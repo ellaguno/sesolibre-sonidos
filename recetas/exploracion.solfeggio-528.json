@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "id": "exploracion.solfeggio-528",
+  "sala": "exploracion",
+  "situacion": "exploracion",
+  "nombre": {
+    "es": "528 Hz (solfeggio)",
+    "en": "528 Hz (solfeggio)"
+  },
+  "descripcion": {
+    "es": "Un tono de 528 Hz con dos parciales suaves sobre un colchón de quintas afinado a su mitad (264 Hz). Es el tono que la tradición solfeggio llama 'frecuencia del amor'.",
+    "en": "A 528 Hz tone with two soft partials over a fifths pad tuned to its half (264 Hz). The tone the solfeggio tradition calls the 'love frequency'."
+  },
+  "ciencia": {
+    "es": "Sin evidencia científica: ningún estudio serio respalda efectos de 528 Hz. Es un tono puro, agradable e inofensivo a volumen seguro. Esto es exploración personal.",
+    "en": "No scientific evidence: no serious study supports effects of 528 Hz. It is a pure, pleasant, harmless tone at safe volume. This is personal exploration."
+  },
+  "fuentes": [],
+  "duracion_s": 900,
+  "fade_in_s": 8,
+  "fade_out_s": 20,
+  "semilla": 5,
+  "techo_db": -14,
+  "advertencias": [],
+  "capas": [
+    {
+      "tipo": "tono",
+      "hz": 528,
+      "armonicos": 2,
+      "nivel_db": -26
+    },
+    {
+      "tipo": "colchon",
+      "modo": "quintas",
+      "raiz_hz": 132,
+      "nivel_db": -16,
+      "ciclo_s": 120,
+      "voces": 5,
+      "brillo": 0.4
+    }
+  ]
+}

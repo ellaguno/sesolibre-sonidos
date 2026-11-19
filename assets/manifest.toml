@@ -1,0 +1,11 @@
+# Registro de autoría de cada asset. Un asset sin registro no entra al build.
+# Formato heredado de sesolibre-lienzo. Licencias admitidas: CC0-1.0, CC-BY-4.0,
+# CC-BY-SA-4.0, dominio público.
+
+[[asset]]
+id = "fase0_renders"
+path = "audio/fase0/"
+kind = "render"
+author = "Eduardo Llaguno (generado por sonidos-core a partir de recetas/*.json, semillas de cada receta)"
+license = "CC-BY-4.0"
+modified = "90 s por receta, 48 kHz, Ogg Vorbis q5"

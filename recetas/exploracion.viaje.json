@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "id": "exploracion.viaje",
+  "sala": "exploracion",
+  "situacion": "viaje",
+  "nombre": {
+    "es": "Viaje (sonidos tipo psicodélico)",
+    "en": "Trip (psychedelic-style sounds)"
+  },
+  "descripcion": {
+    "es": "Esta receta PRETENDE imitar un estado alterado, al estilo de las llamadas 'drogas digitales': un colchón brillante que cambia de acorde cada minuto y medio, un pulso binaural que baja de 10 a 4 Hz, un segundo pulso a 7,83 Hz que entra a los cinco minutos, un pulso isocrónico lento a los diez y un barrido que respira entre 200 y 800 Hz. Treinta minutos. Pretende; no promete.",
+    "en": "This recipe INTENDS to imitate an altered state, in the style of so-called 'digital drugs': a bright pad changing chords every minute and a half, a binaural pulse drifting from 10 to 4 Hz, a second pulse at 7.83 Hz entering at five minutes, a slow isochronic pulse at ten, and a sweep breathing between 200 and 800 Hz. Thirty minutes. It intends; it does not promise."
+  },
+  "ciencia": {
+    "es": "Sin evidencia: los estudios sobre 'drogas digitales' no encuentran efectos psicodélicos; lo que reportan es relajación, sugestión y, en algunas personas, molestia o dolor de cabeza. Es sonido a volumen seguro, nada más. Si molesta, se para.",
+    "en": "No evidence: studies of 'digital drugs' find no psychedelic effects; what they report is relaxation, suggestion and, in some people, discomfort or headache. It is sound at safe volume, nothing more. If it bothers you, stop."
+  },
+  "fuentes": [
+    "https://pubmed.ncbi.nlm.nih.gov/30073406/"
+  ],
+  "duracion_s": 1800,
+  "fade_in_s": 12,
+  "fade_out_s": 60,
+  "semilla": 6,
+  "techo_db": -14,
+  "advertencias": [
+    "auriculares",
+    "no_conducir",
+    "epilepsia",
+    "parar_si_molesta"
+  ],
+  "capas": [
+    {
+      "tipo": "colchon",
+      "modo": "menor",
+      "raiz_hz": 65.4,
+      "nivel_db": -16,
+      "ciclo_s": 360,
+      "voces": 6,
+      "brillo": 0.8
+    },
+    {
+      "tipo": "pulso",
+      "forma": "binaural",
+      "portadora_hz": 220,
+      "beat_hz": 10,
+      "beat_hz_final": 4,
+      "nivel_db": -32,
+      "desde_s": 10,
+      "transicion_s": 20
+    },
+    {
+      "tipo": "pulso",
+      "forma": "binaural",
+      "portadora_hz": 330,
+      "beat_hz": 7.83,
+      "nivel_db": -36,
+      "desde_s": 300,
+      "transicion_s": 40
+    },
+    {
+      "tipo": "pulso",
+      "forma": "isocronico",
+      "portadora_hz": 110,
+      "beat_hz": 4.5,
+      "nivel_db": -36,
+      "desde_s": 600,
+      "transicion_s": 40
+    },
+    {
+      "tipo": "barrido",
+      "desde_hz": 200,
+      "hasta_hz": 800,
+      "periodo_s": 45,
+      "nivel_db": -37,
+      "desde_s": 120,
+      "hasta_s": 1600,
+      "transicion_s": 30
+    },
+    {
+      "tipo": "ruido",
+      "color": "rosa",
+      "paso_alto_hz": 500,
+      "paso_bajo_hz": 4000,
+      "nivel_db": -26
+    }
+  ]
+}

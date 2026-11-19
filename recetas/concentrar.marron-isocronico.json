@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "id": "concentrar.marron-isocronico",
+  "sala": "prometedor",
+  "situacion": "concentrar",
+  "nombre": {
+    "es": "Marrón con pulso de foco",
+    "en": "Brown with a focus pulse"
+  },
+  "descripcion": {
+    "es": "Ruido marrón, grave y estable, para tapar la oficina o la calle; un colchón pentatónico casi inaudible para que no sea un ventilador; y un pulso isocrónico a 14 Hz (beta baja) que no necesita auriculares. 25 minutos: un pomodoro.",
+    "en": "Low, steady brown noise to cover the office or the street; a barely audible pentatonic pad so it is not just a fan; and a 14 Hz isochronic pulse (low beta) that needs no headphones. 25 minutes: one pomodoro."
+  },
+  "ciencia": {
+    "es": "El ruido de fondo constante ayuda a algunas personas a concentrarse en entornos ruidosos (efecto individual, evidencia mixta). Los pulsos isocrónicos están menos estudiados que los binaurales; se ofrecen por si a ti te sirven.",
+    "en": "Constant background noise helps some people focus in noisy places (individual, mixed evidence). Isochronic pulses are less studied than binaural ones; offered in case they work for you."
+  },
+  "fuentes": [
+    "https://pubmed.ncbi.nlm.nih.gov/35842538/"
+  ],
+  "duracion_s": 1500,
+  "fade_in_s": 6,
+  "fade_out_s": 20,
+  "semilla": 2,
+  "techo_db": -14,
+  "advertencias": [
+    "no_conducir"
+  ],
+  "capas": [
+    {
+      "tipo": "ruido",
+      "color": "marron",
+      "nivel_db": -14
+    },
+    {
+      "tipo": "colchon",
+      "modo": "re_pentatonico",
+      "nivel_db": -26,
+      "ciclo_s": 300,
+      "voces": 4,
+      "brillo": 0.2
+    },
+    {
+      "tipo": "pulso",
+      "forma": "isocronico",
+      "portadora_hz": 240,
+      "beat_hz": 14,
+      "nivel_db": -30,
+      "desde_s": 10,
+      "transicion_s": 20
+    }
+  ]
+}

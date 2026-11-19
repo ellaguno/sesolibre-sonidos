@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "respirar.seis-por-minuto",
+  "sala": "comprobado",
+  "situacion": "respirar",
+  "nombre": {
+    "es": "Seis por minuto",
+    "en": "Six a minute"
+  },
+  "descripcion": {
+    "es": "Un soplo de aire y un tono suben durante 4 segundos y bajan durante 6: seis respiraciones por minuto, exhalación larga. Sin voz, sin contar. Cinco minutos.",
+    "en": "A breath of air and a tone rise for 4 seconds and fall for 6: six breaths a minute with a long exhale. No voice, no counting. Five minutes."
+  },
+  "ciencia": {
+    "es": "La respiración lenta (≈6 por minuto, exhalación más larga) tiene evidencia consistente sobre ansiedad y variabilidad cardiaca. El sonido aquí es solo el metrónomo.",
+    "en": "Slow breathing (≈6 per minute, longer exhale) has consistent evidence for anxiety and heart-rate variability. The sound here is only the metronome."
+  },
+  "fuentes": [],
+  "duracion_s": 300,
+  "fade_in_s": 4,
+  "fade_out_s": 10,
+  "semilla": 3,
+  "techo_db": -14,
+  "advertencias": [],
+  "capas": [
+    {
+      "tipo": "respiracion",
+      "inhalar_s": 4,
+      "retener_s": 0,
+      "exhalar_s": 6,
+      "pausa_s": 0,
+      "hz": 196,
+      "nivel_db": -12,
+      "transicion_s": 2
+    },
+    {
+      "tipo": "colchon",
+      "modo": "menor",
+      "nivel_db": -24,
+      "ciclo_s": 120,
+      "voces": 4,
+      "brillo": 0.3,
+      "transicion_s": 6
+    }
+  ]
+}

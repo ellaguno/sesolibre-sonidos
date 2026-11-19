@@ -1,0 +1,6 @@
+/target
+*.wav
+!assets/audio/**/*.ogg
+node_modules/
+dist/
+.DS_Store

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "id": "meditar.theta-colchon",
+  "sala": "prometedor",
+  "situacion": "meditar",
+  "nombre": {
+    "es": "Theta bajo el agua",
+    "en": "Theta under water"
+  },
+  "descripcion": {
+    "es": "El colchón pentatónico de Lienzo, un aire de ruido rosa filtrado y, con auriculares, un pulso binaural a 6 Hz (theta). Veinte minutos.",
+    "en": "Lienzo's pentatonic pad, a breath of filtered pink noise and, with headphones, a 6 Hz (theta) binaural pulse. Twenty minutes."
+  },
+  "ciencia": {
+    "es": "Los pulsos binaurales muestran efectos pequeños y heterogéneos sobre ansiedad; en meditación, lo que más pesa es sentarse. El colchón es música lenta, que sí tiene respaldo para relajar.",
+    "en": "Binaural pulses show small, heterogeneous effects on anxiety; in meditation, sitting down matters most. The pad is slow music, which does have support for relaxation."
+  },
+  "fuentes": [
+    "https://pubmed.ncbi.nlm.nih.gov/30073406/",
+    "https://www.frontiersin.org/articles/10.3389/fpsyg.2025.1539823/full"
+  ],
+  "duracion_s": 1200,
+  "fade_in_s": 8,
+  "fade_out_s": 30,
+  "semilla": 4,
+  "techo_db": -14,
+  "advertencias": [
+    "auriculares",
+    "no_conducir"
+  ],
+  "capas": [
+    {
+      "tipo": "colchon",
+      "modo": "re_pentatonico",
+      "nivel_db": -16,
+      "ciclo_s": 180,
+      "voces": 5,
+      "brillo": 0.5
+    },
+    {
+      "tipo": "ruido",
+      "color": "rosa",
+      "paso_alto_hz": 200,
+      "paso_bajo_hz": 1200,
+      "nivel_db": -26
+    },
+    {
+      "tipo": "pulso",
+      "forma": "binaural",
+      "portadora_hz": 200,
+      "beat_hz": 6,
+      "nivel_db": -34,
+      "desde_s": 15,
+      "transicion_s": 20
+    }
+  ]
+}
