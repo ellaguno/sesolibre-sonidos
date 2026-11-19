@@ -39,7 +39,7 @@
       "tipo": "colchon",
       "modo": "menor",
       "afinacion_hz": 440,
-      "nivel_db": -14,
+      "nivel_db": -16,
       "ciclo_s": 240,
       "voces": 5,
       "brillo": 0.3

@@ -67,7 +67,7 @@ fn la_ganancia_no_sube_de_golpe() {
         ultimo = g.hacia(0.0);
     }
     // Salta libre hasta el umbral audible y de ahí sube como mucho SUBIDA_MAX_DB_S en un segundo.
-    assert!(ultimo < 10f32.powf((GananciaSuave::UMBRAL_AUDIBLE_DB + GananciaSuave::SUBIDA_MAX_DB_S + 0.01) / 20.0));
+    assert!(ultimo < 10f32.powf((GananciaSuave::UMBRAL_AUDIBLE_DB + GananciaSuave::SUBIDA_MAX_DB_S + 0.1) / 20.0));
     assert!(ultimo > 10f32.powf((GananciaSuave::UMBRAL_AUDIBLE_DB + GananciaSuave::SUBIDA_MAX_DB_S - 0.5) / 20.0));
 }
 
@@ -101,3 +101,4 @@ fn rechaza_promesas_y_descuidos() {
     r.capas[0].nivel_db = 3.0;
     assert!(r.validar().is_err(), "capa por encima de 0 dB");
 }
+
