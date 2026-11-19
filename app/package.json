@@ -1,0 +1,37 @@
+{
+  "name": "sesolibre-sonidos",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "description": "Paisajes sonoros con propósito, con la pantalla apagada (web + Android vía Capacitor)",
+  "scripts": {
+    "audio": "node scripts/sync-audio.mjs",
+    "dev": "npm run audio && vite",
+    "build": "npm run audio && tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "cap:sync": "cap sync android",
+    "android:apk": "./scripts/android-apk.sh"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/core": "^8.4.2",
+    "capacitor-sonidos": "file:./plugin",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.2",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.2"
+  }
+}

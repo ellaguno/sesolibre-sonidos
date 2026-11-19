@@ -4,3 +4,10 @@
 node_modules/
 dist/
 .DS_Store
+
+# app
+app/android/
+app/public/audio/
+app/plugin/android/src/main/jniLibs/
+app/plugin/android/build/
+*.tsbuildinfo

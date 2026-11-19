@@ -1,0 +1,165 @@
+import { useCallback, useEffect, useState } from 'react';
+
+import { idiomaInicial, traducir } from './core/i18n';
+import { NOCHE_DB, Sonidos } from './core/motor';
+import { RECETAS, SALAS, deSala, type Entrada, type Idioma } from './core/recetas';
+import { useMotor } from './core/useMotor';
+import { DE_SALA } from './ui/estilos';
+import { Ficha } from './ui/Ficha';
+import { Luna, MarcaSala } from './ui/iconos';
+import { Reproductor } from './ui/Reproductor';
+import { Tarjeta } from './ui/Tarjeta';
+
+function guardado(clave: string): string | null {
+  try {
+    return localStorage.getItem(clave);
+  } catch {
+    return null;
+  }
+}
+
+function guardar(clave: string, valor: string): void {
+  try {
+    localStorage.setItem(clave, valor);
+  } catch {
+    /* sin almacenamiento: el ajuste dura lo que dure la sesión */
+  }
+}
+
+export default function App() {
+  const [idioma, setIdioma] = useState<Idioma>(idiomaInicial);
+  const [noche, setNoche] = useState(() => guardado('sonidos.noche') === '1');
+  const [abierta, setAbierta] = useState<Entrada | null>(null);
+  const { estado, segundos, error, limpiarError } = useMotor();
+  const [fallo, setFallo] = useState<string | null>(null);
+  const t = (c: string) => traducir(idioma, c);
+
+  useEffect(() => {
+    document.documentElement.lang = idioma;
+    guardar('sonidos.idioma', idioma);
+  }, [idioma]);
+
+  useEffect(() => {
+    guardar('sonidos.noche', noche ? '1' : '0');
+    Sonidos.volumen({ db: noche ? NOCHE_DB : 0 }).catch(() => undefined);
+  }, [noche]);
+
+  const tocar = useCallback(
+    (entrada: Entrada, minutos: number) => {
+      const r = entrada.receta;
+      setAbierta(null);
+      setFallo(null);
+      limpiarError();
+      Sonidos.tocar({
+        receta: entrada.json,
+        recetaId: r.id,
+        titulo: r.nombre[idioma],
+        subtitulo: `${traducir(idioma, `sala.${r.sala}`)} · SesoLibre Sonidos`,
+        minutos,
+        volumenDb: noche ? NOCHE_DB : 0,
+      }).catch((e: unknown) => setFallo(e instanceof Error ? e.message : String(e)));
+    },
+    [idioma, noche, limpiarError],
+  );
+
+  const sonando = estado.activo ? (RECETAS.find((e) => e.receta.id === estado.recetaId) ?? null) : null;
+  const aviso = fallo ?? error;
+
+  return (
+    <div className={`mx-auto max-w-xl px-4 pt-[max(1.25rem,env(safe-area-inset-top))] ${sonando ? 'pb-32' : 'pb-10'}`}>
+      <header className="flex items-center gap-3">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-3xl font-semibold tracking-tight">Sonidos</h1>
+          <p className="text-tenue">{t('lema')}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setNoche((n) => !n)}
+          aria-pressed={noche}
+          title={t('nocheAyuda')}
+          className={`flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition ${
+            noche ? 'border-transparent bg-texto text-fondo' : 'border-borde text-tenue'
+          }`}
+        >
+          <Luna className="h-4 w-4" />
+          {t('noche')}
+        </button>
+        <button
+          type="button"
+          onClick={() => setIdioma((i) => (i === 'es' ? 'en' : 'es'))}
+          aria-label={idioma === 'es' ? 'Switch to English' : 'Cambiar a español'}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-borde text-sm font-semibold uppercase text-tenue"
+        >
+          {idioma === 'es' ? 'en' : 'es'}
+        </button>
+      </header>
+
+      {estado.simulado && (
+        <p className="mt-4 rounded-xl border border-borde bg-panel/70 p-3 text-sm text-tenue">{t('simulado')}</p>
+      )}
+      {aviso && (
+        <p role="alert" className="mt-4 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-red-200">
+          {aviso}
+        </p>
+      )}
+
+      <main>
+        {SALAS.map((sala) => {
+          const recetas = deSala(sala);
+          if (recetas.length === 0) return null;
+          const s = DE_SALA[sala];
+          return (
+            <section key={sala} className={sala === 'exploracion' ? 'mt-10 border-t border-dashed border-exploracion/40 pt-8' : 'mt-8'}>
+              <h2 className={`flex items-center gap-2 text-sm font-semibold uppercase tracking-wider ${s.texto}`}>
+                <MarcaSala sala={sala} className="h-5 w-5" />
+                {t(`sala.${sala}`)}
+              </h2>
+              <p className="mt-1 text-sm text-tenue">{t(`sala.${sala}.que`)}</p>
+              <div className="mt-3 space-y-3">
+                {recetas.map((e) => (
+                  <Tarjeta
+                    key={e.receta.id}
+                    entrada={e}
+                    idioma={idioma}
+                    sonando={estado.activo && estado.sonando && estado.recetaId === e.receta.id}
+                    alAbrir={() => setAbierta(e)}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </main>
+
+      <footer className="mt-10 space-y-1 text-center text-sm text-tenue">
+        <p>{t('pie')}</p>
+        <p>{t('adv.siempre')}</p>
+        {sonando && <p>{t('apagada')}</p>}
+      </footer>
+
+      {abierta && (
+        <Ficha
+          entrada={abierta}
+          idioma={idioma}
+          auriculares={estado.auriculares}
+          simulado={estado.simulado}
+          alCerrar={() => setAbierta(null)}
+          alTocar={(m) => tocar(abierta, m)}
+        />
+      )}
+
+      {sonando && (
+        <Reproductor
+          entrada={sonando}
+          estado={estado}
+          segundos={segundos}
+          idioma={idioma}
+          alPausar={() => void Sonidos.pausar()}
+          alReanudar={() => void Sonidos.reanudar()}
+          alParar={() => void Sonidos.parar()}
+          alExtender={() => void Sonidos.extender({ minutos: 15 })}
+        />
+      )}
+    </div>
+  );
+}

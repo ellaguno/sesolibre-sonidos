@@ -1,0 +1,17 @@
+{
+  "name": "capacitor-sonidos",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Plugin Capacitor de SesoLibre Sonidos: el núcleo de sonido en un servicio de reproducción que sigue con la pantalla apagada.",
+  "main": "index.js",
+  "type": "module",
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=8.0.0"
+  }
+}
