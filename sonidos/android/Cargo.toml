@@ -1,0 +1,14 @@
+[package]
+name = "sonidos-android"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "SesoLibre Sonidos: el núcleo detrás de JNI, para el servicio de Android."
+
+[lib]
+name = "sonidos"
+crate-type = ["cdylib"]
+
+[dependencies]
+sonidos-core = { path = "../core", default-features = false, features = ["ogg"] }
+jni = "0.21"

@@ -30,12 +30,12 @@
     {
       "tipo": "ruido",
       "color": "marron",
-      "nivel_db": -14
+      "nivel_db": -19
     },
     {
       "tipo": "colchon",
       "modo": "re_pentatonico",
-      "nivel_db": -26,
+      "nivel_db": -24,
       "ciclo_s": 300,
       "voces": 4,
       "brillo": 0.2

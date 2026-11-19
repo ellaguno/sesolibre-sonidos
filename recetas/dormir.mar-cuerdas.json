@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "id": "dormir.mar-cuerdas",
+  "sala": "comprobado",
+  "situacion": "dormir",
+  "nombre": {
+    "es": "Mar y cuerdas",
+    "en": "Sea and strings"
+  },
+  "descripcion": {
+    "es": "Un oleaje lento hecho de ruido rosa y marrón, olas grabadas cerca de las rocas y una sección de cuerdas en modo menor. Sin pulsos ni notas sueltas: nada que seguir con la atención. Funciona en altavoz. Cuarenta y cinco minutos.",
+    "en": "A slow swell made of pink and brown noise, waves recorded close to the rocks and a string section in a minor mode. No pulses, no single notes: nothing for attention to follow. Works on a speaker. Forty-five minutes."
+  },
+  "ciencia": {
+    "es": "La música lenta probablemente mejora la calidad subjetiva del sueño (Cochrane 2022, certeza moderada). El ruido constante ayuda a conciliar cuando hay ruido alrededor (evidencia modesta).",
+    "en": "Slow music probably improves subjective sleep quality (Cochrane 2022, moderate certainty). Steady noise helps falling asleep in noisy surroundings (modest evidence)."
+  },
+  "fuentes": [
+    "https://www.cochrane.org/CD010459/SLEEP_music-for-insomnia-adults"
+  ],
+  "duracion_s": 2700,
+  "fade_in_s": 10,
+  "fade_out_s": 300,
+  "semilla": 8,
+  "techo_db": -14,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 6,
+    "amortiguacion_hz": 2500
+  },
+  "capas": [
+    {
+      "tipo": "ruido",
+      "color": "rosa",
+      "paso_bajo_hz": 1400,
+      "oleaje_s": 11,
+      "nivel_db": -16
+    },
+    {
+      "tipo": "ruido",
+      "color": "marron",
+      "oleaje_s": 17,
+      "nivel_db": -18
+    },
+    {
+      "tipo": "ambiente",
+      "ambiente": "olas",
+      "paso_bajo_hz": 2000,
+      "nivel_db": -34
+    },
+    {
+      "tipo": "colchon",
+      "modo": "menor",
+      "timbre": "cuerdas",
+      "nivel_db": -18,
+      "ciclo_s": 260,
+      "voces": 5,
+      "reverb": 0.5
+    }
+  ]
+}

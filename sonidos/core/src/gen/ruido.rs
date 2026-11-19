@@ -16,10 +16,12 @@ pub struct Ruido {
     hp_marron: [UnPolo; 2],
     lp: Option<[UnPolo; 4]>,
     hp: Option<[UnPolo; 2]>,
+    /// Periodo del oleaje en segundos: el ruido sube y baja como el mar en la orilla.
+    oleaje_s: Option<f32>,
 }
 
 impl Ruido {
-    pub fn nuevo(color: ColorRuido, lp_hz: Option<f32>, hp_hz: Option<f32>, sr: f32, rng: Rng) -> Self {
+    pub fn nuevo(color: ColorRuido, lp_hz: Option<f32>, hp_hz: Option<f32>, oleaje_s: Option<f32>, sr: f32, rng: Rng) -> Self {
         Ruido {
             color,
             rng,
@@ -28,6 +30,7 @@ impl Ruido {
             hp_marron: [UnPolo::paso_alto(30.0, sr), UnPolo::paso_alto(30.0, sr)],
             lp: lp_hz.map(|f| [UnPolo::paso_bajo(f, sr), UnPolo::paso_bajo(f, sr), UnPolo::paso_bajo(f, sr), UnPolo::paso_bajo(f, sr)]),
             hp: hp_hz.map(|f| [UnPolo::paso_alto(f, sr), UnPolo::paso_alto(f, sr)]),
+            oleaje_s,
         }
     }
 
@@ -61,7 +64,17 @@ impl Ruido {
 }
 
 impl Fuente for Ruido {
-    fn procesar(&mut self, _t0: f64, out: &mut [Cuadro]) {
+    fn procesar(&mut self, t0: f64, out: &mut [Cuadro]) {
+        // Dos periodos que no casan (1 y 1,37): ninguna ola es igual a la anterior.
+        let ola = match self.oleaje_s {
+            Some(p) => {
+                let a = (std::f64::consts::TAU * t0 / p as f64).sin() as f32;
+                let b = (std::f64::consts::TAU * t0 / (p as f64 * 1.37)).sin() as f32;
+                let x = 0.5 + 0.3 * a + 0.2 * b;
+                0.25 + 0.75 * x * x
+            }
+            None => 1.0,
+        };
         for c in out.iter_mut() {
             for canal in 0..2 {
                 let mut y = self.muestra(canal);
@@ -72,7 +85,7 @@ impl Fuente for Ruido {
                 if let Some(hp) = &mut self.hp {
                     y = hp[canal].procesar(y);
                 }
-                c[canal] = y;
+                c[canal] = y * ola;
             }
         }
     }

@@ -1,0 +1,138 @@
+{
+ "version": 1,
+ "instrumentos": {
+  "arpa": {
+   "sostenido": false,
+   "notas": {
+    "35": "instruments/harp/35.ogg",
+    "38": "instruments/harp/38.ogg",
+    "45": "instruments/harp/45.ogg",
+    "48": "instruments/harp/48.ogg",
+    "59": "instruments/harp/59.ogg",
+    "62": "instruments/harp/62.ogg",
+    "69": "instruments/harp/69.ogg",
+    "72": "instruments/harp/72.ogg",
+    "83": "instruments/harp/83.ogg",
+    "93": "instruments/harp/93.ogg"
+   }
+  },
+  "vibrafono": {
+   "sostenido": false,
+   "notas": {
+    "45": "instruments/vibes/45.ogg",
+    "48": "instruments/vibes/48.ogg",
+    "52": "instruments/vibes/52.ogg",
+    "59": "instruments/vibes/59.ogg",
+    "62": "instruments/vibes/62.ogg",
+    "69": "instruments/vibes/69.ogg",
+    "72": "instruments/vibes/72.ogg",
+    "76": "instruments/vibes/76.ogg"
+   }
+  },
+  "marimba": {
+   "sostenido": false,
+   "notas": {
+    "36": "instruments/marimba/36.ogg",
+    "43": "instruments/marimba/43.ogg",
+    "47": "instruments/marimba/47.ogg",
+    "53": "instruments/marimba/53.ogg",
+    "60": "instruments/marimba/60.ogg",
+    "71": "instruments/marimba/71.ogg",
+    "84": "instruments/marimba/84.ogg"
+   }
+  },
+  "armonicos": {
+   "sostenido": true,
+   "notas": {
+    "67": "instruments/violin_harm/67.ogg",
+    "71": "instruments/violin_harm/71.ogg",
+    "74": "instruments/violin_harm/74.ogg",
+    "78": "instruments/violin_harm/78.ogg",
+    "81": "instruments/violin_harm/81.ogg",
+    "84": "instruments/violin_harm/84.ogg"
+   }
+  },
+  "flauta": {
+   "sostenido": true,
+   "notas": {
+    "48": "instruments/flute_sus/48.ogg",
+    "52": "instruments/flute_sus/52.ogg",
+    "55": "instruments/flute_sus/55.ogg",
+    "57": "instruments/flute_sus/57.ogg",
+    "60": "instruments/flute_sus/60.ogg",
+    "64": "instruments/flute_sus/64.ogg",
+    "67": "instruments/flute_sus/67.ogg",
+    "69": "instruments/flute_sus/69.ogg",
+    "72": "instruments/flute_sus/72.ogg",
+    "76": "instruments/flute_sus/76.ogg",
+    "81": "instruments/flute_sus/81.ogg"
+   }
+  },
+  "cello": {
+   "sostenido": true,
+   "notas": {
+    "24": "instruments/cello_sus/24.ogg",
+    "28": "instruments/cello_sus/28.ogg",
+    "31": "instruments/cello_sus/31.ogg",
+    "35": "instruments/cello_sus/35.ogg",
+    "38": "instruments/cello_sus/38.ogg",
+    "41": "instruments/cello_sus/41.ogg",
+    "48": "instruments/cello_sus/48.ogg",
+    "59": "instruments/cello_sus/59.ogg"
+   }
+  },
+  "viola": {
+   "sostenido": true,
+   "notas": {
+    "36": "instruments/viola_sus/36.ogg",
+    "38": "instruments/viola_sus/38.ogg",
+    "40": "instruments/viola_sus/40.ogg",
+    "43": "instruments/viola_sus/43.ogg",
+    "47": "instruments/viola_sus/47.ogg",
+    "50": "instruments/viola_sus/50.ogg",
+    "53": "instruments/viola_sus/53.ogg",
+    "57": "instruments/viola_sus/57.ogg",
+    "60": "instruments/viola_sus/60.ogg",
+    "64": "instruments/viola_sus/64.ogg",
+    "71": "instruments/viola_sus/71.ogg"
+   }
+  },
+  "violin": {
+   "sostenido": true,
+   "notas": {
+    "43": "instruments/violin_sus/43.ogg",
+    "45": "instruments/violin_sus/45.ogg",
+    "47": "instruments/violin_sus/47.ogg",
+    "50": "instruments/violin_sus/50.ogg",
+    "57": "instruments/violin_sus/57.ogg",
+    "60": "instruments/violin_sus/60.ogg",
+    "64": "instruments/violin_sus/64.ogg",
+    "71": "instruments/violin_sus/71.ogg",
+    "74": "instruments/violin_sus/74.ogg"
+   }
+  },
+  "cuerdas": {
+   "sostenido": true,
+   "notas": {
+    "24": "instruments/cello_sus/24.ogg",
+    "28": "instruments/cello_sus/28.ogg",
+    "31": "instruments/cello_sus/31.ogg",
+    "35": "instruments/cello_sus/35.ogg",
+    "38": "instruments/cello_sus/38.ogg",
+    "41": "instruments/cello_sus/41.ogg",
+    "50": "instruments/viola_sus/50.ogg",
+    "53": "instruments/viola_sus/53.ogg",
+    "57": "instruments/viola_sus/57.ogg",
+    "60": "instruments/violin_sus/60.ogg",
+    "64": "instruments/violin_sus/64.ogg",
+    "71": "instruments/violin_sus/71.ogg",
+    "74": "instruments/violin_sus/74.ogg"
+   }
+  }
+ },
+ "ambientes": {
+  "hidrofono": "ambience/hydrophone_flow.ogg",
+  "burbujas": "ambience/bubble_flow.ogg",
+  "olas": "ambience/waves_rocks.ogg"
+ }
+}

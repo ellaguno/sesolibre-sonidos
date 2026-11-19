@@ -2,12 +2,13 @@
 
 use std::path::Path;
 
+use crate::banco::Banco;
 use crate::motor::{medir, Medidas, Motor};
 use crate::receta::Receta;
 use crate::{Error, SR};
 
-pub fn rendir_wav(receta: &Receta, semilla: Option<u64>, segundos: Option<f32>, salida: &Path) -> Result<Medidas, Error> {
-    let mut motor = Motor::nuevo(receta, semilla)?;
+pub fn rendir_wav(receta: &Receta, banco: &Banco, semilla: Option<u64>, segundos: Option<f32>, salida: &Path) -> Result<Medidas, Error> {
+    let mut motor = Motor::con_banco(receta, semilla, banco)?;
     let muestras = motor.rendir(segundos);
     let spec = hound::WavSpec { channels: 2, sample_rate: SR, bits_per_sample: 16, sample_format: hound::SampleFormat::Int };
     let mut w = hound::WavWriter::create(salida, spec)?;

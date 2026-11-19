@@ -30,7 +30,7 @@
       "exhalar_s": 6,
       "pausa_s": 0,
       "hz": 196,
-      "nivel_db": -14,
+      "nivel_db": -15,
       "transicion_s": 2
     },
     {
@@ -39,8 +39,13 @@
       "nivel_db": -24,
       "ciclo_s": 120,
       "voces": 4,
-      "brillo": 0.3,
-      "transicion_s": 6
+      "transicion_s": 6,
+      "timbre": "cuerdas",
+      "reverb": 0.5
     }
-  ]
+  ],
+  "espacio": {
+    "rt60_s": 5,
+    "amortiguacion_hz": 3000
+  }
 }

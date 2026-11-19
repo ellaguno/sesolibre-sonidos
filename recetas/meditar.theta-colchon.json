@@ -8,8 +8,8 @@
     "en": "Theta under water"
   },
   "descripcion": {
-    "es": "El colchón pentatónico de Lienzo, un aire de ruido rosa filtrado y, con auriculares, un pulso binaural a 6 Hz (theta). Veinte minutos.",
-    "en": "Lienzo's pentatonic pad, a breath of filtered pink noise and, with headphones, a 6 Hz (theta) binaural pulse. Twenty minutes."
+    "es": "Agua grabada con hidrófono, cuerdas en Re pentatónico, un vibráfono que deja caer una nota cada tanto y, con auriculares, un pulso binaural a 6 Hz (theta). Veinte minutos.",
+    "en": "Water recorded with a hydrophone, strings in D pentatonic, a vibraphone dropping a note now and then and, with headphones, a 6 Hz (theta) binaural pulse. Twenty minutes."
   },
   "ciencia": {
     "es": "Los pulsos binaurales muestran efectos pequeños y heterogéneos sobre ansiedad; en meditación, lo que más pesa es sentarse. El colchón es música lenta, que sí tiene respaldo para relajar.",
@@ -32,26 +32,45 @@
     {
       "tipo": "colchon",
       "modo": "re_pentatonico",
-      "nivel_db": -16,
+      "timbre": "cuerdas",
+      "nivel_db": -14,
       "ciclo_s": 180,
       "voces": 5,
-      "brillo": 0.5
+      "reverb": 0.5
     },
     {
-      "tipo": "ruido",
-      "color": "rosa",
-      "paso_alto_hz": 200,
-      "paso_bajo_hz": 1200,
-      "nivel_db": -26
+      "tipo": "ambiente",
+      "ambiente": "hidrofono",
+      "paso_bajo_hz": 2500,
+      "nivel_db": -27
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "vibrafono",
+      "modo": "re_pentatonico",
+      "ciclo_s": 180,
+      "notas_por_minuto": 3,
+      "octavas": [
+        1,
+        2
+      ],
+      "nivel_db": -25,
+      "reverb": 0.8,
+      "desde_s": 20,
+      "transicion_s": 10
     },
     {
       "tipo": "pulso",
       "forma": "binaural",
       "portadora_hz": 200,
       "beat_hz": 6,
-      "nivel_db": -34,
+      "nivel_db": -32,
       "desde_s": 15,
       "transicion_s": 20
     }
-  ]
+  ],
+  "espacio": {
+    "rt60_s": 7,
+    "amortiguacion_hz": 3000
+  }
 }

@@ -8,8 +8,8 @@
     "en": "Trip (psychedelic-style sounds)"
   },
   "descripcion": {
-    "es": "Esta receta PRETENDE imitar un estado alterado, al estilo de las llamadas 'drogas digitales': un colchón brillante que cambia de acorde cada minuto y medio, un pulso binaural que baja de 10 a 4 Hz, un segundo pulso a 7,83 Hz que entra a los cinco minutos, un pulso isocrónico lento a los diez y un barrido que respira entre 200 y 800 Hz. Treinta minutos. Pretende; no promete.",
-    "en": "This recipe INTENDS to imitate an altered state, in the style of so-called 'digital drugs': a bright pad changing chords every minute and a half, a binaural pulse drifting from 10 to 4 Hz, a second pulse at 7.83 Hz entering at five minutes, a slow isochronic pulse at ten, and a sweep breathing between 200 and 800 Hz. Thirty minutes. It intends; it does not promise."
+    "es": "Esta receta PRETENDE imitar un estado alterado, al estilo de las llamadas 'drogas digitales': un colchón brillante que cambia de acorde cada minuto y medio, armónicos de violín y un arpa en una sala enorme, un pulso binaural que baja de 10 a 4 Hz, un segundo pulso a 7,83 Hz que entra a los cinco minutos, un pulso isocrónico lento a los diez y un barrido que respira entre 200 y 800 Hz. Treinta minutos. Pretende; no promete.",
+    "en": "This recipe INTENDS to imitate an altered state, in the style of so-called 'digital drugs': a bright pad changing chords every minute and a half, violin harmonics and a harp in a huge room, a binaural pulse drifting from 10 to 4 Hz, a second pulse at 7.83 Hz entering at five minutes, a slow isochronic pulse at ten, and a sweep breathing between 200 and 800 Hz. Thirty minutes. It intends; it does not promise."
   },
   "ciencia": {
     "es": "Sin evidencia: los estudios sobre 'drogas digitales' no encuentran efectos psicodélicos; lo que reportan es relajación, sugestión y, en algunas personas, molestia o dolor de cabeza. Es sonido a volumen seguro, nada más. Si molesta, se para.",
@@ -37,7 +37,8 @@
       "nivel_db": -16,
       "ciclo_s": 360,
       "voces": 6,
-      "brillo": 0.8
+      "brillo": 0.8,
+      "reverb": 0.3
     },
     {
       "tipo": "pulso",
@@ -83,6 +84,42 @@
       "paso_alto_hz": 500,
       "paso_bajo_hz": 4000,
       "nivel_db": -26
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "armonicos",
+      "modo": "menor",
+      "raiz_hz": 65.4,
+      "ciclo_s": 360,
+      "notas_por_minuto": 4,
+      "octavas": [
+        2,
+        3
+      ],
+      "nivel_db": -26,
+      "reverb": 1.0,
+      "desde_s": 30,
+      "transicion_s": 20
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "arpa",
+      "modo": "menor",
+      "raiz_hz": 65.4,
+      "ciclo_s": 360,
+      "notas_por_minuto": 7,
+      "octavas": [
+        1,
+        3
+      ],
+      "nivel_db": -28,
+      "reverb": 1.0,
+      "desde_s": 60,
+      "transicion_s": 20
     }
-  ]
+  ],
+  "espacio": {
+    "rt60_s": 10,
+    "amortiguacion_hz": 5000
+  }
 }

@@ -47,6 +47,24 @@ pub struct Receta {
     pub techo_db: f32,
     #[serde(default)]
     pub advertencias: Vec<String>,
+    /// La sala donde suenan las capas que envían a la reverberación (`reverb` > 0).
+    #[serde(default)]
+    pub espacio: Option<Espacio>,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
+pub struct Espacio {
+    /// Segundos que tarda la cola en apagarse (RT60).
+    #[serde(default = "d_rt60")]
+    pub rt60_s: f32,
+    #[serde(default = "d_amortiguacion")]
+    pub amortiguacion_hz: f32,
+}
+
+impl Default for Espacio {
+    fn default() -> Self {
+        Espacio { rt60_s: d_rt60(), amortiguacion_hz: d_amortiguacion() }
+    }
 }
 
 fn d_fade_in() -> f32 {
@@ -76,6 +94,15 @@ fn d_voces() -> u8 {
 fn d_hz_resp() -> f32 {
     196.0
 }
+fn d_rt60() -> f32 {
+    5.0
+}
+fn d_amortiguacion() -> f32 {
+    3500.0
+}
+fn d_npm() -> f32 {
+    6.0
+}
 
 /// Una capa: un generador con su nivel y su ventana de actividad dentro de la receta.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -89,6 +116,9 @@ pub struct Capa {
     /// Segundos de entrada/salida de la capa dentro de su ventana.
     #[serde(default = "d_transicion")]
     pub transicion_s: f32,
+    /// Cuánto de la capa va a la reverberación (0 = seca, 1 = tanto como la señal directa).
+    #[serde(default)]
+    pub reverb: f32,
     #[serde(flatten)]
     pub gen: Generador,
 }
@@ -121,6 +151,9 @@ pub enum Generador {
         paso_bajo_hz: Option<f32>,
         #[serde(default)]
         paso_alto_hz: Option<f32>,
+        /// Periodo en segundos de un vaivén de mar: el ruido sube y baja como olas.
+        #[serde(default)]
+        oleaje_s: Option<f32>,
     },
     Tono {
         hz: f32,
@@ -151,6 +184,27 @@ pub enum Generador {
         /// 0 = solo fundamentales; 1 = parciales presentes. Por defecto 0,4.
         #[serde(default)]
         brillo: Option<f32>,
+        /// Instrumento sostenido del banco (p. ej. "cuerdas"). Si falta: sintético.
+        #[serde(default)]
+        timbre: Option<String>,
+    },
+    /// Un instrumento real (arpa, vibráfono, flauta…) que toca notas sueltas del acorde que
+    /// suena en el colchón. Para ir juntos basta con el mismo modo, raíz y ciclo.
+    Instrumento {
+        instrumento: String,
+        #[serde(default = "d_afinacion")]
+        afinacion_hz: f32,
+        #[serde(default)]
+        raiz_hz: Option<f32>,
+        #[serde(default = "d_modo")]
+        modo: String,
+        #[serde(default = "d_ciclo")]
+        ciclo_s: f32,
+        #[serde(default = "d_npm")]
+        notas_por_minuto: f32,
+        /// Octavas por encima del colchón entre las que elige: [mínima, máxima].
+        #[serde(default)]
+        octavas: Option<[i32; 2]>,
     },
     Respiracion {
         inhalar_s: f32,
@@ -162,8 +216,12 @@ pub enum Generador {
         #[serde(default = "d_hz_resp")]
         hz: f32,
     },
-    /// Bucle de grabación de campo (Fase 2). El núcleo lo acepta pero aún no lo rinde.
-    Ambiente { archivo: String },
+    /// Grabación de campo en bucle (agua, olas…), por su nombre en el banco.
+    Ambiente {
+        ambiente: String,
+        #[serde(default)]
+        paso_bajo_hz: Option<f32>,
+    },
     /// Solo Exploración: frecuencia que recorre un rango ida y vuelta (cimática).
     Barrido {
         desde_hz: f32,
@@ -186,6 +244,22 @@ impl Receta {
         let r: Receta = serde_json::from_str(s)?;
         r.validar()?;
         Ok(r)
+    }
+
+    /// La misma receta con otra duración (el temporizador del usuario). Las capas con
+    /// final propio se recortan; el desvanecimiento final nunca pasa de un tercio.
+    pub fn con_duracion(&self, duracion_s: f32) -> Receta {
+        let mut r = self.clone();
+        r.duracion_s = duracion_s.clamp(10.0, 12.0 * 3600.0);
+        r.fade_out_s = r.fade_out_s.min(r.duracion_s / 3.0).max(2.0);
+        r.fade_in_s = r.fade_in_s.min(r.duracion_s / 3.0).max(2.0);
+        for c in r.capas.iter_mut() {
+            if let Some(h) = c.hasta_s {
+                c.hasta_s = if h >= self.duracion_s { None } else { Some(h.min(r.duracion_s)) };
+            }
+        }
+        r.capas.retain(|c| c.desde_s < r.duracion_s && c.hasta_s.map(|h| h > c.desde_s).unwrap_or(true));
+        r
     }
 
     pub fn a_json(&self) -> Result<String, Error> {
@@ -213,6 +287,11 @@ impl Receta {
         if self.capas.is_empty() {
             return e("sin capas".into());
         }
+        if let Some(esp) = &self.espacio {
+            if !(0.3..=12.0).contains(&esp.rt60_s) || !(500.0..=12_000.0).contains(&esp.amortiguacion_hz) {
+                return e("espacio: rt60 en [0.3, 12] s y amortiguación en [500, 12000] Hz".into());
+            }
+        }
         let mut hay_binaural = false;
         let mut hay_pulso = false;
         for (i, c) in self.capas.iter().enumerate() {
@@ -223,16 +302,24 @@ impl Receta {
             if c.transicion_s < 1.0 {
                 return ec("la transición dura al menos 1 s");
             }
+            if !(0.0..=1.0).contains(&c.reverb) {
+                return ec("el envío a reverb va de 0 a 1");
+            }
             if let Some(h) = c.hasta_s {
                 if h <= c.desde_s {
                     return ec("hasta_s debe ser mayor que desde_s");
                 }
             }
             match &c.gen {
-                Generador::Ruido { paso_bajo_hz, paso_alto_hz, .. } => {
+                Generador::Ruido { paso_bajo_hz, paso_alto_hz, oleaje_s, .. } => {
                     for f in [paso_bajo_hz, paso_alto_hz].into_iter().flatten() {
                         if !(20.0..=16_000.0).contains(f) {
                             return ec("filtro fuera de [20, 16000] Hz");
+                        }
+                    }
+                    if let Some(o) = oleaje_s {
+                        if !(4.0..=60.0).contains(o) {
+                            return ec("oleaje fuera de [4, 60] s");
                         }
                     }
                 }
@@ -258,7 +345,12 @@ impl Receta {
                         hay_binaural = true;
                     }
                 }
-                Generador::Colchon { afinacion_hz, raiz_hz, ciclo_s, voces, .. } => {
+                Generador::Colchon { afinacion_hz, raiz_hz, ciclo_s, voces, timbre, .. } => {
+                    if let Some(t) = timbre {
+                        if !crate::banco::instrumento(t).map_err(|e| Error::Receta(format!("{} capa {}: {}", self.id, i, e)))?.sostenido {
+                            return ec("el timbre del colchón debe ser un instrumento sostenido");
+                        }
+                    }
                     if !(400.0..=480.0).contains(afinacion_hz) {
                         return ec("afinación fuera de [400, 480] Hz");
                     }
@@ -279,9 +371,31 @@ impl Receta {
                         return ec("tono de respiración fuera de [60, 600] Hz");
                     }
                 }
-                Generador::Ambiente { archivo } => {
-                    if archivo.trim().is_empty() {
-                        return ec("ambiente sin archivo");
+                Generador::Instrumento { instrumento, afinacion_hz, raiz_hz, ciclo_s, notas_por_minuto, octavas, .. } => {
+                    crate::banco::instrumento(instrumento).map_err(|e| Error::Receta(format!("{} capa {}: {}", self.id, i, e)))?;
+                    if !(400.0..=480.0).contains(afinacion_hz) {
+                        return ec("afinación fuera de [400, 480] Hz");
+                    }
+                    if let Some(r) = raiz_hz {
+                        if !(40.0..=400.0).contains(r) {
+                            return ec("raíz fuera de [40, 400] Hz");
+                        }
+                    }
+                    if *ciclo_s < 20.0 || !(0.5..=30.0).contains(notas_por_minuto) {
+                        return ec("ciclo ≥ 20 s y notas por minuto en [0.5, 30]");
+                    }
+                    if let Some([a, b]) = octavas {
+                        if a > b || *a < -2 || *b > 5 {
+                            return ec("octavas: [mínima, máxima] dentro de [-2, 5]");
+                        }
+                    }
+                }
+                Generador::Ambiente { ambiente, paso_bajo_hz } => {
+                    crate::banco::ambiente(ambiente).map_err(|e| Error::Receta(format!("{} capa {}: {}", self.id, i, e)))?;
+                    if let Some(f) = paso_bajo_hz {
+                        if !(20.0..=16_000.0).contains(f) {
+                            return ec("filtro fuera de [20, 16000] Hz");
+                        }
                     }
                 }
                 Generador::Barrido { desde_hz, hasta_hz, periodo_s } => {

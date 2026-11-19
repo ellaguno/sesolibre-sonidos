@@ -4,12 +4,12 @@
   "sala": "comprobado",
   "situacion": "dormir",
   "nombre": {
-    "es": "Lluvia rosa con colchón",
-    "en": "Pink rain with a pad"
+    "es": "Lluvia rosa con cuerdas",
+    "en": "Pink rain with strings"
   },
   "descripcion": {
-    "es": "Ruido rosa suave que tapa los ruidos de la casa, un colchón de cuerdas lentas en modo menor y, si llevas auriculares, un pulso binaural que baja despacio de 6 a 2,5 Hz. Se apaga solo en 45 minutos con un desvanecimiento de 5.",
-    "en": "Soft pink noise to mask the house, a slow string pad in a minor mode and, with headphones, a binaural pulse drifting from 6 down to 2.5 Hz. Fades out by itself over the last 5 of its 45 minutes."
+    "es": "Ruido rosa suave que tapa los ruidos de la casa, una sección de cuerdas real que cambia de acorde cada minuto y, si llevas auriculares, un pulso binaural que baja despacio de 6 a 2,5 Hz. Se apaga solo en 45 minutos con un desvanecimiento de 5.",
+    "en": "Soft pink noise to mask the house, a real string section changing chords every minute and, with headphones, a binaural pulse drifting from 6 down to 2.5 Hz. Fades out by itself over the last 5 of its 45 minutes."
   },
   "ciencia": {
     "es": "La música lenta probablemente mejora la calidad subjetiva del sueño (Cochrane 2022, certeza moderada). El ruido de enmascaramiento ayuda a conciliar cuando hay ruido alrededor (evidencia modesta). El pulso binaural es la parte menos probada: efectos pequeños y heterogéneos.",
@@ -42,7 +42,8 @@
       "nivel_db": -16,
       "ciclo_s": 240,
       "voces": 5,
-      "brillo": 0.3
+      "timbre": "cuerdas",
+      "reverb": 0.5
     },
     {
       "tipo": "pulso",
@@ -54,5 +55,9 @@
       "desde_s": 20,
       "transicion_s": 30
     }
-  ]
+  ],
+  "espacio": {
+    "rt60_s": 6,
+    "amortiguacion_hz": 2500
+  }
 }

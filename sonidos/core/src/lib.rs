@@ -4,7 +4,9 @@
 //! Sin interfaz, sin plataforma, sin hilos. Determinista: receta + semilla → el mismo
 //! sonido, siempre. La app, Somnia y Mind lo consumen vía ligaduras; el CLI lo rinde a WAV.
 
+pub mod banco;
 pub mod dsp;
+pub mod espacio;
 pub mod gen;
 pub mod mezcla;
 pub mod motor;
@@ -14,6 +16,7 @@ pub mod teoria;
 #[cfg(feature = "wav")]
 pub mod render;
 
+pub use banco::Banco;
 pub use motor::{Medidas, Motor};
 pub use receta::{Capa, Generador, Receta, Sala};
 

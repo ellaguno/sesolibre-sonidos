@@ -31,3 +31,14 @@ pub fn raiz_por_defecto(afinacion_hz: f32) -> f32 {
 pub fn semitonos(raiz_hz: f32, st: i32) -> f32 {
     raiz_hz * 2f32.powf(st as f32 / 12.0)
 }
+
+/// El ciclo de acordes ya en Hz, con `voces` notas por acorde. El colchón y los
+/// instrumentos lo calculan igual, así que suenan en el mismo acorde sin hablarse.
+pub fn acordes_hz(raiz_hz: f32, modo: &str, voces: usize) -> Vec<Vec<f32>> {
+    ciclo_de_acordes(modo).iter().map(|ac| ac.iter().take(voces.max(1)).map(|&st| semitonos(raiz_hz, st)).collect()).collect()
+}
+
+/// Segundos que dura cada acorde del ciclo.
+pub fn segmento_s(ciclo_s: f32, acordes: usize) -> f32 {
+    (ciclo_s / acordes.max(1) as f32).max(10.0)
+}

@@ -3,12 +3,14 @@
 //!   sonidos render <receta.json> <salida.wav> [--segundos S] [--semilla N]
 //!   sonidos validar <receta.json>...
 //!   sonidos lote <dir_recetas> <dir_salida> [--segundos S]
+//!
+//! Las recetas con muestras las leen de `--audio DIR` (por defecto `assets/audio`).
 
 use std::path::{Path, PathBuf};
 use std::process::exit;
 
 use sonidos_core::render::rendir_wav;
-use sonidos_core::{Medidas, Receta};
+use sonidos_core::{Banco, Medidas, Receta};
 
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -31,6 +33,11 @@ fn opcion<T: std::str::FromStr>(args: &[String], nombre: &str) -> Option<T> {
     args.iter().position(|a| a == nombre).and_then(|i| args.get(i + 1)).and_then(|v| v.parse().ok())
 }
 
+fn banco(args: &[String], receta: &Receta) -> Result<Banco, Box<dyn std::error::Error>> {
+    let dir: String = opcion(args, "--audio").unwrap_or_else(|| "assets/audio".to_string());
+    Ok(Banco::para_receta(receta, Path::new(&dir))?)
+}
+
 fn cargar(p: &Path) -> Result<Receta, Box<dyn std::error::Error>> {
     Ok(Receta::desde_json(&std::fs::read_to_string(p)?)?)
 }
@@ -39,7 +46,9 @@ fn render(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     let entrada = PathBuf::from(args.first().ok_or("falta la receta")?);
     let salida = PathBuf::from(args.get(1).ok_or("falta la salida")?);
     let receta = cargar(&entrada)?;
-    let m = rendir_wav(&receta, opcion(args, "--semilla"), opcion(args, "--segundos"), &salida)?;
+    let inicio = std::time::Instant::now();
+    let m = rendir_wav(&receta, &banco(args, &receta)?, opcion(args, "--semilla"), opcion(args, "--segundos"), &salida)?;
+    eprintln!("{:.0}× tiempo real", m.segundos / inicio.elapsed().as_secs_f32());
     println!("{}", fila(&receta, &m, &salida));
     Ok(())
 }
@@ -76,7 +85,7 @@ fn lote(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     for p in entradas {
         let receta = cargar(&p)?;
         let wav = salida.join(format!("{}.wav", receta.id));
-        let m = rendir_wav(&receta, None, segundos, &wav)?;
+        let m = rendir_wav(&receta, &banco(args, &receta)?, None, segundos, &wav)?;
         println!("{}", fila(&receta, &m, &wav));
     }
     Ok(())

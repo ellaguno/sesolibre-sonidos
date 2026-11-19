@@ -8,4 +8,48 @@ path = "audio/fase0/"
 kind = "render"
 author = "Eduardo Llaguno (generado por sonidos-core a partir de recetas/*.json, semillas de cada receta)"
 license = "CC-BY-4.0"
-modified = "90 s por receta, 48 kHz, Ogg Vorbis q5"
+modified = "90 s por receta, 48 kHz, Ogg Vorbis q5 (versión sintética, antes de las muestras)"
+
+# ---------------------------------------------------------------- instrumentos
+# Curados en sesolibre-lienzo (tools/curate_samples.py): una nota por archivo, nombre =
+# nota MIDI, 48 kHz estéreo, RMS -20 dB, Ogg Vorbis q5. El índice es audio/banco.json
+# (lo genera tools/banco.py).
+
+[[asset]]
+id = "vsco-256"
+path = "audio/instruments/"
+kind = "instrument-pack"
+author = "Sam Gossner / Versilian Studios LLC"
+source = "https://vis.versilstudios.net/ (256-Sample Pack of Orchestral Sounds, 2016)"
+license = "Public-domain-like (README: 'total and eternal public usage, redistribution, and modification'; crédito solicitado, no exigido)"
+contents = "harp (KSHarp), vibes (Vibes_soft), marimba, cello_sus / viola_sus / violin_sus (ensembles, sus vib), violin_harm, flute_sus"
+modified = "selección, recorte del silencio inicial, normalización a RMS -20 dB, Ogg Vorbis q5 (hecho en sesolibre-lienzo)"
+
+# ---------------------------------------------------------- grabaciones de campo
+
+[[asset]]
+id = "fs-733812-hydrophone-flow"
+path = "audio/ambience/hydrophone_flow.ogg"
+kind = "ambience"
+author = "Salomé_Lubczanski"
+source = "https://freesound.org/s/733812/"
+license = "CC0-1.0"
+modified = "48 kHz estéreo, RMS -24 dB, Ogg Vorbis q5 (hecho en sesolibre-lienzo)"
+
+[[asset]]
+id = "fs-705058-waves-underwater-rocks"
+path = "audio/ambience/waves_rocks.ogg"
+kind = "ambience"
+author = "felix.blume"
+source = "https://freesound.org/s/705058/"
+license = "CC0-1.0"
+modified = "48 kHz estéreo, RMS -24 dB, Ogg Vorbis q5 (hecho en sesolibre-lienzo)"
+
+[[asset]]
+id = "fs-852478-bubble-flow-loop"
+path = "audio/ambience/bubble_flow.ogg"
+kind = "ambience"
+author = "KolbyRFX"
+source = "https://freesound.org/s/852478/"
+license = "CC0-1.0"
+modified = "48 kHz estéreo, RMS -24 dB, Ogg Vorbis q5 (hecho en sesolibre-lienzo)"

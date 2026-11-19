@@ -127,6 +127,7 @@ impl Seno {
 #[derive(Debug, Clone)]
 pub struct GananciaSuave {
     actual_db: f32,
+    lineal: f32,
     subida_db_por_muestra: f32,
     bajada_db_por_muestra: f32,
 }
@@ -140,6 +141,7 @@ impl GananciaSuave {
     pub fn nueva(sr: f32) -> Self {
         GananciaSuave {
             actual_db: Self::SILENCIO_DB,
+            lineal: 0.0,
             subida_db_por_muestra: Self::SUBIDA_MAX_DB_S / sr,
             bajada_db_por_muestra: Self::BAJADA_MAX_DB_S / sr,
         }
@@ -148,6 +150,9 @@ impl GananciaSuave {
     #[inline]
     pub fn hacia(&mut self, objetivo_db: f32) -> f32 {
         let objetivo = objetivo_db.max(Self::SILENCIO_DB);
+        if objetivo == self.actual_db {
+            return self.lineal;
+        }
         if objetivo > self.actual_db {
             if self.actual_db < Self::UMBRAL_AUDIBLE_DB {
                 self.actual_db = objetivo.min(Self::UMBRAL_AUDIBLE_DB);
@@ -156,11 +161,8 @@ impl GananciaSuave {
         } else {
             self.actual_db = (self.actual_db - self.bajada_db_por_muestra).max(objetivo);
         }
-        if self.actual_db <= Self::SILENCIO_DB + 0.01 {
-            0.0
-        } else {
-            db_a_lin(self.actual_db)
-        }
+        self.lineal = if self.actual_db <= Self::SILENCIO_DB + 0.01 { 0.0 } else { db_a_lin(self.actual_db) };
+        self.lineal
     }
 }
 

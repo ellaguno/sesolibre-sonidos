@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "id": "calmar.arpa-agua",
+  "sala": "comprobado",
+  "situacion": "calmar",
+  "nombre": {
+    "es": "Arpa sobre el agua",
+    "en": "Harp over water"
+  },
+  "descripcion": {
+    "es": "Agua grabada con hidrófono, una sección de cuerdas lenta y un arpa que toca una nota cada diez o doce segundos, en una sala grande. Sin pulsos: suena igual con auriculares que en altavoz. Quince minutos.",
+    "en": "Water recorded with a hydrophone, a slow string section and a harp playing a note every ten or twelve seconds, in a large room. No pulses: sounds the same on headphones or a speaker. Fifteen minutes."
+  },
+  "ciencia": {
+    "es": "Escuchar música lenta y sonidos de agua baja la activación tras un momento de estrés más rápido que el silencio o el ruido urbano (ensayos pequeños, efectos pequeños a medianos). La música lenta probablemente mejora la calidad del sueño (Cochrane 2022).",
+    "en": "Listening to slow music and water sounds lowers arousal after a stressful moment faster than silence or city noise (small trials, small to medium effects). Slow music probably improves sleep quality (Cochrane 2022)."
+  },
+  "fuentes": [
+    "https://www.cochrane.org/CD010459/SLEEP_music-for-insomnia-adults"
+  ],
+  "duracion_s": 900,
+  "fade_in_s": 8,
+  "fade_out_s": 40,
+  "semilla": 7,
+  "techo_db": -14,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 6,
+    "amortiguacion_hz": 3500
+  },
+  "capas": [
+    {
+      "tipo": "ambiente",
+      "ambiente": "hidrofono",
+      "paso_bajo_hz": 3000,
+      "nivel_db": -25
+    },
+    {
+      "tipo": "colchon",
+      "modo": "re_pentatonico",
+      "timbre": "cuerdas",
+      "nivel_db": -14,
+      "ciclo_s": 200,
+      "voces": 5,
+      "reverb": 0.5
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "arpa",
+      "modo": "re_pentatonico",
+      "ciclo_s": 200,
+      "notas_por_minuto": 5.5,
+      "octavas": [
+        1,
+        2
+      ],
+      "nivel_db": -21,
+      "reverb": 0.7,
+      "desde_s": 12,
+      "transicion_s": 8
+    }
+  ]
+}
