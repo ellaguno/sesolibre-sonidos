@@ -425,7 +425,7 @@ final class Hilo: Thread {
     let nodo: AVAudioSourceNode
     private let anillo: OpaquePointer
     private let receta: String
-    private let duracionS: Float
+    private let duracionPedida: Float
     private let volumenDb: Float
     private let candado = NSCondition()
     private var sesion: OpaquePointer?
@@ -437,7 +437,7 @@ final class Hilo: Thread {
 
     init(receta: String, duracionS: Float, volumenDb: Float, pausado: Bool) {
         self.receta = receta
-        self.duracionS = duracionS
+        self.duracionPedida = duracionS
         self.volumenDb = volumenDb
         self.quierePausa = pausado
         let a = Nativo.anilloNuevo(Hilo.capacidad)!
@@ -607,7 +607,7 @@ final class Hilo: Thread {
             }
             try Nativo.bancoAgregar(banco, archivo, datos)
         }
-        return try Nativo.crear(receta, duracionS, -1, banco)
+        return try Nativo.crear(receta, duracionPedida, -1, banco)
     }
 
     /// Espera a que quepa un bloque. Si nadie lee del anillo (el motor está detenido por una
