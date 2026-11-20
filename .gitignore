@@ -1,6 +1,8 @@
 /target
 *.wav
 !assets/audio/**/*.ogg
+# El material crudo (muestras sin curar) sí se versiona.
+!assets/audio/raw/**
 node_modules/
 dist/
 .DS_Store
