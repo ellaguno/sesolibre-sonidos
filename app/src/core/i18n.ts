@@ -69,6 +69,7 @@ const DIC = {
   'o.cello': { es: 'Cellos', en: 'Cellos' },
   'o.violin': { es: 'Violines', en: 'Violins' },
   'o.flauta': { es: 'Flauta (viento)', en: 'Flute (wind)' },
+  'o.corno': { es: 'Corno (metal)', en: 'Horn (brass)' },
   'o.arpa': { es: 'Arpa', en: 'Harp' },
   'o.vibrafono': { es: 'Vibráfono', en: 'Vibraphone' },
   'o.marimba': { es: 'Marimba', en: 'Marimba' },

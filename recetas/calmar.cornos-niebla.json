@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "id": "calmar.cornos-niebla",
+  "sala": "comprobado",
+  "situacion": "calmar",
+  "nombre": {
+    "es": "Cornos en la niebla",
+    "en": "Horns in the mist"
+  },
+  "descripcion": {
+    "es": "Un coro de cornos lejano que cambia de acorde cada minuto, viento suave y un arpa muy espaciada, en una sala grande. Sin pulsos; sirve en altavoz. Veinte minutos.",
+    "en": "A distant horn choir changing chords every minute, soft wind and a very sparse harp, in a large room. No pulses; fine on a speaker. Twenty minutes."
+  },
+  "ciencia": {
+    "es": "La música lenta probablemente mejora la calidad subjetiva del sueño (Cochrane 2022, certeza moderada) y, junto con sonidos de naturaleza, baja la activación tras un momento de estrés (ensayos pequeños).",
+    "en": "Slow music probably improves subjective sleep quality (Cochrane 2022, moderate certainty) and, with nature sounds, lowers arousal after a stressful moment (small trials)."
+  },
+  "fuentes": [
+    "https://www.cochrane.org/CD010459/SLEEP_music-for-insomnia-adults"
+  ],
+  "duracion_s": 1200,
+  "fade_in_s": 8,
+  "fade_out_s": 40,
+  "semilla": 13,
+  "techo_db": -14,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 8,
+    "amortiguacion_hz": 2800
+  },
+  "capas": [
+    {
+      "tipo": "colchon",
+      "modo": "menor",
+      "timbre": "corno",
+      "nivel_db": -23,
+      "ciclo_s": 240,
+      "voces": 4,
+      "reverb": 0.8
+    },
+    {
+      "tipo": "naturaleza",
+      "clase": "viento",
+      "nivel_db": -27
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "arpa",
+      "modo": "menor",
+      "ciclo_s": 240,
+      "notas_por_minuto": 3,
+      "octavas": [
+        1,
+        2
+      ],
+      "nivel_db": -26,
+      "reverb": 0.8,
+      "desde_s": 15
+    }
+  ]
+}

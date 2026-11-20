@@ -27,6 +27,7 @@ instrumentos = {
     "marimba": {"sostenido": False, "notas": notas("marimba")},
     "armonicos": {"sostenido": True, "notas": notas("violin_harm")},
     "flauta": {"sostenido": True, "notas": notas("flute_sus")},
+    "corno": {"sostenido": True, "notas": notas("horn_sus")},
     "cello": {"sostenido": True, "notas": notas("cello_sus")},
     "viola": {"sostenido": True, "notas": notas("viola_sus")},
     "violin": {"sostenido": True, "notas": notas("violin_sus")},

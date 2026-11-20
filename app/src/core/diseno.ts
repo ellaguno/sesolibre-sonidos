@@ -4,9 +4,9 @@
 import type { Entrada, Receta } from './recetas';
 
 export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'viento', 'lluvia', 'aves', 'rosa', 'marron'] as const;
-export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta'] as const;
+export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta', 'corno'] as const;
 export const MODOS = ['re_pentatonico', 'menor', 'quintas'] as const;
-export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'armonicos'] as const;
+export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'corno', 'armonicos'] as const;
 export const FRECUENCIAS = ['ninguno', 'tono', 'binaural', 'isocronico', 'serie'] as const;
 export const DENSIDADES = { pocas: 3, algunas: 6, muchas: 12 } as const;
 
@@ -91,8 +91,8 @@ export function construir(d: Diseno, id = `propio.${Date.now().toString(36)}`): 
       instrumento: d.instrumento,
       ...armonia,
       notas_por_minuto: DENSIDADES[d.densidad],
-      octavas: d.instrumento === 'flauta' || d.instrumento === 'armonicos' ? [2, 2] : [1, 2],
-      nivel_db: d.instrumento === 'flauta' || d.instrumento === 'armonicos' ? -29 : -23,
+      octavas: d.instrumento === 'corno' ? [0, 1] : d.instrumento === 'flauta' || d.instrumento === 'armonicos' ? [2, 2] : [1, 2],
+      nivel_db: ['flauta', 'armonicos', 'corno'].includes(d.instrumento) ? -29 : -23,
       reverb: 0.7,
       desde_s: 10,
     });

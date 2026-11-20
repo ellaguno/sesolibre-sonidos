@@ -22,7 +22,7 @@ kind = "instrument-pack"
 author = "Sam Gossner / Versilian Studios LLC"
 source = "https://vis.versilstudios.net/ (256-Sample Pack of Orchestral Sounds, 2016)"
 license = "Public-domain-like (README: 'total and eternal public usage, redistribution, and modification'; crédito solicitado, no exigido)"
-contents = "harp (KSHarp), vibes (Vibes_soft), marimba, cello_sus / viola_sus / violin_sus (ensembles, sus vib), violin_harm, flute_sus"
+contents = "harp (KSHarp), vibes (Vibes_soft), marimba, cello_sus / viola_sus / violin_sus (ensembles, sus vib), violin_harm, flute_sus, horn_sus (SGHorn_sus; crudo en audio/raw/vsco-256, curado con tools/curar.py)"
 modified = "selección, recorte del silencio inicial, normalización a RMS -20 dB, Ogg Vorbis q5 (hecho en sesolibre-lienzo)"
 
 # ---------------------------------------------------------- grabaciones de campo

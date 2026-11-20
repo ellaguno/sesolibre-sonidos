@@ -68,6 +68,16 @@
     "81": "instruments/flute_sus/81.ogg"
    }
   },
+  "corno": {
+   "sostenido": true,
+   "notas": {
+    "38": "instruments/horn_sus/38.ogg",
+    "46": "instruments/horn_sus/46.ogg",
+    "50": "instruments/horn_sus/50.ogg",
+    "53": "instruments/horn_sus/53.ogg",
+    "58": "instruments/horn_sus/58.ogg"
+   }
+  },
   "cello": {
    "sostenido": true,
    "notas": {
