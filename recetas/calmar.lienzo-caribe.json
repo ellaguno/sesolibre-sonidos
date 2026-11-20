@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "id": "calmar.lienzo-caribe",
+  "sala": "comprobado",
+  "situacion": "calmar",
+  "nombre": {
+    "es": "Caribe (obra de Lienzo)",
+    "en": "Caribbean (a Lienzo piece)"
+  },
+  "descripcion": {
+    "es": "Otra obra de SesoLibre Lienzo, en aguas claras y con más luz: la misma orquesta pequeña, más alta y más viva. Con un oleaje suave debajo. Treinta minutos.",
+    "en": "Another SesoLibre Lienzo piece, in clear water and with more light: the same small orchestra, higher and livelier. With a soft swell beneath. Thirty minutes."
+  },
+  "ciencia": {
+    "es": "Es música lenta, que probablemente mejora la calidad subjetiva del sueño (Cochrane 2022, certeza moderada). La obra es de SesoLibre Lienzo: cada trazo del dibujo es una frase musical.",
+    "en": "It is slow music, which probably improves subjective sleep quality (Cochrane 2022, moderate certainty). The piece comes from SesoLibre Lienzo: each stroke of the drawing is a musical phrase."
+  },
+  "fuentes": [
+    "https://www.cochrane.org/CD010459/SLEEP_music-for-insomnia-adults"
+  ],
+  "duracion_s": 1800,
+  "fade_in_s": 10,
+  "fade_out_s": 60,
+  "semilla": 22,
+  "techo_db": -14,
+  "advertencias": [],
+  "capas": [
+    {
+      "tipo": "ambiente",
+      "ambiente": "lienzo_caribe",
+      "nivel_db": -25
+    },
+    {
+      "tipo": "ruido",
+      "color": "rosa",
+      "paso_bajo_hz": 1400,
+      "oleaje_s": 11,
+      "nivel_db": -17
+    }
+  ]
+}

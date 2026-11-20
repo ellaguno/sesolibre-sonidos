@@ -3,13 +3,14 @@
 
 import type { Entrada, Receta } from './recetas';
 
-export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'gaviotas', 'viento', 'lluvia', 'mirlo', 'verderon', 'mosquitero', 'campanero', 'selva', 'noche', 'grillos', 'ranas', 'aves', 'rosa', 'marron'] as const;
+export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'gaviotas', 'viento', 'lluvia', 'mirlo', 'verderon', 'mosquitero', 'campanero', 'selva', 'noche', 'grillos', 'ranas', 'lienzo_abismo', 'lienzo_caribe', 'aves', 'rosa', 'marron'] as const;
 /** Los fondos, agrupados como se muestran en el diseñador. */
 export const GRUPOS_DE_FONDO: { titulo: string; fondos: (typeof FONDOS)[number][] }[] = [
   { titulo: 'd.fondo.agua', fondos: ['mar', 'olas', 'oleaje', 'burbujas'] },
   { titulo: 'd.fondo.aire', fondos: ['viento', 'lluvia'] },
   { titulo: 'd.fondo.aves', fondos: ['mirlo', 'verderon', 'mosquitero', 'campanero', 'selva', 'gaviotas'] },
   { titulo: 'd.fondo.noche', fondos: ['noche', 'grillos', 'ranas'] },
+  { titulo: 'd.fondo.lienzo', fondos: ['lienzo_abismo', 'lienzo_caribe'] },
   { titulo: 'd.fondo.ruido', fondos: ['rosa', 'marron', 'aves'] },
 ];
 export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta', 'corno', 'trombones'] as const;
@@ -77,6 +78,9 @@ function capaDeFondo(f: Diseno['fondos'][number]): Record<string, unknown> {
     case 'mosquitero':
     case 'campanero':
       return { tipo: 'ambiente', ambiente: f, nivel_db: -30 };
+    case 'lienzo_abismo':
+    case 'lienzo_caribe':
+      return { tipo: 'ambiente', ambiente: f, nivel_db: -19 };
     case 'gaviotas':
       return { tipo: 'ambiente', ambiente: 'gaviotas', nivel_db: -34 };
     case 'selva':

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "id": "dormir.lienzo-abismo",
+  "sala": "comprobado",
+  "situacion": "dormir",
+  "nombre": {
+    "es": "El Abismo (obra de Lienzo)",
+    "en": "The Abyss (a Lienzo piece)"
+  },
+  "descripcion": {
+    "es": "Una obra pintada en SesoLibre Lienzo: un abismo submarino con kelp, cardúmenes y una ballena lejana, que suena con cello, arpa y celesta. Aquí va envuelta en un rumor grave para dormir. Cuarenta y cinco minutos; la obra vuelve a empezar cada cuatro.",
+    "en": "A piece painted in SesoLibre Lienzo: an undersea abyss with kelp, shoals and a distant whale, sounding as cello, harp and celesta. Here it is wrapped in a low murmur for sleep. Forty-five minutes; the piece starts over every four."
+  },
+  "ciencia": {
+    "es": "Es música lenta, que probablemente mejora la calidad subjetiva del sueño (Cochrane 2022, certeza moderada). La obra es de SesoLibre Lienzo: cada trazo del dibujo es una frase musical.",
+    "en": "It is slow music, which probably improves subjective sleep quality (Cochrane 2022, moderate certainty). The piece comes from SesoLibre Lienzo: each stroke of the drawing is a musical phrase."
+  },
+  "fuentes": [
+    "https://www.cochrane.org/CD010459/SLEEP_music-for-insomnia-adults"
+  ],
+  "duracion_s": 2700,
+  "fade_in_s": 10,
+  "fade_out_s": 300,
+  "semilla": 21,
+  "techo_db": -14,
+  "advertencias": [],
+  "capas": [
+    {
+      "tipo": "ambiente",
+      "ambiente": "lienzo_abismo",
+      "nivel_db": -23
+    },
+    {
+      "tipo": "ruido",
+      "color": "marron",
+      "nivel_db": -19
+    }
+  ]
+}

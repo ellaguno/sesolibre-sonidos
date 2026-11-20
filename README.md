@@ -40,6 +40,13 @@ armar sonidos propios, guardarlos y compartirlos como un código de texto, y un
 **espectrómetro** calculado en Rust. Y un **laboratorio**: cimática con tono en vivo y
 cámara, y un experimento de plantas con control y diario.
 
+## Web (PWA)
+
+`app/` es también una web instalable. `.github/workflows/web.yml` la prueba y la publica en
+GitHub Pages en cada push a `main`; hay que activarlo una vez en Settings → Pages →
+Source = "GitHub Actions". En la web suena mientras la pestaña esté viva; la pantalla
+apagada solo la garantiza la app de Android.
+
 ## App Android
 
 ```bash

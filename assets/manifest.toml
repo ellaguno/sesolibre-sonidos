@@ -151,3 +151,15 @@ source = "https://xeno-canto.org/602854"
 license = "CC-BY-4.0"
 notes = "New Zealand Bellbird (Anthornis melanura), Nueva Zelanda"
 modified = "recorte, paso alto, nivel, 48 kHz estéreo, Ogg Vorbis q4 (tools/curar.py). El crudo no se versiona."
+
+# ------------------------------------------------------------- obras de Lienzo
+
+[[asset]]
+id = "lienzo-obras"
+path = "audio/ambience/lienzo_abismo.ogg, audio/ambience/lienzo_caribe.ogg"
+kind = "ambience"
+author = "Eduardo Llaguno (obras de sesolibre-lienzo: assets/escenas/demo_abismo.json y demo_caribe.json)"
+source = "https://github.com/ellaguno/sesolibre-lienzo (commit 0a39fc3; `lienzo render <escena> --seconds 240`)"
+license = "CC-BY-4.0"
+notes = "Incluyen material de terceros que exige crédito: cantos de ballena (raiden04, freesound 797762, CC-BY 4.0, datos de Rychen et al. 2023 © ETH Zürich) y crujidos (designerschoice, freesound 818587, CC-BY 4.0); instrumentos VSCO 256 y ambientes CC0."
+modified = "4 min, fundidos de entrada y salida, 48 kHz estéreo, Ogg Vorbis q4"

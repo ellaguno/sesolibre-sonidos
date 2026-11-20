@@ -60,6 +60,13 @@ licencias y la idea de un *core* sin interfaz; toma de Mind el stack de interfaz
   diario de alturas y fotos, gráfica y exportación a CSV. Además, receta `concentrar.gamma-40`
   (una hora). Todo se guarda en el dispositivo. Probado en navegador con cámara simulada; en
   Android compila, y la cámara dentro de la app está sin probar.
+- **Fase 5 — Más (20 nov 2026, v0.5.0):** la web es una **PWA instalable** (manifiesto,
+  service worker; la app y el núcleo quedan en el dispositivo y cada muestra se guarda la
+  primera vez que suena) con un flujo de GitHub Actions que la prueba y la publica en
+  Pages. **Obras de Lienzo como paisaje**: *El Abismo* y *Caribe*, rendidas con el CLI de
+  Lienzo, son recetas y fondos del diseñador. Ícono propio (el ángel de SesoLibre sobre un
+  ecualizador). **Sin hacer:** iPhone (exige una Mac para el plugin nativo y la firma),
+  reloj y widgets.
 - Cambios respecto al plan: el servicio **sí** sostiene un wake lock parcial mientras suena
   (como hace ExoPlayer; se suelta al pausar o terminar); el audio sale por `AudioTrack` desde
   Kotlin en vez de Oboe (la latencia no importa y es menos código nativo); el puente es JNI a
@@ -334,7 +341,7 @@ ninguna app hermana tiene que inventar sonido ni volver a decidir qué es honest
 | **2 · Catálogo y salas** | Las siete situaciones, etiquetas con fuentes, sala Exploración con presets, ajustes heredados de Mind, es/en. | ¿Se entiende la diferencia entre salas sin leer? ¿Se usa de noche más de una semana? |
 | **3 · Hermanas** 🔧 *núcleo WASM, enlaces y guía hechos el 20 nov 2026; falta integrarlo en Somnia y Mind* | AAR + npm publicados; Somnia embebe `sonar.calma-ronquido` y compara noches; Mind ofrece sonido de fondo; deep links. | ¿Somnia nota algo medible? ¿Mind lo quiere? |
 | **4 · Laboratorio** 🔧 *hecho el 20 nov 2026; falta probar la cámara en el teléfono* | Cimática con cámara y barrido; experimento de plantas con protocolo y diario; sesión 40 Hz larga. | ¿Lo fringe se disfruta como exploración honesta? |
-| **5 · Más** | PWA pública, iOS (cuando haya Mac), obras de Lienzo como paisaje para dormir, Wear/widgets. | — |
+| **5 · Más** 🔧 *PWA y obras de Lienzo hechas el 20 nov 2026; falta iPhone* | PWA pública, iOS (cuando haya Mac), obras de Lienzo como paisaje para dormir, Wear/widgets. | — |
 
 ### Regla de trabajo
 

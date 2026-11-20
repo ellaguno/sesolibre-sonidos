@@ -14,4 +14,7 @@ export const CREDITOS: { que: string; quien: string; licencia: string; url: stri
   { que: 'European Greenfinch (XC642404)', quien: 'Kevin Ortega', licencia: 'CC BY 4.0', url: 'https://xeno-canto.org/642404' },
   { que: 'Willow Warbler (XC989893)', quien: 'Noé Ferrari', licencia: 'CC BY 4.0', url: 'https://xeno-canto.org/989893' },
   { que: 'New Zealand Bellbird (XC602854)', quien: 'craig wilson', licencia: 'CC BY 4.0', url: 'https://xeno-canto.org/602854' },
+  { que: 'El Abismo y Caribe (obras de SesoLibre Lienzo)', quien: 'Eduardo Llaguno', licencia: 'CC BY 4.0', url: 'https://github.com/ellaguno/sesolibre-lienzo' },
+  { que: 'Humpback whales and orcas (en las obras de Lienzo)', quien: 'raiden04, con datos de Rychen et al. 2023, ETH Zürich', licencia: 'CC BY 4.0', url: 'https://freesound.org/s/797762/' },
+  { que: 'Ship creaking (en las obras de Lienzo)', quien: 'designerschoice (Nicholas Judy, TDC)', licencia: 'CC BY 4.0', url: 'https://freesound.org/s/818587/' },
 ];

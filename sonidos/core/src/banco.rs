@@ -80,6 +80,9 @@ pub struct Indice {
     /// Ambientes que deben sonar a su velocidad real (cantos de animales).
     #[serde(default)]
     pub ambientes_fieles: Vec<String>,
+    /// Ambientes que son música ya hecha: suenan en una sola copia.
+    #[serde(default)]
+    pub ambientes_unicos: Vec<String>,
     /// Golpes sueltos (gong, platillo, carillón): nombre → archivos entre los que se elige.
     #[serde(default)]
     pub eventos: BTreeMap<String, Vec<String>>,

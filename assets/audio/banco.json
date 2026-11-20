@@ -198,7 +198,9 @@
   "mirlo": "ambience/blackbird.ogg",
   "verderon": "ambience/greenfinch.ogg",
   "mosquitero": "ambience/willow_warbler.ogg",
-  "campanero": "ambience/bellbird.ogg"
+  "campanero": "ambience/bellbird.ogg",
+  "lienzo_abismo": "ambience/lienzo_abismo.ogg",
+  "lienzo_caribe": "ambience/lienzo_caribe.ogg"
  },
  "ambientes_fieles": [
   "chotacabras",
@@ -210,6 +212,10 @@
   "verderon",
   "mosquitero",
   "campanero"
+ ],
+ "ambientes_unicos": [
+  "lienzo_abismo",
+  "lienzo_caribe"
  ],
  "eventos": {
   "gong": [

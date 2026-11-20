@@ -14,21 +14,24 @@ pub struct Ambiente {
     cruce: f64,
     largo: f64,
     ganancia: f32,
+    unico: bool,
     lp: Option<[UnPolo; 2]>,
 }
 
 impl Ambiente {
     /// `fiel`: las dos copias van a velocidad real (un canto no se puede bajar de tono).
-    pub fn nuevo(m: Arc<Muestra>, paso_bajo_hz: Option<f32>, fiel: bool, sr: f32) -> Self {
+    /// `unico`: una sola copia (música ya compuesta, que no debe pisarse a sí misma).
+    pub fn nuevo(m: Arc<Muestra>, paso_bajo_hz: Option<f32>, fiel: bool, unico: bool, sr: f32) -> Self {
         let cruce = (2.0 * sr as f64).min(m.cuadros as f64 / 4.0).max(1.0);
         let largo = (m.cuadros as f64 - cruce).max(1.0);
-        let ganancia = (0.25 / m.rms.max(1e-4)).min(8.0) * std::f32::consts::FRAC_1_SQRT_2;
+        let ganancia = (0.25 / m.rms.max(1e-4)).min(8.0) * if unico { 1.0 } else { std::f32::consts::FRAC_1_SQRT_2 };
         Ambiente {
             pos: [0.0, largo * if fiel { 0.5 } else { 0.37 }],
             vel: [1.0, if fiel { 1.0 } else { 0.84 }],
             cruce,
             largo,
             ganancia,
+            unico,
             lp: paso_bajo_hz.map(|f| [UnPolo::paso_bajo(f, sr), UnPolo::paso_bajo(f, sr)]),
             m,
         }
@@ -52,7 +55,9 @@ impl Fuente for Ambiente {
     fn procesar(&mut self, _t0: f64, out: &mut [Cuadro]) {
         for c in out.iter_mut() {
             let (al, ar) = self.leer(self.pos[0]);
-            let (bl, br) = self.leer(self.pos[1]);
+            let (bl, br) = if self.unico { (ar, al) } else { self.leer(self.pos[1]) };
+            let (al, ar) = if self.unico { (al * 0.5, ar * 0.5) } else { (al, ar) };
+            let (bl, br) = if self.unico { (bl * 0.5, br * 0.5) } else { (bl, br) };
             let mut l = (al + br) * self.ganancia;
             let mut r = (ar + bl) * self.ganancia;
             if let Some(lp) = &mut self.lp {

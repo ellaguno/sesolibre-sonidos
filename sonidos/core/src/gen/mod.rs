@@ -84,7 +84,7 @@ pub fn construir(
         ),
         Generador::Ambiente { ambiente, paso_bajo_hz } => {
             let fiel = banco::indice().ambientes_fieles.iter().any(|a| a == ambiente);
-            Box::new(ambiente::Ambiente::nuevo(banco.obtener(banco::ambiente(ambiente)?)?, *paso_bajo_hz, fiel, sr))
+            Box::new(ambiente::Ambiente::nuevo(banco.obtener(banco::ambiente(ambiente)?)?, *paso_bajo_hz, fiel, banco::indice().ambientes_unicos.iter().any(|a| a == ambiente), sr))
         }
         Generador::Serie { base_hz, armonicos } => Box::new(serie::Serie::nueva(*base_hz, armonicos, sr)),
         Generador::Eventos { evento, cada_s } => {
