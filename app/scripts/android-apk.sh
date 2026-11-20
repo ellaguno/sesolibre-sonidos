@@ -49,6 +49,9 @@ if ! grep -q 'android:scheme="sesolibre-sonidos"' "$MANIFIESTO"; then
   sed -i '0,/<\/activity>/s||    <intent-filter>\n                <action android:name="android.intent.action.VIEW" />\n                <category android:name="android.intent.category.DEFAULT" />\n                <category android:name="android.intent.category.BROWSABLE" />\n                <data android:scheme="sesolibre-sonidos" />\n            </intent-filter>\n\n        </activity>|' "$MANIFIESTO"
   grep -q 'android:scheme="sesolibre-sonidos"' "$MANIFIESTO"
 fi
+# El ícono (assets/icono, generado con tools/iconos.py + iconos.mjs) pisa el de la plantilla.
+cp -r native/android/res/. android/app/src/main/res/
+
 # La versión del APK es la de package.json; el código de versión, el número de commits.
 VERSION="$(node -p "require('./package.json').version")"
 CODIGO="$(git -C "$REPO" rev-list --count HEAD 2>/dev/null || echo 1)"

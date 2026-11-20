@@ -16,6 +16,7 @@ app, en la sala **Exploración**, con una etiqueta honesta y la única regla de 
 - `sonidos/android` — el núcleo detrás de JNI (`libsonidos.so`).
 - `sonidos/wasm` — el núcleo en WebAssembly, para el navegador.
 - `app/` — la app (Capacitor + React) y su plugin de Android.
+- `assets/icono/` — el ícono (tres variantes) y `tools/iconos.py` + `tools/iconos.mjs` para regenerarlo.
 - `assets/audio/` — muestras reales (CC0 o equivalentes) y su índice `banco.json`.
 
 Hermano de [sesolibre-lienzo](https://github.com/ellaguno/sesolibre-lienzo) (de donde toma
