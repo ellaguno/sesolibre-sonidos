@@ -1,5 +1,5 @@
-// El motor de sonido visto desde la web. En Android es el plugin nativo `Sonidos`
-// (app/plugin): un servicio de reproducción que sigue con la pantalla apagada. En el
+// El motor de sonido visto desde la web. En Android e iOS es el plugin nativo `Sonidos`
+// (app/plugin): un reproductor nativo que sigue con la pantalla apagada. En el
 // navegador es el mismo núcleo en WebAssembly dentro de un AudioWorklet: suena mientras la
 // pestaña esté viva, pero no garantiza la pantalla apagada.
 

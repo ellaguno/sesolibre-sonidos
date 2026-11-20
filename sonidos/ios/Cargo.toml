@@ -1,0 +1,14 @@
+[package]
+name = "sonidos-ios"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "SesoLibre Sonidos: el núcleo detrás de una ABI de C, para el plugin de iOS (Swift)."
+
+[lib]
+name = "sonidos_ios"
+# staticlib para el XCFramework de iOS; rlib para que `cargo test` pueda probarlo.
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+sonidos-core = { path = "../core", default-features = false, features = ["ogg"] }

@@ -1,0 +1,154 @@
+name: iOS (TestFlight)
+
+# Compila el núcleo (Rust → XCFramework), la app (Capacitor + plugin nativo con
+# AVAudioEngine), la firma con el certificado Apple Distribution de SesoLibre y la sube a
+# TestFlight. ios/ no se versiona: lo genera scripts/ios-app.sh con `cap add ios`.
+#
+# Secrets (los mismos que sesolibre-games): APPLE_TEAM_ID, APPLE_CERT_P12_BASE64,
+#   APPLE_CERT_PASSWORD, KEYCHAIN_PASSWORD, ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY.
+# La app ya existe en App Store Connect (id 6837455986) con el bundle de abajo.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      upload:
+        description: 'Subir a TestFlight'
+        type: boolean
+        default: true
+
+env:
+  BUNDLE_ID: com.sesolibre.sonidos
+  PROFILE_NAME: SesoLibre Sonidos App Store
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # número de compilación = número de commits
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim,wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      # Nada se publica si fallan las pruebas del núcleo o de la app.
+      - run: cargo test --release -p sonidos-core -p sonidos-ios
+      - run: npm ci
+        working-directory: app
+      - run: npm test
+        working-directory: app
+
+      - name: Núcleo, web y proyecto iOS (Info.plist de audio en segundo plano)
+        working-directory: app
+        run: ./scripts/ios-app.sh
+
+      - name: Firma, versión, privacidad e ícono
+        working-directory: app
+        run: |
+          gem list -i xcodeproj >/dev/null || gem install xcodeproj --no-document
+          VERSION=$(node -p "require('./package.json').version")
+          ./scripts/ios-configure.sh "$VERSION" "$(git rev-list --count HEAD)" \
+            "${{ secrets.APPLE_TEAM_ID }}" "$PROFILE_NAME"
+
+      - name: Certificado Apple Distribution (keychain temporal)
+        env:
+          P12_BASE64: ${{ secrets.APPLE_CERT_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/firma.keychain-db"
+          P12="$RUNNER_TEMP/dist.p12"
+          printf '%s' "$P12_BASE64" | base64 --decode > "$P12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$P12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          rm -f "$P12"
+          security find-identity -v -p codesigning "$KEYCHAIN" | grep -q "Apple Distribution" \
+            || { echo "::error::El .p12 no contiene una identidad Apple Distribution válida"; exit 1; }
+
+      - name: Llave de la API de App Store Connect y perfil App Store
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          APP_NAME: SesoLibre Sonidos
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          printf '%s\n' "$ASC_PRIVATE_KEY" > ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
+          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
+          python3 -m pip install --quiet --break-system-packages pyjwt cryptography 2>/dev/null \
+            || python3 -m pip install --quiet pyjwt cryptography
+          python3 app/scripts/asc-profile.py "$BUNDLE_ID" "$PROFILE_NAME"
+
+      - name: Compilar y archivar (Release)
+        working-directory: app
+        run: |
+          LOG="$RUNNER_TEMP/xcodebuild.log"
+          status=0
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            archive > "$LOG" 2>&1 || status=$?
+          grep -E '(error:|\*\* ARCHIVE)' "$LOG" | head -60 || true
+          if [ "$status" -ne 0 ]; then tail -150 "$LOG"; exit "$status"; fi
+
+      - name: Exportar .ipa firmado
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>teamID</key><string>${TEAM_ID}</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>signingCertificate</key><string>Apple Distribution</string>
+            <key>provisioningProfiles</key>
+            <dict><key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string></dict>
+            <key>uploadSymbols</key><true/>
+            <key>destination</key><string>export</string>
+          </dict>
+          </plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportPath "$RUNNER_TEMP/export" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
+          ls -la "$RUNNER_TEMP/export"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sesolibre-sonidos-ipa
+          path: ${{ runner.temp }}/export/*.ipa
+          retention-days: 14
+
+      - name: Subir a TestFlight
+        if: github.event_name == 'push' || inputs.upload
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          IPA=$(ls "$RUNNER_TEMP"/export/*.ipa | head -1)
+          xcrun altool --upload-app --type ios --file "$IPA" \
+            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
+
+      - name: Limpiar keychain y llave
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/firma.keychain-db" 2>/dev/null || true
+          rm -rf ~/.appstoreconnect/private_keys

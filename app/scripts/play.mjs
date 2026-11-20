@@ -181,7 +181,43 @@ async function upload(aab, track, mapping, notesFile) {
   );
 }
 
+async function ficha(archivo, carpeta) {
+  if (!archivo || !carpeta) fail('uso: ficha <ficha.json> <carpeta-de-imágenes>');
+  const f = JSON.parse(readFileSync(archivo, 'utf8'));
+  const idiomas = Object.keys(f.fichas);
+  await withEdit(async (id) => {
+    if (f.detalles) {
+      await call(`${API}/edits/${id}/details`, { method: 'PATCH', ...json(f.detalles) });
+      console.log('✓ Detalles (idioma predeterminado y contacto)');
+    }
+    for (const [idioma, textos] of Object.entries(f.fichas)) {
+      if (textos.shortDescription.length > 80) fail(`${idioma}: descripción corta > 80`);
+      await call(`${API}/edits/${id}/listings/${idioma}`, {
+        method: 'PUT',
+        ...json({ language: idioma, ...textos }),
+      });
+      console.log(`✓ Ficha ${idioma}`);
+    }
+    // Cada tipo de imagen: una lista común a todos los idiomas, o una por idioma.
+    for (const [tipo, valor] of Object.entries(f.imagenes ?? {})) {
+      for (const idioma of idiomas) {
+        const archivos = Array.isArray(valor) ? valor : (valor[idioma] ?? []);
+        if (!archivos.length) continue;
+        await call(`${API}/edits/${id}/listings/${idioma}/${tipo}`, { method: 'DELETE' });
+        for (const a of archivos)
+          await call(`${UPLOAD}/edits/${id}/listings/${idioma}/${tipo}?uploadType=media`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'image/png' },
+            body: readFileSync(`${carpeta}/${a}`),
+          });
+        console.log(`✓ ${tipo} ${idioma}: ${archivos.length}`);
+      }
+    }
+  }, true);
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 if (cmd === 'tracks') await tracks();
 else if (cmd === 'upload') await upload(...args);
-else fail('uso: play.mjs tracks | upload <app.aab> <pista> [mapping.txt] [notas.txt]');
+else if (cmd === 'ficha') await ficha(...args);
+else fail('uso: play.mjs tracks | upload <app.aab> <pista> [mapping.txt] [notas.txt] | ficha <ficha.json> <carpeta>');

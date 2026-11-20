@@ -1,0 +1,24 @@
+{
+  "detalles": {
+    "defaultLanguage": "es-419",
+    "contactEmail": "eduardo.llaguno@gmail.com",
+    "contactWebsite": "https://sesolibre.com"
+  },
+  "fichas": {
+    "es-419": {
+      "title": "SesoLibre Sonidos",
+      "shortDescription": "Sonidos para dormir, concentrarte o calmarte, en vivo y con la pantalla apagada.",
+      "fullDescription": "SesoLibre Sonidos genera en vivo el sonido pensado para lo que estás haciendo: dormir, concentrarte, meditar, respirar, calmarte o despertar. Suena con la pantalla apagada y se detiene sola cuando termina el temporizador.\n\nLO COMPROBADO, PRIMERO\nCada sonido dice qué dice la ciencia, con fuentes, y lleva una de tres etiquetas: Comprobado, Prometedor o Exploración. Ruido rosa y marrón, agua, cuerdas lentas, respiración guiada a seis por minuto.\n\nEXPLORACIÓN, CON ETIQUETA HONESTA\n432 Hz, solfeggio, resonancia Schumann, cimática: viven aparte, con la única regla de que no hagan daño.\n\n• Se genera en el teléfono: nunca suena igual y no gasta datos.\n• Controles en la notificación y la pantalla de bloqueo, +15 min y modo noche.\n• Diseñador: arma tus propios sonidos y compártelos como un código de texto.\n• Laboratorio: cimática con la cámara y un experimento de plantas con diario.\n• Sin cuentas, sin anuncios, sin recopilar datos. Español e inglés.\n• Código abierto.\n\nNo sustituye atención médica."
+    },
+    "en-US": {
+      "title": "SesoLibre Sonidos",
+      "shortDescription": "Sounds to sleep, focus or calm down, generated live and with the screen off.",
+      "fullDescription": "SesoLibre Sonidos generates, live, the sound meant for what you are doing: sleeping, focusing, meditating, breathing, calming down or waking up. It plays with the screen off and stops by itself when the timer ends.\n\nWHAT'S PROVEN COMES FIRST\nEvery sound says what science says, with sources, and carries one of three labels: Proven, Promising or Exploration. Pink and brown noise, water, slow strings, guided breathing at six per minute.\n\nEXPLORATION, HONESTLY LABELED\n432 Hz, solfeggio, Schumann resonance, cymatics: they live apart, with the single rule that they do no harm.\n\n• Generated on your phone: never sounds the same and uses no data.\n• Controls in the notification and lock screen, +15 min and night mode.\n• Designer: build your own sounds and share them as a text code.\n• Lab: cymatics with the camera and a plant experiment with a diary.\n• No accounts, no ads, no data collection. Spanish and English.\n• Open source.\n\nNot a substitute for medical care."
+    }
+  },
+  "imagenes": {
+    "icon": ["icono-512.png"],
+    "featureGraphic": { "es-419": ["grafico-funciones.png"], "en-US": ["grafico-funciones-en.png"] },
+    "phoneScreenshots": ["captura-1.png", "captura-2.png", "captura-3.png", "captura-4.png"]
+  }
+}

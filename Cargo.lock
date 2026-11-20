@@ -222,6 +222,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "sonidos-ios"
+version = "0.1.0"
+dependencies = [
+ "sonidos-core",
+]
+
+[[package]]
 name = "sonidos-wasm"
 version = "0.1.0"
 dependencies = [

@@ -4,7 +4,7 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "description": "Paisajes sonoros con prop\u00f3sito, con la pantalla apagada (web + Android v\u00eda Capacitor)",
+  "description": "Paisajes sonoros con propósito, con la pantalla apagada (web + Android + iOS vía Capacitor)",
   "scripts": {
     "audio": "node scripts/sync-audio.mjs",
     "dev": "npm run audio && npm run wasm && vite",
@@ -13,6 +13,8 @@
     "test": "vitest run",
     "cap:sync": "cap sync android",
     "android:apk": "./scripts/android-apk.sh",
+    "ios:nucleo": "./scripts/ios-nucleo.sh",
+    "ios:app": "./scripts/ios-app.sh",
     "wasm": "cd .. && cargo build --release -p sonidos-wasm --target wasm32-unknown-unknown && mkdir -p app/public/motor && cp target/wasm32-unknown-unknown/release/sonidos_wasm.wasm app/public/motor/sonidos.wasm"
   },
   "dependencies": {
@@ -20,6 +22,7 @@
     "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.4.2",
     "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/ios": "^8.6.2",
     "@capacitor/share": "^8.0.3",
     "capacitor-sonidos": "file:./plugin",
     "react": "^18.3.1",

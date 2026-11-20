@@ -1,0 +1,4 @@
+module SonidosNucleo {
+    header "sonidos.h"
+    export *
+}

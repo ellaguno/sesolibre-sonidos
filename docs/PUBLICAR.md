@@ -9,7 +9,7 @@ Las fichas se escriben según [PALABRAS.md](PALABRAS.md): nada de curar, tratar 
 |---|---|---|
 | Id | `com.sesolibre.sonidos` | `com.sesolibre.sonidos` |
 | Nombre | SesoLibre Sonidos | SesoLibre Sonidos |
-| Categoría | Salud y bienestar | Health & Fitness (2.ª: Lifestyle) |
+| Categoría | Salud y deportes | Health & Fitness (2.ª: Lifestyle) |
 | Política de privacidad | <https://ellaguno.github.io/sesolibre-sonidos/privacidad.html> | la misma |
 | Workflow | `.github/workflows/android.yml` | `.github/workflows/ios.yml` |
 
@@ -65,7 +65,9 @@ Google no deja subir por API a una app nueva: **el primer AAB se sube a mano** e
    y reproduce con la pantalla apagada hasta que termina el temporizador o el usuario lo detiene
    desde la notificación."* Hace falta un video corto (iniciar → bloquear → notificación).
 10. **App de salud**: declarar *Bienestar / relajación y sueño*, sin funciones médicas.
-11. Ficha (abajo), ícono 512 (`assets/icono/`), gráfico 1024×500 y ≥ 2 capturas.
+11. Ficha: `node app/scripts/play.mjs ficha docs/ficha-play.json assets/play` sube textos,
+    ícono, gráfico de funciones y capturas (los gráficos los genera `tools/play-graficos.py`;
+    las capturas salen del teléfono con adb, recortadas a ≤ 2:1). Categoría: *Salud y deportes*.
 12. *Prueba cerrada* (pista `alpha`): subir el AAB, crear la lista de testers y compartir el
     enlace. Cuenta personal: **12 testers con opt-in durante 14 días** antes de pedir producción
     (ver `sesolibre-games/docs/RELEASING.md`).
@@ -74,9 +76,22 @@ Google no deja subir por API a una app nueva: **el primer AAB se sube a mano** e
 
 Lo compila y sube `.github/workflows/ios.yml` en un runner de macOS: núcleo Rust →
 XCFramework, `cap add ios`, plugin nativo (AVAudioEngine + pantalla de bloqueo), firma y
-TestFlight. Usa los mismos secrets que Games: `APPLE_TEAM_ID`, `APPLE_CERT_P12_BASE64`,
-`APPLE_CERT_PASSWORD`, `KEYCHAIN_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_PRIVATE_KEY`.
-Requisito manual: la app debe existir en App Store Connect con el bundle id de arriba.
+TestFlight (*Actions → iOS (TestFlight) → Run workflow*, o cada tag `v*`). La app ya existe en
+App Store Connect (id `6837455986`); el Bundle ID y el perfil *SesoLibre Sonidos App Store* los
+crea `app/scripts/asc-profile.py` por la API. Secrets (los mismos valores que Games):
+
+```bash
+R=ellaguno/sesolibre-sonidos; A=~/apple-certs
+printf PLNS58WDQF | gh secret set APPLE_TEAM_ID -R $R
+base64 -w0 $A/dist-ci.p12 | gh secret set APPLE_CERT_P12_BASE64 -R $R
+tr -d '\n' < $A/dist-ci.p12.password | gh secret set APPLE_CERT_PASSWORD -R $R
+openssl rand -hex 16 | tr -d '\n' | gh secret set KEYCHAIN_PASSWORD -R $R
+printf 596256L8PU | gh secret set ASC_KEY_ID -R $R
+printf 12352a5c-64b1-4d69-8a4f-374ce2bb62f8 | gh secret set ASC_ISSUER_ID -R $R
+gh secret set ASC_PRIVATE_KEY -R $R < $A/AuthKey_596256L8PU.p8
+```
+
+En local (macOS): `app/scripts/ios-app.sh` prepara `app/ios/` y `npx cap open ios`.
 
 ## Ficha
 
