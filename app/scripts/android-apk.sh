@@ -49,6 +49,10 @@ if ! grep -q 'android:scheme="sesolibre-sonidos"' "$MANIFIESTO"; then
   sed -i '0,/<\/activity>/s||    <intent-filter>\n                <action android:name="android.intent.action.VIEW" />\n                <category android:name="android.intent.category.DEFAULT" />\n                <category android:name="android.intent.category.BROWSABLE" />\n                <data android:scheme="sesolibre-sonidos" />\n            </intent-filter>\n\n        </activity>|' "$MANIFIESTO"
   grep -q 'android:scheme="sesolibre-sonidos"' "$MANIFIESTO"
 fi
+# La versión del APK es la de package.json; el código de versión, el número de commits.
+VERSION="$(node -p "require('./package.json').version")"
+CODIGO="$(git -C "$REPO" rev-list --count HEAD 2>/dev/null || echo 1)"
+sed -i -E "s/versionCode [0-9]+/versionCode $CODIGO/; s/versionName \"[^\"]*\"/versionName \"$VERSION\"/" android/app/build.gradle
 [ -f android/local.properties ] || echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 npx cap sync android
 

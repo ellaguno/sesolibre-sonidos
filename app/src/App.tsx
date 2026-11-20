@@ -149,13 +149,14 @@ export default function App() {
           type="button"
           onClick={() => setNoche((n) => !n)}
           aria-pressed={noche}
-          title={t('nocheAyuda')}
+          title={t('nocheQue')}
           className={`flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition ${
             noche ? 'border-transparent bg-texto text-fondo' : 'border-borde text-tenue'
           }`}
         >
           <Luna className="h-4 w-4" />
           {t('noche')}
+          <span className="tabular-nums opacity-80">{noche ? '−8 dB' : ''}</span>
         </button>
         <button
           type="button"
@@ -167,6 +168,12 @@ export default function App() {
         </button>
       </header>
 
+      {noche && (
+        <p className="mt-3 flex items-start gap-2 rounded-xl border border-borde bg-panel/70 p-3 text-sm text-tenue">
+          <Luna className="mt-0.5 h-4 w-4 shrink-0" />
+          {t('nocheAyuda')}
+        </p>
+      )}
       {estado.simulado && (
         <p className="mt-4 rounded-xl border border-borde bg-panel/70 p-3 text-sm text-tenue">{t('simulado')}</p>
       )}
@@ -245,6 +252,14 @@ export default function App() {
       <footer className="mt-10 space-y-1 text-center text-sm text-tenue">
         <p>{t('pie')}</p>
         <p>{t('adv.siempre')}</p>
+        <p className="pt-3 text-xs">
+          <a href="https://sesolibre.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-propio hover:underline">
+            SesoLibre.com
+          </a>
+          <span className="mx-2">·</span>Sonidos v{__APP_VERSION__}
+          <span className="mx-2">·</span>
+          {t('pieInfo')}
+        </p>
         {sonando && <p>{t('apagada')}</p>}
         <details className="pt-4 text-left">
           <summary className="cursor-pointer text-center underline underline-offset-2">{t('creditos')}</summary>

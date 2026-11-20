@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { COLCHONES, DENSIDADES, EVENTOS, FONDOS, FRECUENCIAS, INSTRUMENTOS, MODOS, type Diseno } from '../core/diseno';
+import { COLCHONES, DENSIDADES, EVENTOS, GRUPOS_DE_FONDO, FRECUENCIAS, INSTRUMENTOS, MODOS, type Diseno } from '../core/diseno';
 import { traducir } from '../core/i18n';
 import type { Idioma } from '../core/recetas';
 import { DE_SALA } from './estilos';
@@ -87,23 +87,28 @@ export function Disenador({ inicial, idioma, alCerrar, alGuardar }: Props) {
 
         <fieldset className="mt-5">
           <legend className="text-sm font-semibold text-tenue">{t('d.fondo')}</legend>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {FONDOS.map((f) => {
-              const puesto = d.fondos.includes(f);
-              return (
-                <button
-                  key={f}
-                  type="button"
-                  aria-pressed={puesto}
-                  disabled={!puesto && d.fondos.length >= 3}
-                  onClick={() => poner({ fondos: puesto ? d.fondos.filter((x) => x !== f) : [...d.fondos, f] })}
-                  className={`${ficha(puesto)} disabled:opacity-40`}
-                >
-                  {t(`o.${f}`)}
-                </button>
-              );
-            })}
-          </div>
+          {GRUPOS_DE_FONDO.map((g) => (
+            <div key={g.titulo} className="mt-3">
+              <p className="text-xs uppercase tracking-wider text-tenue/80">{t(g.titulo)}</p>
+              <div className="mt-1.5 flex flex-wrap gap-2">
+                {g.fondos.map((f) => {
+                  const puesto = d.fondos.includes(f);
+                  return (
+                    <button
+                      key={f}
+                      type="button"
+                      aria-pressed={puesto}
+                      disabled={!puesto && d.fondos.length >= 3}
+                      onClick={() => poner({ fondos: puesto ? d.fondos.filter((x) => x !== f) : [...d.fondos, f] })}
+                      className={`${ficha(puesto)} disabled:opacity-40`}
+                    >
+                      {t(`o.${f}`)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </fieldset>
 
         <Grupo titulo="d.colchon" opciones={COLCHONES} valor={d.colchon} alElegir={(colchon) => poner({ colchon })} />

@@ -4,6 +4,14 @@
 import type { Entrada, Receta } from './recetas';
 
 export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'gaviotas', 'viento', 'lluvia', 'mirlo', 'verderon', 'mosquitero', 'campanero', 'selva', 'noche', 'grillos', 'ranas', 'aves', 'rosa', 'marron'] as const;
+/** Los fondos, agrupados como se muestran en el diseñador. */
+export const GRUPOS_DE_FONDO: { titulo: string; fondos: (typeof FONDOS)[number][] }[] = [
+  { titulo: 'd.fondo.agua', fondos: ['mar', 'olas', 'oleaje', 'burbujas'] },
+  { titulo: 'd.fondo.aire', fondos: ['viento', 'lluvia'] },
+  { titulo: 'd.fondo.aves', fondos: ['mirlo', 'verderon', 'mosquitero', 'campanero', 'selva', 'gaviotas'] },
+  { titulo: 'd.fondo.noche', fondos: ['noche', 'grillos', 'ranas'] },
+  { titulo: 'd.fondo.ruido', fondos: ['rosa', 'marron', 'aves'] },
+];
 export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta', 'corno', 'trombones'] as const;
 export const MODOS = ['re_pentatonico', 'menor', 'quintas'] as const;
 export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'fagot', 'corno', 'trompeta', 'campanas', 'armonicos'] as const;
