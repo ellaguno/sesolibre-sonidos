@@ -57,7 +57,7 @@ npx cap sync ios
 if [ "$MODO" = "sim" ]; then
   xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
     -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-    -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO build
+    -derivedDataPath ios/build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO build
   echo "compilado para el simulador: ios/build/Build/Products/Debug-iphonesimulator/App.app"
 else
   echo "listo: npx cap open ios (firma y archiva desde Xcode)"
