@@ -46,7 +46,11 @@ public final class Prueba {
                     estado = Nativo.procesar(s, bloque, CUADROS);
                     for (float x : bloque) pico = Math.max(pico, Math.abs(x));
                 }
-                exigir(estado == 0 && pico > 0.001 && pico <= 0.2001, "  suena bajo techo (pico " + String.format("%.3f", pico) + ")");
+                var m = java.util.regex.Pattern.compile("\"techo_db\":\\s*(-?[0-9.]+)").matcher(receta);
+                double techo = Math.pow(10, (m.find() ? Double.parseDouble(m.group(1)) : -14.0) / 20.0);
+                exigir(estado == 0 && pico > 0.001 && pico <= techo + 0.0005, "  suena bajo su techo (pico " + String.format("%.3f", pico) + " ≤ " + String.format("%.3f", techo) + ")");
+                float puesto = Nativo.mando(s, 99999f);
+                exigir(puesto == 2000f, "  el mando no pasa de 2000 Hz");
 
                 float[] bandas = new float[48];
                 Nativo.espectro(s, bandas);

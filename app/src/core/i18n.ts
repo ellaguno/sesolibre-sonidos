@@ -1,3 +1,4 @@
+import { DIC_LAB } from './i18n-lab';
 import type { Idioma, Texto } from './recetas';
 
 const DIC = {
@@ -185,7 +186,7 @@ export function idiomaInicial(): Idioma {
 }
 
 export function traducir(idioma: Idioma, clave: Clave | string): string {
-  const e = (DIC as Record<string, Texto>)[clave];
+  const e = (DIC as Record<string, Texto>)[clave] ?? (DIC_LAB as Record<string, Texto>)[clave];
   return e ? e[idioma] : clave;
 }
 

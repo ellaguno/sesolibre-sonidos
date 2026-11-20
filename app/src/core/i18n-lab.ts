@@ -1,0 +1,98 @@
+// Textos del laboratorio (Fase 4), aparte para no engordar el diccionario principal.
+export const DIC_LAB = {
+  lab: { es: 'Laboratorio', en: 'Laboratory' },
+  'lab.que': {
+    es: 'Dos experimentos para hacer en casa y sacar tus propias conclusiones.',
+    en: 'Two experiments to do at home and draw your own conclusions.',
+  },
+  'lab.volver': { es: 'Volver', en: 'Back' },
+  'situacion.laboratorio': { es: 'Laboratorio', en: 'Laboratory' },
+  'adv.altavoz': { es: 'Por el altavoz, nunca con auriculares: suena fuerte.', en: 'Through the speaker, never with headphones: it plays loud.' },
+  'cim.titulo': { es: 'Cimática', en: 'Cymatics' },
+  'cim.que': {
+    es: 'Las figuras que una frecuencia dibuja en el agua. Es física de verdad: ondas estacionarias.',
+    en: 'The figures a frequency draws in water. Real physics: standing waves.',
+  },
+  'cim.como': { es: 'Cómo montarlo', en: 'How to set it up' },
+  'cim.p1': {
+    es: 'Conecta el teléfono a un altavoz (cable o Bluetooth) y túmbalo con el cono hacia arriba. Cuanto más grande el altavoz, mejor.',
+    en: 'Connect the phone to a speaker (cable or Bluetooth) and lay it with the cone facing up. The bigger the speaker, the better.',
+  },
+  'cim.p2': {
+    es: 'Pon encima un plato o una tapa con dos o tres milímetros de agua. Con arena fina o sal sobre una lámina rígida salen las figuras de Chladni.',
+    en: 'Put on it a dish or a lid with two or three millimetres of water. Fine sand or salt on a stiff sheet gives Chladni figures.',
+  },
+  'cim.p3': {
+    es: 'Ilumina de lado con una linterna: las ondas se ven por sus brillos.',
+    en: 'Light it from the side with a torch: you see the waves by their glints.',
+  },
+  'cim.p4': {
+    es: 'Empieza suave y entre 20 y 150 Hz, que es donde el agua responde. Sube la fuerza poco a poco y mueve la frecuencia despacio.',
+    en: 'Start soft and between 20 and 150 Hz, where water responds. Raise the strength little by little and move the frequency slowly.',
+  },
+  'cim.sonar': { es: 'Empezar el tono', en: 'Start the tone' },
+  'cim.callar': { es: 'Parar el tono', en: 'Stop the tone' },
+  'cim.fuerza': { es: 'Fuerza', en: 'Strength' },
+  'cim.frecuencia': { es: 'Frecuencia', en: 'Frequency' },
+  'cim.barrido': { es: 'Barrido lento', en: 'Slow sweep' },
+  'cim.camara': { es: 'Abrir la cámara', en: 'Open the camera' },
+  'cim.cerrarCamara': { es: 'Cerrar la cámara', en: 'Close the camera' },
+  'cim.sinCamara': { es: 'No se pudo abrir la cámara. Puedes mirar a simple vista y anotar la frecuencia.', en: 'The camera could not be opened. You can watch by eye and note the frequency.' },
+  'cim.foto': { es: 'Foto', en: 'Photo' },
+  'cim.fotos': { es: 'Tus figuras', en: 'Your figures' },
+  'cim.auriculares': {
+    es: '¿Llevas auriculares puestos? Quítatelos: este tono suena mucho más fuerte que el resto de la app.',
+    en: 'Are you wearing headphones? Take them off: this tone plays much louder than the rest of the app.',
+  },
+  'pl.titulo': { es: 'Plantas y sonido', en: 'Plants and sound' },
+  'pl.que': {
+    es: 'Dos macetas iguales, una con sonido y otra sin él. Un diario para ver si hay diferencia.',
+    en: 'Two identical pots, one with sound and one without. A diary to see if there is a difference.',
+  },
+  'pl.protocolo': { es: 'El protocolo', en: 'The protocol' },
+  'pl.r1': {
+    es: 'Dos macetas iguales: misma semilla o esqueje, misma tierra, mismo tamaño. Mejor aún, tres y tres.',
+    en: 'Two identical pots: same seed or cutting, same soil, same size. Better still, three and three.',
+  },
+  'pl.r2': {
+    es: 'Misma luz y mismo riego, medido. Sepáralas lo bastante para que la de control no oiga el sonido (otra habitación).',
+    en: 'Same light and same measured watering. Keep them far enough apart that the control one does not hear the sound (another room).',
+  },
+  'pl.r3': {
+    es: 'Decide a suertes cuál recibe el sonido, y ponle la sesión cada día a la misma hora.',
+    en: 'Toss a coin for which one gets the sound, and play its session every day at the same time.',
+  },
+  'pl.r4': {
+    es: 'Mide las dos el mismo día, de la tierra a la punta, y apunta. Si otra persona mide sin saber cuál es cuál, mejor.',
+    en: 'Measure both on the same day, soil to tip, and write it down. Better if someone else measures without knowing which is which.',
+  },
+  'pl.r5': {
+    es: 'Cuatro semanas como mínimo. Una maceta de cada no demuestra nada: si ves diferencia, repítelo cambiando cuál recibe el sonido.',
+    en: 'Four weeks at least. One pot of each proves nothing: if you see a difference, repeat it swapping which one gets the sound.',
+  },
+  'pl.nuevo': { es: 'Nuevo experimento', en: 'New experiment' },
+  'pl.nombre': { es: 'Nombre (qué planta)', en: 'Name (which plant)' },
+  'pl.receta': { es: 'Sonido de cada día', en: 'Daily sound' },
+  'pl.minutos': { es: 'Minutos al día', en: 'Minutes a day' },
+  'pl.crear': { es: 'Empezar', en: 'Start' },
+  'pl.sesion': { es: 'Sesión de hoy', en: "Today's session" },
+  'pl.medir': { es: 'Apuntar medición', en: 'Log a measurement' },
+  'pl.control': { es: 'Control (cm)', en: 'Control (cm)' },
+  'pl.sonido': { es: 'Con sonido (cm)', en: 'With sound (cm)' },
+  'pl.nota': { es: 'Nota', en: 'Note' },
+  'pl.fotoControl': { es: 'Foto del control', en: 'Control photo' },
+  'pl.fotoSonido': { es: 'Foto con sonido', en: 'Sound photo' },
+  'pl.dia': { es: 'Día', en: 'Day' },
+  'pl.sinDatos': { es: 'Aún no hay mediciones.', en: 'No measurements yet.' },
+  'pl.crecio': { es: 'En {d} días: control {c} cm, con sonido {s} cm.', en: 'Over {d} days: control {c} cm, with sound {s} cm.' },
+  'pl.ojo': {
+    es: 'Con una maceta de cada, una diferencia así puede ser casualidad. Repítelo.',
+    en: 'With one pot of each, a difference like this can be chance. Repeat it.',
+  },
+  'pl.csv': { es: 'Exportar CSV', en: 'Export CSV' },
+  'pl.borrar': { es: 'Borrar experimento', en: 'Delete experiment' },
+  'pl.ciencia': {
+    es: 'Qué se sabe: hay estudios pequeños con resultados a favor y otros sin efecto; ninguno bien replicado. Por eso el control importa más que el sonido que elijas.',
+    en: 'What is known: small studies with positive results and others with no effect; none well replicated. That is why the control matters more than the sound you pick.',
+  },
+} as const;

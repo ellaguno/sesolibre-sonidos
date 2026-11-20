@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "id": "concentrar.gamma-40",
+  "sala": "prometedor",
+  "situacion": "concentrar",
+  "nombre": {
+    "es": "Gamma 40 Hz",
+    "en": "Gamma 40 Hz"
+  },
+  "descripcion": {
+    "es": "Un tono grave que late 40 veces por segundo (modulación de amplitud), un pulso isocrónico al mismo ritmo y un colchón de quintas muy bajo para que no canse. Una hora: es la duración que se usa en los estudios. Funciona en altavoz.",
+    "en": "A low tone beating 40 times a second (amplitude modulation), an isochronic pulse at the same rate and a very soft fifths pad so it does not tire. One hour: the length used in studies. Works on a speaker."
+  },
+  "ciencia": {
+    "es": "La estimulación sensorial a 40 Hz está en investigación clínica, con resultados preliminares en personas mayores y todavía sin publicar del todo. En personas sanas no hay evidencia de beneficio. Aquí es solo sonido, sin la luz que usan esos estudios.",
+    "en": "Sensory stimulation at 40 Hz is under clinical research, with preliminary results in older people not yet fully published. In healthy people there is no evidence of benefit. Here it is sound only, without the light those studies use."
+  },
+  "fuentes": [
+    "https://www.frontiersin.org/articles/10.3389/fneur.2024.1343588"
+  ],
+  "duracion_s": 3600,
+  "fade_in_s": 10,
+  "fade_out_s": 30,
+  "semilla": 20,
+  "techo_db": -14,
+  "advertencias": [
+    "no_conducir",
+    "epilepsia",
+    "parar_si_molesta"
+  ],
+  "capas": [
+    {
+      "tipo": "pulso",
+      "forma": "am",
+      "portadora_hz": 160,
+      "beat_hz": 40,
+      "nivel_db": -24
+    },
+    {
+      "tipo": "pulso",
+      "forma": "isocronico",
+      "portadora_hz": 320,
+      "beat_hz": 40,
+      "nivel_db": -32,
+      "desde_s": 10
+    },
+    {
+      "tipo": "colchon",
+      "modo": "quintas",
+      "raiz_hz": 80,
+      "nivel_db": -22,
+      "ciclo_s": 300,
+      "voces": 4,
+      "brillo": 0.2
+    }
+  ]
+}

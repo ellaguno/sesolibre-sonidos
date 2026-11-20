@@ -6,7 +6,7 @@ license.workspace = true
 description = "SesoLibre Sonidos: el núcleo en WebAssembly, para el navegador y para SesoLibre Mind."
 
 [lib]
-name = "sonidos"
+name = "sonidos_wasm"
 crate-type = ["cdylib"]
 
 [dependencies]

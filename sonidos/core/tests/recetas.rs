@@ -24,7 +24,7 @@ fn motor(r: &Receta, semilla: Option<u64>) -> Motor {
 
 #[test]
 fn hay_recetas_y_todas_validan() {
-    assert!(recetas().len() >= 18);
+    assert!(recetas().len() >= 20);
 }
 
 #[test]
@@ -198,4 +198,25 @@ fn un_diseno_propio_pasa_sin_vigilar_palabras_pero_no_los_limites() {
     assert!(r.validar().is_ok());
     r.techo_db = -3.0;
     assert!(r.validar().is_err());
+}
+
+#[test]
+fn el_mando_mueve_el_tono_y_no_sale_de_sus_limites() {
+    let r = recetas().into_iter().find(|r| r.id == "laboratorio.cimatica").unwrap();
+    let mut m = motor(&r, None);
+    assert_eq!(m.mando(5.0), 20.0);
+    assert_eq!(m.mando(99_999.0), 2000.0);
+    assert_eq!(m.mando(f32::NAN), 220.0);
+    assert_eq!(m.mando(440.0), 440.0);
+    m.rendir(Some(10.0));
+    let mut bandas = [0.0f32; 64];
+    m.espectro(&mut bandas);
+    let mayor = bandas.iter().enumerate().max_by(|a, b| a.1.total_cmp(b.1)).unwrap().0;
+    let f0 = 40.0 * (16_000.0f32 / 40.0).powf(mayor as f32 / 64.0);
+    let f1 = 40.0 * (16_000.0f32 / 40.0).powf((mayor + 1) as f32 / 64.0);
+    assert!(f0 / 1.12 <= 440.0 && 440.0 <= f1 * 1.12, "pico en {f0}-{f1} Hz, se esperaba cerca de 440");
+    // En una receta normal el mando no existe: solo en Exploración o diseños propios.
+    let mut otra = r.clone();
+    otra.sala = sonidos_core::Sala::Comprobado;
+    assert!(otra.validar().is_err());
 }

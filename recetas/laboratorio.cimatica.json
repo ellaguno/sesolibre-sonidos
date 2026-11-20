@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "id": "laboratorio.cimatica",
+  "sala": "exploracion",
+  "situacion": "laboratorio",
+  "nombre": {
+    "es": "Generador de tonos (cimática)",
+    "en": "Tone generator (cymatics)"
+  },
+  "descripcion": {
+    "es": "Un tono puro que mueves en vivo entre 20 y 2000 Hz, para ver las figuras que dibuja en el agua o en la arena sobre el altavoz. Es la única receta que suena fuerte: por el altavoz, nunca con auriculares.",
+    "en": "A pure tone you move live between 20 and 2000 Hz, to watch the figures it draws in water or sand over the speaker. The only recipe that plays loud: through the speaker, never with headphones."
+  },
+  "ciencia": {
+    "es": "La física es real: son ondas estacionarias (figuras de Chladni y ondas de Faraday) y cada frecuencia da su figura. Lo que no se ha demostrado es que el agua quede 'cambiada' después.",
+    "en": "The physics is real: standing waves (Chladni figures and Faraday waves), and each frequency gives its figure. What has not been shown is that the water stays 'changed' afterwards."
+  },
+  "fuentes": [],
+  "duracion_s": 1800,
+  "fade_in_s": 2,
+  "fade_out_s": 2,
+  "semilla": 19,
+  "techo_db": -6,
+  "advertencias": [
+    "altavoz"
+  ],
+  "capas": [
+    {
+      "tipo": "mando",
+      "hz": 100,
+      "nivel_db": -7,
+      "transicion_s": 1
+    }
+  ]
+}

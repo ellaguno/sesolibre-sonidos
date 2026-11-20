@@ -35,6 +35,9 @@ internal object Nativo {
     @JvmStatic external fun extender(sesion: Long, segundos: Float): Float
     @JvmStatic external fun segundos(sesion: Long): Double
     @JvmStatic external fun duracion(sesion: Long): Double
+    /** Mueve el tono en vivo (capa `mando`). Devuelve la frecuencia que quedó (20–2000 Hz). */
+    @JvmStatic external fun mando(sesion: Long, hz: Float): Float
+
     /** Espectro de lo último que sonó: 0..1 por banda, graves primero. */
     @JvmStatic external fun espectro(sesion: Long, bandas: FloatArray)
     @JvmStatic external fun liberar(sesion: Long)

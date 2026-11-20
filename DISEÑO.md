@@ -53,6 +53,13 @@ licencias y la idea de un *core* sin interfaz; toma de Mind el stack de interfaz
   paquete npm (hoy se copian archivos).
 - **Capa `eventos`** (gong, platillo frotado, carillón) y **aves reales** de xeno-canto
   (CC BY 4.0, nueve grabaciones, créditos en la app).
+- **Fase 4 — Laboratorio (20 nov 2026):** en Exploración hay una entrada *Laboratorio* con
+  dos experimentos. **Cimática**: un tono que se mueve en vivo de 20 a 2000 Hz (capa `mando`
+  del núcleo, con su limitador), barrido lento, fuerza regulable, la cámara mirando el agua
+  y fotos rotuladas con la frecuencia. **Plantas**: protocolo con control, sesión diaria,
+  diario de alturas y fotos, gráfica y exportación a CSV. Además, receta `concentrar.gamma-40`
+  (una hora). Todo se guarda en el dispositivo. Probado en navegador con cámara simulada; en
+  Android compila, y la cámara dentro de la app está sin probar.
 - Cambios respecto al plan: el servicio **sí** sostiene un wake lock parcial mientras suena
   (como hace ExoPlayer; se suelta al pausar o terminar); el audio sale por `AudioTrack` desde
   Kotlin en vez de Oboe (la latencia no importa y es menos código nativo); el puente es JNI a
@@ -326,7 +333,7 @@ ninguna app hermana tiene que inventar sonido ni volver a decidir qué es honest
 | **1 · Pantalla apagada** 🔧 *construida el 20 nov 2026; falta probar en el Pixel* | App Android mínima (tres situaciones) con el servicio `mediaPlayback`, controles de bloqueo, temporizador y techo de volumen. Una noche entera en el Pixel sin cortes ni batería rara. | ¿Sobrevive al Doze, al cambio de auriculares, a una llamada? Es el riesgo técnico número uno y se resuelve antes de hacer el catálogo. |
 | **2 · Catálogo y salas** | Las siete situaciones, etiquetas con fuentes, sala Exploración con presets, ajustes heredados de Mind, es/en. | ¿Se entiende la diferencia entre salas sin leer? ¿Se usa de noche más de una semana? |
 | **3 · Hermanas** 🔧 *núcleo WASM, enlaces y guía hechos el 20 nov 2026; falta integrarlo en Somnia y Mind* | AAR + npm publicados; Somnia embebe `sonar.calma-ronquido` y compara noches; Mind ofrece sonido de fondo; deep links. | ¿Somnia nota algo medible? ¿Mind lo quiere? |
-| **4 · Laboratorio** | Cimática con cámara y barrido; experimento de plantas con protocolo y diario; sesión 40 Hz larga. | ¿Lo fringe se disfruta como exploración honesta? |
+| **4 · Laboratorio** 🔧 *hecho el 20 nov 2026; falta probar la cámara en el teléfono* | Cimática con cámara y barrido; experimento de plantas con protocolo y diario; sesión 40 Hz larga. | ¿Lo fringe se disfruta como exploración honesta? |
 | **5 · Más** | PWA pública, iOS (cuando haya Mac), obras de Lienzo como paisaje para dormir, Wear/widgets. | — |
 
 ### Regla de trabajo

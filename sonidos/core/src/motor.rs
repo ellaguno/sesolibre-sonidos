@@ -42,6 +42,8 @@ pub struct Motor {
     /// Lo último que salió (mono), en anillo, para el espectrómetro.
     anillo: Vec<f32>,
     anillo_pos: usize,
+    /// Frecuencia (bits de f32) del tono en vivo, si la receta tiene una capa `mando`.
+    mando: std::sync::Arc<std::sync::atomic::AtomicU32>,
 }
 
 impl Motor {
@@ -55,9 +57,15 @@ impl Motor {
         receta.validar()?;
         let sr = SR as f32;
         let raiz = Rng::nueva(semilla.unwrap_or(receta.semilla));
+        let hz_inicial = receta
+            .capas
+            .iter()
+            .find_map(|c| if let crate::receta::Generador::Mando { hz } = c.gen { Some(hz) } else { None })
+            .unwrap_or(220.0);
+        let mando = std::sync::Arc::new(std::sync::atomic::AtomicU32::new(hz_inicial.to_bits()));
         let mut capas = Vec::new();
         for (i, capa) in receta.capas.iter().enumerate() {
-            let fuente = gen::construir(&capa.gen, sr, raiz.derivar(i as u64 + 1), receta.duracion_s, banco)?;
+            let fuente = gen::construir(&capa.gen, sr, raiz.derivar(i as u64 + 1), receta.duracion_s, banco, &mando)?;
             capas.push(CapaActiva { fuente, mezcla: CapaMezcla::nueva(capa, receta, sr), envio: capa.reverb });
         }
         let reverb = if capas.iter().any(|c| c.envio > 0.0) {
@@ -83,6 +91,7 @@ impl Motor {
             volumen_objetivo_db: 0.0,
             anillo: vec![0.0; VENTANA],
             anillo_pos: 0,
+            mando,
         })
     }
 
@@ -119,6 +128,14 @@ impl Motor {
     /// Volumen del usuario en dB (0 o menos). El techo de la receta no se puede subir.
     pub fn volumen(&mut self, db: f32) {
         self.volumen_objetivo_db = db.clamp(-60.0, 0.0);
+    }
+
+    /// Mueve el tono en vivo (capa `mando`) a `hz`, dentro de 20–2000 Hz. Devuelve la
+    /// frecuencia que quedó. Sin esa capa no hace nada audible.
+    pub fn mando(&self, hz: f32) -> f32 {
+        let hz = if hz.is_finite() { hz } else { 220.0 }.clamp(crate::receta::MANDO_MIN_HZ, crate::receta::MANDO_MAX_HZ);
+        self.mando.store(hz.to_bits(), std::sync::atomic::Ordering::Relaxed);
+        hz
     }
 
     /// Alarga la sesión ("+15 min"). Devuelve los segundos realmente añadidos.

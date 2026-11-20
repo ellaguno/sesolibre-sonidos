@@ -1,6 +1,6 @@
 {
   "name": "sesolibre-sonidos",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
@@ -13,12 +13,13 @@
     "test": "vitest run",
     "cap:sync": "cap sync android",
     "android:apk": "./scripts/android-apk.sh",
-    "wasm": "cd .. && cargo build --release -p sonidos-wasm --target wasm32-unknown-unknown && mkdir -p app/public/motor && cp target/wasm32-unknown-unknown/release/sonidos.wasm app/public/motor/"
+    "wasm": "cd .. && cargo build --release -p sonidos-wasm --target wasm32-unknown-unknown && mkdir -p app/public/motor && cp target/wasm32-unknown-unknown/release/sonidos_wasm.wasm app/public/motor/sonidos.wasm"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.2",
     "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.4.2",
+    "@capacitor/filesystem": "^8.1.5",
     "@capacitor/share": "^8.0.3",
     "capacitor-sonidos": "file:./plugin",
     "react": "^18.3.1",

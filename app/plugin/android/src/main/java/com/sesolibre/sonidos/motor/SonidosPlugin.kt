@@ -166,6 +166,13 @@ class SonidosPlugin : Plugin() {
         call.resolve(JSObject().put("bandas", arr))
     }
 
+    /** Mueve el tono en vivo del laboratorio de cimática. */
+    @PluginMethod
+    fun mando(call: PluginCall) {
+        val hz = call.getFloat("hz") ?: return call.reject("faltan los Hz")
+        call.resolve(JSObject().put("hz", (SonidosService.actual?.mando(hz) ?: 0f).toDouble()))
+    }
+
     /** `motivo` nulo si el núcleo acepta la receta; si no, por qué no. */
     @PluginMethod
     fun validar(call: PluginCall) {

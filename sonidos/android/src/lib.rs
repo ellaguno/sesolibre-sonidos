@@ -207,6 +207,12 @@ pub extern "system" fn Java_com_sesolibre_sonidos_motor_Nativo_duracion(_env: JN
     sesion(h).map(|s| s.motor.lock().unwrap_or_else(|e| e.into_inner()).duracion_s()).unwrap_or(0.0)
 }
 
+/// Mueve el tono en vivo del laboratorio. Devuelve la frecuencia que quedó (20–2000 Hz).
+#[no_mangle]
+pub extern "system" fn Java_com_sesolibre_sonidos_motor_Nativo_mando(_env: JNIEnv, _c: JClass, h: jlong, hz: jfloat) -> jfloat {
+    sesion(h).map(|s| s.motor.lock().unwrap_or_else(|e| e.into_inner()).mando(hz)).unwrap_or(0.0)
+}
+
 /// Llena `bandas` con el espectro de lo último que sonó (0..1 por banda, graves primero).
 #[no_mangle]
 pub extern "system" fn Java_com_sesolibre_sonidos_motor_Nativo_espectro<'l>(env: JNIEnv<'l>, _c: JClass<'l>, h: jlong, bandas: JFloatArray<'l>) {

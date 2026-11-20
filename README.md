@@ -36,7 +36,8 @@ Falta lo que solo dice un teléfono: una noche entera con la pantalla apagada.
 
 Desde el 20 nov: doce recetas (432 Hz, Schumann, lluvia, bosque), un **diseñador** para
 armar sonidos propios, guardarlos y compartirlos como un código de texto, y un
-**espectrómetro** calculado en Rust.
+**espectrómetro** calculado en Rust. Y un **laboratorio**: cimática con tono en vivo y
+cámara, y un experimento de plantas con control y diario.
 
 ## App Android
 

@@ -6,6 +6,7 @@ mod barrido;
 mod colchon;
 mod eventos;
 mod instrumento;
+mod mando;
 mod naturaleza;
 mod pulso;
 mod respiracion;
@@ -28,7 +29,14 @@ pub trait Fuente: Send {
 
 /// Construye la fuente de un generador. `duracion_s` sirve a las derivas (p. ej. un beat que
 /// baja a lo largo de la receta). Las capas con muestras las toman del banco.
-pub fn construir(gen: &Generador, sr: f32, rng: Rng, duracion_s: f32, banco: &Banco) -> Result<Box<dyn Fuente>, Error> {
+pub fn construir(
+    gen: &Generador,
+    sr: f32,
+    rng: Rng,
+    duracion_s: f32,
+    banco: &Banco,
+    mando: &std::sync::Arc<std::sync::atomic::AtomicU32>,
+) -> Result<Box<dyn Fuente>, Error> {
     Ok(match gen {
         Generador::Ruido { color, paso_bajo_hz, paso_alto_hz, oleaje_s } => {
             Box::new(ruido::Ruido::nuevo(*color, *paso_bajo_hz, *paso_alto_hz, *oleaje_s, sr, rng))
@@ -86,6 +94,7 @@ pub fn construir(gen: &Generador, sr: f32, rng: Rng, duracion_s: f32, banco: &Ba
             }
             Box::new(eventos::Eventos::nuevos(sonidos, *cada_s, sr, rng))
         }
+        Generador::Mando { .. } => Box::new(mando::Mando::nuevo(mando.clone(), sr)),
         Generador::Naturaleza { clase } => naturaleza::nueva(*clase, sr, rng),
         Generador::Barrido { desde_hz, hasta_hz, periodo_s } => {
             Box::new(barrido::Barrido::nuevo(*desde_hz, *hasta_hz, *periodo_s, sr))

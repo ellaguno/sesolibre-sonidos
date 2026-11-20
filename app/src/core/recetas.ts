@@ -43,8 +43,9 @@ export const RECETAS: Entrada[] = Object.keys(crudos)
   .sort()
   .map((ruta) => ({ receta: JSON.parse(crudos[ruta]) as Receta, json: crudos[ruta] }));
 
+/** Las recetas del catálogo de una sala (las del laboratorio se usan desde su pantalla). */
 export function deSala(sala: Sala): Entrada[] {
-  return RECETAS.filter((e) => e.receta.sala === sala);
+  return RECETAS.filter((e) => e.receta.sala === sala && e.receta.situacion !== 'laboratorio');
 }
 
 /** Minutos que se ofrecen para una receta: los habituales más la duración propia. */

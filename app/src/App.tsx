@@ -14,6 +14,7 @@ import { useMotor } from './core/useMotor';
 import { DE_SALA } from './ui/estilos';
 import { Disenador } from './ui/Disenador';
 import { Ficha } from './ui/Ficha';
+import { Laboratorio } from './ui/lab/Laboratorio';
 import { Luna, MarcaSala, Mas } from './ui/iconos';
 import { Reproductor } from './ui/Reproductor';
 import { Tarjeta } from './ui/Tarjeta';
@@ -44,6 +45,7 @@ export default function App() {
   /** El diseñador abierto: un diseño nuevo o el id del que se edita. */
   const [disenando, setDisenando] = useState<{ diseno: Diseno; id?: string } | null>(null);
   const [nota, setNota] = useState<string | null>(null);
+  const [enLaboratorio, setEnLaboratorio] = useState(false);
 
   const ponerDisenos = (lista: Entrada[]) => {
     setDisenos(lista);
@@ -137,6 +139,43 @@ export default function App() {
 
   const sonando = estado.activo ? ([...disenos, ...RECETAS].find((e) => e.receta.id === estado.recetaId) ?? null) : null;
   const aviso = fallo ?? error;
+
+  const catalogo = [...disenos, ...RECETAS].filter((e) => e.receta.situacion !== 'laboratorio');
+  const reproductor = sonando && sonando.receta.situacion !== 'laboratorio' && (
+    <Reproductor
+      entrada={sonando}
+      estado={estado}
+      segundos={segundos}
+      idioma={idioma}
+      alPausar={() => void Sonidos.pausar()}
+      alReanudar={() => void Sonidos.reanudar()}
+      alParar={() => void Sonidos.parar()}
+      alExtender={() => void Sonidos.extender({ minutos: 15 })}
+    />
+  );
+
+  if (enLaboratorio) {
+    return (
+      <div className={`mx-auto max-w-xl px-4 pt-[max(1.25rem,env(safe-area-inset-top))] ${reproductor ? 'pb-40' : 'pb-10'}`}>
+        {aviso && (
+          <p role="alert" className="mb-4 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-red-200">
+            {aviso}
+          </p>
+        )}
+        <Laboratorio
+          idioma={idioma}
+          estado={estado}
+          recetas={catalogo}
+          alVolver={() => {
+            setEnLaboratorio(false);
+            if (estado.recetaId === 'laboratorio.cimatica') void Sonidos.parar();
+            void Sonidos.volumen({ db: noche ? NOCHE_DB : 0 });
+          }}
+        />
+        {reproductor}
+      </div>
+    );
+  }
 
   return (
     <div className={`mx-auto max-w-xl px-4 pt-[max(1.25rem,env(safe-area-inset-top))] ${sonando ? 'pb-32' : 'pb-10'}`}>
@@ -243,6 +282,21 @@ export default function App() {
                     alAbrir={() => setAbierta(e)}
                   />
                 ))}
+                {sala === 'exploracion' && (
+                  <button
+                    type="button"
+                    onClick={() => setEnLaboratorio(true)}
+                    className="flex w-full items-center gap-4 rounded-2xl border border-dashed border-exploracion/40 bg-panel/80 p-4 text-left"
+                  >
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-exploracion/10 text-2xl text-exploracion" aria-hidden="true">
+                      ⚗
+                    </span>
+                    <span>
+                      <span className="block text-lg font-medium">{t('lab')}</span>
+                      <span className="block text-sm text-tenue">{t('lab.que')}</span>
+                    </span>
+                  </button>
+                )}
               </div>
             </section>
           );
@@ -313,18 +367,7 @@ export default function App() {
         />
       )}
 
-      {sonando && (
-        <Reproductor
-          entrada={sonando}
-          estado={estado}
-          segundos={segundos}
-          idioma={idioma}
-          alPausar={() => void Sonidos.pausar()}
-          alReanudar={() => void Sonidos.reanudar()}
-          alParar={() => void Sonidos.parar()}
-          alExtender={() => void Sonidos.extender({ minutos: 15 })}
-        />
-      )}
+      {reproductor}
     </div>
   );
 }

@@ -185,6 +185,11 @@ pub extern "C" fn duracion() -> f64 {
     con_motor(0.0, |m| m.duracion_s())
 }
 
+#[no_mangle]
+pub extern "C" fn mando(hz: f32) -> f32 {
+    con_motor(0.0, |m| m.mando(hz))
+}
+
 /// Calcula el espectro en `bandas` bandas y devuelve dónde quedó (f32, 0..1).
 #[no_mangle]
 pub extern "C" fn espectro(bandas: usize) -> *const f32 {

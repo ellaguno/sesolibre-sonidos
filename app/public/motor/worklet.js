@@ -56,6 +56,9 @@ class Sonidos extends AudioWorkletProcessor {
       case 'extender':
         this.port.postMessage({ t: 'respuesta', id: m.id, segundos: x.extender(m.segundos) });
         break;
+      case 'mando':
+        this.port.postMessage({ t: 'respuesta', id: m.id, segundos: x.mando(m.hz) });
+        break;
       case 'parar':
         this.suena = false;
         x.parar();

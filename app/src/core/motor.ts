@@ -50,6 +50,8 @@ export interface SonidosPlugin {
   parar(): Promise<void>;
   extender(o: { minutos: number }): Promise<{ minutos: number }>;
   volumen(o: { db: number }): Promise<void>;
+  /** Mueve el tono en vivo del laboratorio (20–2000 Hz). Devuelve la frecuencia que quedó. */
+  mando(o: { hz: number }): Promise<{ hz: number }>;
   /** Espectro de lo que suena: valores 0..1, graves primero. Vacío si no suena nada. */
   espectro(o: { bandas: number }): Promise<{ bandas: number[] }>;
   /** `motivo` nulo si el núcleo acepta la receta. */

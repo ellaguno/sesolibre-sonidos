@@ -124,6 +124,9 @@ internal class SonidosPlayer(private val context: Context) : SimpleBasePlayer(Lo
         hilo?.volumen(db)
     }
 
+    /** Mueve el tono en vivo del laboratorio. Devuelve la frecuencia que quedó. */
+    fun mando(hz: Float): Float = hilo?.mando(hz) ?: 0f
+
     /** Llena `bandas` con el espectro actual. Devuelve false si no hay nada sonando. */
     fun espectro(bandas: FloatArray): Boolean {
         val h = hilo ?: return false
@@ -294,6 +297,7 @@ internal class SonidosPlayer(private val context: Context) : SimpleBasePlayer(Lo
         fun restanteS(): Double = conSesion(0.0) { Nativo.duracion(it) - Nativo.segundos(it) }
         fun extender(s: Float): Float = conSesion(0f) { Nativo.extender(it, s) }
         fun volumen(db: Float) = conSesion(Unit) { Nativo.volumen(it, db) }
+        fun mando(hz: Float): Float = conSesion(0f) { Nativo.mando(it, hz) }
         fun espectro(bandas: FloatArray): Boolean = conSesion(false) {
             Nativo.espectro(it, bandas)
             true

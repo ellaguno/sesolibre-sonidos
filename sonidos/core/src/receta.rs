@@ -6,6 +6,9 @@ use serde::{Deserialize, Serialize};
 use crate::Error;
 
 pub const VERSION_RECETA: u32 = 1;
+/// Límites del tono en vivo: ni infrasonido ni agudos que cansen.
+pub const MANDO_MIN_HZ: f32 = 20.0;
+pub const MANDO_MAX_HZ: f32 = 2000.0;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 pub struct Texto {
@@ -234,6 +237,8 @@ pub enum Generador {
     },
     /// Golpes sueltos y espaciados (gong, platillo frotado, carillón), uno cada `cada_s` de media.
     Eventos { evento: String, cada_s: f32 },
+    /// Tono que se mueve en vivo (`Motor::mando`). Solo Exploración y diseños propios.
+    Mando { hz: f32 },
     /// Armónicos audibles de una fundamental que puede no oírse (7,83 Hz → 125, 188, 250…).
     Serie { base_hz: f32, armonicos: Vec<u16> },
     /// Naturaleza sintetizada: viento, lluvia o pájaros imaginarios.
@@ -423,6 +428,14 @@ impl Receta {
                     }
                 }
                 Generador::Naturaleza { .. } => {}
+                Generador::Mando { hz } => {
+                    if self.sala != Sala::Exploracion && self.sala != Sala::Propio {
+                        return ec("el mando solo existe en Exploración");
+                    }
+                    if !(MANDO_MIN_HZ..=MANDO_MAX_HZ).contains(hz) {
+                        return ec("mando fuera de [20, 2000] Hz");
+                    }
+                }
                 Generador::Eventos { evento, cada_s } => {
                     crate::banco::evento(evento).map_err(|e| Error::Receta(format!("{} capa {}: {}", self.id, i, e)))?;
                     if !(15.0..=900.0).contains(cada_s) {

@@ -21,6 +21,7 @@ public final class Nativo {
     public static native float extender(long sesion, float segundos);
     public static native double segundos(long sesion);
     public static native double duracion(long sesion);
+    public static native float mando(long sesion, float hz);
     public static native void espectro(long sesion, float[] bandas);
     public static native void liberar(long sesion);
 

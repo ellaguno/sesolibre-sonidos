@@ -184,6 +184,10 @@ export class SonidosWeb extends WebPlugin implements Omit<SonidosPlugin, 'addLis
     this.nodo?.port.postMessage({ t: 'volumen', db: o.db });
   }
 
+  async mando(o: { hz: number }): Promise<{ hz: number }> {
+    return { hz: (await this.preguntar({ t: 'mando', hz: o.hz })).segundos };
+  }
+
   async espectro(o: { bandas: number }): Promise<{ bandas: number[] }> {
     if (!this.e.sonando || this.e.cargando) return { bandas: [] };
     const r = await this.preguntar({ t: 'consulta', bandas: o.bandas });
