@@ -24,7 +24,7 @@ fn motor(r: &Receta, semilla: Option<u64>) -> Motor {
 
 #[test]
 fn hay_recetas_y_todas_validan() {
-    assert!(recetas().len() >= 16);
+    assert!(recetas().len() >= 18);
 }
 
 #[test]
@@ -59,7 +59,8 @@ fn receta_y_semilla_dan_el_mismo_sonido() {
 #[test]
 fn nunca_supera_el_techo_ni_tiene_nan_ni_sobresaltos() {
     for r in recetas() {
-        let m = medir(&motor(&r, None).rendir(Some(40.0)), SR);
+        // Se mide pasada la entrada: una receta de despertar tarda a propósito en llegar.
+        let m = medir(&motor(&r, None).rendir(Some(r.fade_in_s + 40.0)), SR);
         assert!(!m.tiene_nan, "{}: NaN", r.id);
         assert!(m.pico_db <= r.techo_db + 0.1, "{}: pico {} dB sobre techo {}", r.id, m.pico_db, r.techo_db);
         assert!(m.rms_db > -45.0, "{}: casi inaudible ({} dB RMS)", r.id, m.rms_db);

@@ -43,6 +43,12 @@ if [ ! -d android ]; then
     android/app/src/main/AndroidManifest.xml
   grep -q 'screenOrientation="portrait"' android/app/src/main/AndroidManifest.xml
 fi
+# Enlaces directos: sesolibre-sonidos://tocar?receta=<id>&min=<minutos>
+MANIFIESTO=android/app/src/main/AndroidManifest.xml
+if ! grep -q 'android:scheme="sesolibre-sonidos"' "$MANIFIESTO"; then
+  sed -i '0,/<\/activity>/s||    <intent-filter>\n                <action android:name="android.intent.action.VIEW" />\n                <category android:name="android.intent.category.DEFAULT" />\n                <category android:name="android.intent.category.BROWSABLE" />\n                <data android:scheme="sesolibre-sonidos" />\n            </intent-filter>\n\n        </activity>|' "$MANIFIESTO"
+  grep -q 'android:scheme="sesolibre-sonidos"' "$MANIFIESTO"
+fi
 [ -f android/local.properties ] || echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 npx cap sync android
 

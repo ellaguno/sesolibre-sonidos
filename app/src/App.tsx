@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { App as Aplicacion } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
 import { Share } from '@capacitor/share';
 
 import { CREDITOS } from './core/creditos';
 import { DISENO_INICIAL, cargarDisenos, codificar, construir, decodificar, entradaDe, guardarDisenos, type Diseno } from './core/diseno';
+import { leerEnlace } from './core/enlace';
 import { idiomaInicial, traducir } from './core/i18n';
 import { NOCHE_DB, Sonidos } from './core/motor';
 import { RECETAS, SALAS, deSala, type Entrada, type Idioma } from './core/recetas';
@@ -111,6 +114,26 @@ export default function App() {
     },
     [idioma, noche, limpiarError],
   );
+
+  // Enlaces directos. En Android la receta empieza sola (la app ya está visible, que es lo
+  // que el sistema exige); en el navegador se abre su ficha, porque sin un toque no suena.
+  const alEnlace = useRef<(url: string) => void>(() => undefined);
+  alEnlace.current = (url: string) => {
+    const enlace = leerEnlace(url);
+    const entrada = enlace && [...disenos, ...RECETAS].find((e) => e.receta.id === enlace.recetaId);
+    if (!enlace || !entrada) return;
+    if (Capacitor.isNativePlatform()) tocar(entrada, enlace.minutos ?? Math.round(entrada.receta.duracion_s / 60));
+    else setAbierta(entrada);
+  };
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) {
+      alEnlace.current(window.location.href);
+      return;
+    }
+    void Aplicacion.getLaunchUrl().then((u) => u?.url && alEnlace.current(u.url));
+    const oyente = Aplicacion.addListener('appUrlOpen', (e) => alEnlace.current(e.url));
+    return () => void oyente.then((h) => h.remove());
+  }, []);
 
   const sonando = estado.activo ? ([...disenos, ...RECETAS].find((e) => e.receta.id === estado.recetaId) ?? null) : null;
   const aviso = fallo ?? error;

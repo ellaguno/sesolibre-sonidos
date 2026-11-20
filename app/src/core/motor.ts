@@ -1,6 +1,7 @@
 // El motor de sonido visto desde la web. En Android es el plugin nativo `Sonidos`
 // (app/plugin): un servicio de reproducción que sigue con la pantalla apagada. En el
-// navegador es una simulación sin sonido (el núcleo en WebAssembly llega en la Fase 3).
+// navegador es el mismo núcleo en WebAssembly dentro de un AudioWorklet: suena mientras la
+// pestaña esté viva, pero no garantiza la pantalla apagada.
 
 import { registerPlugin, type PluginListenerHandle } from '@capacitor/core';
 
@@ -14,7 +15,7 @@ export interface Estado {
   segundos: number;
   duracion: number;
   auriculares: boolean;
-  /** true en el navegador: el reloj corre pero no hay sonido. */
+  /** true si el reloj corre pero no hay sonido (ya no ocurre: queda para demostraciones). */
   simulado: boolean;
 }
 

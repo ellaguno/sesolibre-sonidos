@@ -2,104 +2,196 @@ import { WebPlugin } from '@capacitor/core';
 
 import { EN_REPOSO, type Estado, type OpcionesTocar, type SonidosPlugin } from './motor';
 
-/** Simulación para el navegador: mismo contrato, reloj real, sin sonido. */
-export class SonidosWeb extends WebPlugin implements Omit<SonidosPlugin, 'addListener'> {
-  private e: Estado = { ...EN_REPOSO, simulado: true };
-  private inicio = 0;
-  private acumulado = 0;
-  private fin: ReturnType<typeof setTimeout> | null = null;
+// El motor en el navegador: el mismo núcleo que en Android, compilado a WebAssembly
+// (sonidos/wasm → public/motor/sonidos.wasm) y corriendo en un AudioWorklet. Suena mientras
+// la pestaña esté viva; con la pantalla apagada manda el sistema, no nosotros: para eso
+// está la app de Android.
 
-  private ahora(): number {
-    return this.acumulado + (this.e.sonando ? (Date.now() - this.inicio) / 1000 : 0);
+const BASE = import.meta.env.BASE_URL;
+const cod = new TextEncoder();
+const dec = new TextDecoder();
+
+type Exportes = {
+  memory: WebAssembly.Memory;
+  reservar(n: number): number;
+  liberar(p: number, n: number): void;
+  texto_ptr(): number;
+  texto_len(): number;
+  validar(p: number, n: number): number;
+  archivos(p: number, n: number): number;
+};
+
+type Respuesta = { segundos: number; duracion?: number; bandas?: Float32Array | null };
+
+export class SonidosWeb extends WebPlugin implements Omit<SonidosPlugin, 'addListener'> {
+  private e: Estado = { ...EN_REPOSO, auriculares: true };
+  private bytes: Promise<ArrayBuffer> | null = null;
+  private local: Promise<Exportes> | null = null;
+  private ctx: AudioContext | null = null;
+  private nodo: AudioWorkletNode | null = null;
+  private cargadas = new Set<string>();
+  private esperas = new Map<number, (r: Respuesta) => void>();
+  private alCrear: ((m: { ok: boolean; texto: Uint8Array | null }) => void) | null = null;
+  private turno = 0;
+  private volumenDb = 0;
+  private suspension: ReturnType<typeof setTimeout> | null = null;
+
+  private wasm(): Promise<ArrayBuffer> {
+    return (this.bytes ??= fetch(`${BASE}motor/sonidos.wasm`).then((r) => {
+      if (!r.ok) throw new Error('falta motor/sonidos.wasm (npm run wasm)');
+      return r.arrayBuffer();
+    }));
   }
 
-  private publicar(cambios: Partial<Estado>): void {
-    this.e = { ...this.e, ...cambios, segundos: cambios.segundos ?? this.ahora() };
-    this.notifyListeners('estado', this.e);
-    if (this.fin) clearTimeout(this.fin);
-    this.fin = null;
-    if (this.e.sonando) {
-      this.fin = setTimeout(
-        () => {
-          this.acumulado = 0;
-          this.publicar({ activo: false, sonando: false, terminado: true, recetaId: null, segundos: 0, duracion: 0 });
-        },
-        Math.max(0, this.e.duracion - this.e.segundos) * 1000,
-      );
+  /** Una copia del núcleo en el hilo principal, solo para validar y preguntar archivos. */
+  private nucleo(): Promise<Exportes> {
+    return (this.local ??= this.wasm().then(async (b) => (await WebAssembly.instantiate(b, {})).instance.exports as unknown as Exportes));
+  }
+
+  private async conReceta<T>(receta: string, f: (x: Exportes, p: number, n: number) => T): Promise<T> {
+    const x = await this.nucleo();
+    const b = cod.encode(receta);
+    const p = x.reservar(b.length);
+    new Uint8Array(x.memory.buffer, p, b.length).set(b);
+    try {
+      return f(x, p, b.length);
+    } finally {
+      x.liberar(p, b.length);
     }
   }
 
-  async tocar(o: OpcionesTocar): Promise<void> {
-    const receta = JSON.parse(o.receta) as { duracion_s: number };
-    this.acumulado = 0;
-    this.inicio = Date.now();
-    this.publicar({
-      activo: true,
-      sonando: true,
-      terminado: false,
-      recetaId: o.recetaId,
-      segundos: 0,
-      duracion: o.minutos ? o.minutos * 60 : receta.duracion_s,
+  private static texto(x: Exportes): string {
+    return dec.decode(new Uint8Array(x.memory.buffer, x.texto_ptr(), x.texto_len()));
+  }
+
+  async validar(o: { receta: string }): Promise<{ motivo: string | null }> {
+    return this.conReceta(o.receta, (x, p, n) => ({ motivo: x.validar(p, n) ? null : SonidosWeb.texto(x) }));
+  }
+
+  private async audio(): Promise<AudioWorkletNode> {
+    if (this.nodo && this.ctx) return this.nodo;
+    const ctx = new AudioContext({ sampleRate: 48_000, latencyHint: 'playback' });
+    await ctx.audioWorklet.addModule(`${BASE}motor/worklet.js`);
+    const nodo = new AudioWorkletNode(ctx, 'sonidos', { numberOfInputs: 0, outputChannelCount: [2] });
+    nodo.port.onmessage = (ev) => this.mensaje(ev.data);
+    nodo.connect(ctx.destination);
+    nodo.port.postMessage({ t: 'wasm', bytes: await this.wasm() });
+    this.ctx = ctx;
+    this.nodo = nodo;
+    return nodo;
+  }
+
+  private mensaje(m: { t: string; id?: number; ok?: boolean; texto?: Uint8Array | null } & Respuesta): void {
+    if (m.t === 'respuesta' && m.id !== undefined) {
+      this.esperas.get(m.id)?.(m);
+      this.esperas.delete(m.id);
+    } else if (m.t === 'creado') {
+      this.alCrear?.({ ok: !!m.ok, texto: m.texto ?? null });
+    } else if (m.t === 'error' && m.texto) {
+      this.notifyListeners('error', { mensaje: dec.decode(m.texto) });
+    } else if (m.t === 'fin') {
+      this.publicar({ activo: false, sonando: false, terminado: true, recetaId: null, segundos: 0, duracion: 0 });
+      void this.ctx?.suspend();
+    }
+  }
+
+  private preguntar(orden: Record<string, unknown>): Promise<Respuesta> {
+    const nodo = this.nodo;
+    if (!nodo) return Promise.resolve({ segundos: 0, duracion: 0, bandas: null });
+    const id = ++this.turno;
+    return new Promise((listo) => {
+      this.esperas.set(id, listo);
+      nodo.port.postMessage({ ...orden, id });
     });
+  }
+
+  private publicar(cambios: Partial<Estado>): void {
+    this.e = { ...this.e, ...cambios };
+    this.notifyListeners('estado', this.e);
+  }
+
+  async tocar(o: OpcionesTocar): Promise<void> {
+    const { motivo } = await this.validar({ receta: o.receta });
+    if (motivo) throw new Error(motivo);
+    const nodo = await this.audio();
+    if (this.suspension) clearTimeout(this.suspension);
+    await this.ctx!.resume();
+    this.volumenDb = o.volumenDb ?? this.volumenDb;
+    this.publicar({ activo: true, sonando: true, cargando: true, terminado: false, recetaId: o.recetaId, segundos: 0, duracion: 0 });
+
+    const lista = await this.conReceta(o.receta, (x, p, n) => {
+      if (!x.archivos(p, n)) throw new Error(SonidosWeb.texto(x));
+      return SonidosWeb.texto(x).split('\n').filter(Boolean);
+    });
+    await Promise.all(
+      lista
+        .filter((a) => !this.cargadas.has(a))
+        .map(async (a) => {
+          const r = await fetch(`${BASE}audio/${a}`);
+          if (!r.ok) throw new Error(`falta audio/${a}`);
+          nodo.port.postMessage({ t: 'muestra', nombre: cod.encode(a), ogg: new Uint8Array(await r.arrayBuffer()) });
+          this.cargadas.add(a);
+        }),
+    );
+    const creado = new Promise<{ ok: boolean; texto: Uint8Array | null }>((listo) => (this.alCrear = listo));
+    nodo.port.postMessage({ t: 'crear', receta: cod.encode(o.receta), duracion: (o.minutos ?? 0) * 60, volumen: this.volumenDb });
+    const r = await creado;
+    if (!r.ok) {
+      this.publicar({ ...EN_REPOSO, auriculares: true });
+      throw new Error(r.texto ? dec.decode(r.texto) : 'el núcleo rechazó la receta');
+    }
+    const c = await this.preguntar({ t: 'consulta' });
+    this.publicar({ cargando: false, segundos: c.segundos, duracion: c.duracion ?? 0 });
   }
 
   async pausar(): Promise<void> {
     if (!this.e.activo || !this.e.sonando) return;
-    this.acumulado = this.ahora();
-    this.e.sonando = false;
-    this.publicar({ sonando: false, segundos: this.acumulado });
+    this.nodo?.port.postMessage({ t: 'atenuar', callar: true });
+    const c = await this.preguntar({ t: 'consulta' });
+    this.publicar({ sonando: false, segundos: c.segundos });
+    // El núcleo calla en 0,4 s; después se suelta el dispositivo de audio.
+    this.suspension = setTimeout(() => void this.ctx?.suspend(), 600);
   }
 
   async reanudar(): Promise<void> {
     if (!this.e.activo || this.e.sonando) return;
-    this.inicio = Date.now();
-    this.publicar({ sonando: true, segundos: this.acumulado });
+    if (this.suspension) clearTimeout(this.suspension);
+    await this.ctx?.resume();
+    this.nodo?.port.postMessage({ t: 'atenuar', callar: false });
+    const c = await this.preguntar({ t: 'consulta' });
+    this.publicar({ sonando: true, segundos: c.segundos });
   }
 
   async parar(): Promise<void> {
-    this.acumulado = 0;
-    this.e.sonando = false;
+    this.nodo?.port.postMessage({ t: 'atenuar', callar: true });
     this.publicar({ activo: false, sonando: false, recetaId: null, segundos: 0, duracion: 0 });
+    this.suspension = setTimeout(() => {
+      this.nodo?.port.postMessage({ t: 'parar' });
+      void this.ctx?.suspend();
+    }, 600);
   }
 
   async extender(o: { minutos: number }): Promise<{ minutos: number }> {
     if (!this.e.activo) return { minutos: 0 };
-    this.publicar({ duracion: this.e.duracion + o.minutos * 60 });
-    return { minutos: o.minutos };
+    const r = await this.preguntar({ t: 'extender', segundos: o.minutos * 60 });
+    const c = await this.preguntar({ t: 'consulta' });
+    this.publicar({ segundos: c.segundos, duracion: c.duracion ?? this.e.duracion });
+    return { minutos: r.segundos / 60 };
   }
 
-  async volumen(): Promise<void> {}
+  async volumen(o: { db: number }): Promise<void> {
+    this.volumenDb = o.db;
+    this.nodo?.port.postMessage({ t: 'volumen', db: o.db });
+  }
 
-  /** Sin sonido no hay espectro real: una forma inventada que se mueve, para ver el gráfico. */
   async espectro(o: { bandas: number }): Promise<{ bandas: number[] }> {
-    if (!this.e.sonando) return { bandas: [] };
-    const t = Date.now() / 1000;
-    const campana = (x: number, centro: number, ancho: number) => Math.exp(-(((x - centro) / ancho) ** 2));
-    return {
-      bandas: Array.from({ length: o.bandas }, (_, i) => {
-        const x = i / o.bandas;
-        const v =
-          0.75 * campana(x, 0.22, 0.09) * (0.8 + 0.2 * Math.sin(t * 0.7)) +
-          0.55 * campana(x, 0.43, 0.05) * (0.6 + 0.4 * Math.sin(t * 1.3 + 1)) +
-          0.3 * campana(x, 0.66, 0.12) * (0.5 + 0.5 * Math.sin(t * 2.1 + 2)) +
-          0.04 * Math.random();
-        return Math.min(1, v);
-      }),
-    };
-  }
-
-  /** En el navegador no está el núcleo: solo se comprueba que sea una receta con capas. */
-  async validar(o: { receta: string }): Promise<{ motivo: string | null }> {
-    try {
-      const r = JSON.parse(o.receta) as { version?: number; capas?: unknown[] };
-      if (r.version !== 1 || !Array.isArray(r.capas) || r.capas.length === 0) return { motivo: 'no es una receta de Sonidos' };
-      return { motivo: null };
-    } catch {
-      return { motivo: 'no es una receta de Sonidos' };
-    }
+    if (!this.e.sonando || this.e.cargando) return { bandas: [] };
+    const r = await this.preguntar({ t: 'consulta', bandas: o.bandas });
+    return { bandas: r.bandas ? Array.from(r.bandas) : [] };
   }
 
   async estado(): Promise<Estado> {
-    return { ...this.e, segundos: this.ahora() };
+    if (this.e.activo && !this.e.cargando) this.e = { ...this.e, segundos: (await this.preguntar({ t: 'consulta' })).segundos };
+    return this.e;
   }
 }

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["sonidos/core", "sonidos/cli", "sonidos/android"]
+members = ["sonidos/core", "sonidos/cli", "sonidos/android", "sonidos/wasm"]
 
 [workspace.package]
 version = "0.1.0"

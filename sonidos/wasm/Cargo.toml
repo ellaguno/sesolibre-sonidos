@@ -1,0 +1,13 @@
+[package]
+name = "sonidos-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "SesoLibre Sonidos: el núcleo en WebAssembly, para el navegador y para SesoLibre Mind."
+
+[lib]
+name = "sonidos"
+crate-type = ["cdylib"]
+
+[dependencies]
+sonidos-core = { path = "../core", default-features = false, features = ["ogg"] }

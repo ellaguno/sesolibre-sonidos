@@ -44,6 +44,15 @@ licencias y la idea de un *core* sin interfaz; toma de Mind el stack de interfaz
     registradas en `manifest.toml` y añadidas a `tools/banco.py` como ambientes. Mientras, las
     aves son sintéticas y la app lo dice.
   - **Piano, pendiente**: sigue sin haber muestras versionadas.
+- **Fase 3 — Hermanas (20 nov 2026):** el núcleo compila a **WebAssembly**
+  (`sonidos/wasm`, ABI de C) y corre en un AudioWorklet: la web ya suena de verdad, con el
+  mismo código que Android, y valida recetas con el núcleo real. **Enlaces directos**
+  (`sesolibre-sonidos://tocar?receta=…&min=…`). Recetas `sonar.calma-ronquido` (para Somnia)
+  y `despertar.amanecer`. Guía en `docs/INTEGRAR.md`. Probado en navegador; en Android
+  compila. **Sin hacer:** tocar los repositorios de Somnia y Mind, y publicar el AAR y el
+  paquete npm (hoy se copian archivos).
+- **Capa `eventos`** (gong, platillo frotado, carillón) y **aves reales** de xeno-canto
+  (CC BY 4.0, nueve grabaciones, créditos en la app).
 - Cambios respecto al plan: el servicio **sí** sostiene un wake lock parcial mientras suena
   (como hace ExoPlayer; se suelta al pausar o terminar); el audio sale por `AudioTrack` desde
   Kotlin en vez de Oboe (la latencia no importa y es menos código nativo); el puente es JNI a
@@ -316,7 +325,7 @@ ninguna app hermana tiene que inventar sonido ni volver a decidir qué es honest
 | **0 · Escuchar** 🔧 *código hecho el 19 nov 2026; falta escuchar* | `sonidos-core` + CLI que rinde 6 recetas a WAV (dormir, concentrar, respirar, meditar, solfeggio 528, viaje). Eduardo las escucha con auriculares y en altavoz. | ¿El sintético suena bien o hacen falta muestras? ¿Los pulsos dentro de música molestan? Si no gusta, se cambia el sonido, no la arquitectura. |
 | **1 · Pantalla apagada** 🔧 *construida el 20 nov 2026; falta probar en el Pixel* | App Android mínima (tres situaciones) con el servicio `mediaPlayback`, controles de bloqueo, temporizador y techo de volumen. Una noche entera en el Pixel sin cortes ni batería rara. | ¿Sobrevive al Doze, al cambio de auriculares, a una llamada? Es el riesgo técnico número uno y se resuelve antes de hacer el catálogo. |
 | **2 · Catálogo y salas** | Las siete situaciones, etiquetas con fuentes, sala Exploración con presets, ajustes heredados de Mind, es/en. | ¿Se entiende la diferencia entre salas sin leer? ¿Se usa de noche más de una semana? |
-| **3 · Hermanas** | AAR + npm publicados; Somnia embebe `sonar.calma-ronquido` y compara noches; Mind ofrece sonido de fondo; deep links. | ¿Somnia nota algo medible? ¿Mind lo quiere? |
+| **3 · Hermanas** 🔧 *núcleo WASM, enlaces y guía hechos el 20 nov 2026; falta integrarlo en Somnia y Mind* | AAR + npm publicados; Somnia embebe `sonar.calma-ronquido` y compara noches; Mind ofrece sonido de fondo; deep links. | ¿Somnia nota algo medible? ¿Mind lo quiere? |
 | **4 · Laboratorio** | Cimática con cámara y barrido; experimento de plantas con protocolo y diario; sesión 40 Hz larga. | ¿Lo fringe se disfruta como exploración honesta? |
 | **5 · Más** | PWA pública, iOS (cuando haya Mac), obras de Lienzo como paisaje para dormir, Wear/widgets. | — |
 

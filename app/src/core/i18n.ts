@@ -24,6 +24,8 @@ const DIC = {
   'situacion.respirar': { es: 'Respirar', en: 'Breathe' },
   'situacion.meditar': { es: 'Meditar', en: 'Meditate' },
   'situacion.calmar': { es: 'Calmar', en: 'Calm' },
+  'situacion.sonar': { es: 'Soñar en calma', en: 'Calm dreaming' },
+  'situacion.despertar': { es: 'Despertar', en: 'Wake up' },
   'situacion.exploracion': { es: 'Frecuencias', en: 'Frequencies' },
   'situacion.viaje': { es: 'Viaje', en: 'Trip' },
   'sala.propio': { es: 'Tus diseños', en: 'Your designs' },
@@ -131,8 +133,8 @@ const DIC = {
     en: 'You can turn the screen off: it keeps playing and stops by itself.',
   },
   simulado: {
-    es: 'Vista previa en el navegador: el reloj corre, pero aquí todavía no suena. El sonido está en la app de Android.',
-    en: 'Browser preview: the clock runs, but there is no sound here yet. Sound lives in the Android app.',
+    es: 'Modo de demostración: el reloj corre, pero no hay sonido.',
+    en: 'Demo mode: the clock runs, but there is no sound.',
   },
   sinAuriculares: {
     es: 'Esta receta necesita auriculares y no veo ninguno conectado. Por el altavoz el pulso binaural no funciona.',

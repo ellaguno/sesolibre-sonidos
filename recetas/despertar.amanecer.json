@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "id": "despertar.amanecer",
+  "sala": "prometedor",
+  "situacion": "despertar",
+  "nombre": {
+    "es": "Amanecer",
+    "en": "Dawn"
+  },
+  "descripcion": {
+    "es": "Empieza casi en silencio y tarda minuto y medio en llegar: un mirlo y un verderón, cuerdas luminosas, un arpa cada vez más presente y un pulso isocrónico que sube de 8 a 14 Hz. Quince minutos para levantarse sin sobresalto.",
+    "en": "It starts almost silent and takes a minute and a half to arrive: a blackbird and a greenfinch, bright strings, a harp growing more present and an isochronic pulse rising from 8 to 14 Hz. Fifteen minutes to get up without a jolt."
+  },
+  "ciencia": {
+    "es": "Despertar con un sonido que crece poco a poco y es melódico se asocia con menos aturdimiento que una alarma brusca (estudios pequeños, por cuestionario). El pulso que sube es la parte sin probar. Cantos de xeno-canto, CC BY 4.0 (ver créditos).",
+    "en": "Waking to a sound that grows gradually and is melodic is associated with less grogginess than a harsh alarm (small, questionnaire-based studies). The rising pulse is the unproven part. Songs from xeno-canto, CC BY 4.0 (see credits)."
+  },
+  "fuentes": [],
+  "duracion_s": 900,
+  "fade_in_s": 90,
+  "fade_out_s": 20,
+  "semilla": 18,
+  "techo_db": -14,
+  "advertencias": [
+    "no_conducir"
+  ],
+  "espacio": {
+    "rt60_s": 4,
+    "amortiguacion_hz": 5000
+  },
+  "capas": [
+    {
+      "tipo": "ambiente",
+      "ambiente": "mirlo",
+      "nivel_db": -28
+    },
+    {
+      "tipo": "ambiente",
+      "ambiente": "verderon",
+      "nivel_db": -31,
+      "desde_s": 120,
+      "transicion_s": 60
+    },
+    {
+      "tipo": "colchon",
+      "modo": "re_pentatonico",
+      "timbre": "cuerdas",
+      "nivel_db": -18,
+      "ciclo_s": 160,
+      "voces": 5,
+      "reverb": 0.4
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "arpa",
+      "modo": "re_pentatonico",
+      "ciclo_s": 160,
+      "notas_por_minuto": 9,
+      "octavas": [
+        1,
+        2
+      ],
+      "nivel_db": -22,
+      "reverb": 0.5,
+      "desde_s": 180,
+      "transicion_s": 120
+    },
+    {
+      "tipo": "pulso",
+      "forma": "isocronico",
+      "portadora_hz": 260,
+      "beat_hz": 8,
+      "beat_hz_final": 14,
+      "nivel_db": -33,
+      "desde_s": 240,
+      "transicion_s": 60
+    }
+  ]
+}

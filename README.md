@@ -7,12 +7,14 @@ probabilidades tiene de ayudar. Lo que la ciencia respalda va primero; lo altern
 app, en la sala **Exploración**, con una etiqueta honesta y la única regla de que no haga daño.
 
 - [DISEÑO.md](DISEÑO.md) — análisis de la evidencia, experiencia, arquitectura y fases.
+- [docs/INTEGRAR.md](docs/INTEGRAR.md) — cómo usar el núcleo desde Somnia, Mind u otra app.
 - [docs/PALABRAS.md](docs/PALABRAS.md) — lo que la app dice y lo que no dice nunca.
 - `recetas/` — las recetas (JSON): el contrato entre el núcleo y cualquier interfaz.
 - `assets/audio/fase0/` — 90 segundos de cada receta de la Fase 0, para escuchar.
 - `sonidos/core` — núcleo en Rust puro: receta + semilla → audio. Sin UI, sin plataforma.
 - `sonidos/cli` — `sonidos`: rinde recetas a WAV y las mide.
 - `sonidos/android` — el núcleo detrás de JNI (`libsonidos.so`).
+- `sonidos/wasm` — el núcleo en WebAssembly, para el navegador.
 - `app/` — la app (Capacitor + React) y su plugin de Android.
 - `assets/audio/` — muestras reales (CC0 o equivalentes) y su índice `banco.json`.
 
@@ -41,7 +43,7 @@ armar sonidos propios, guardarlos y compartirlos como un código de texto, y un
 ```bash
 cd app
 npm install
-npm run dev                      # la interfaz en el navegador (reloj simulado, sin sonido)
+npm run dev                      # la app en el navegador, con sonido (núcleo en WebAssembly)
 ./scripts/android-apk.sh install # núcleo → web → APK de depuración → adb
 ```
 

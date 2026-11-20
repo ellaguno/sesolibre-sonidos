@@ -12,6 +12,7 @@ dist/
 # app
 app/android/
 app/public/audio/
+app/public/motor/sonidos.wasm
 app/plugin/android/src/main/jniLibs/
 app/plugin/android/build/
 *.tsbuildinfo
