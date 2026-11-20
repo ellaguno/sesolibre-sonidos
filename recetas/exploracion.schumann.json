@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "fade_in_s": 8,
+  "fade_out_s": 30,
+  "techo_db": -14,
+  "id": "exploracion.schumann",
+  "sala": "exploracion",
+  "situacion": "exploracion",
+  "nombre": {
+    "es": "Schumann 7,83 Hz (armónicos)",
+    "en": "Schumann 7.83 Hz (harmonics)"
+  },
+  "descripcion": {
+    "es": "La resonancia Schumann, la 'vibración de la Tierra', está a 7,83 Hz: no se oye. Aquí suenan solo sus armónicos 16, 24, 32 y 48 (125, 188, 251 y 376 Hz); como todos son múltiplos exactos, la onda entera late 7,83 veces por segundo. Encima, un pulso isocrónico al mismo ritmo y un colchón afinado al armónico 8 (62,6 Hz).",
+    "en": "The Schumann resonance, the 'Earth's vibration', sits at 7.83 Hz: inaudible. Here only its harmonics 16, 24, 32 and 48 sound (125, 188, 251 and 376 Hz); since all are exact multiples, the whole wave beats 7.83 times a second. On top, an isochronic pulse at the same rate and a pad tuned to harmonic 8 (62.6 Hz)."
+  },
+  "ciencia": {
+    "es": "La resonancia Schumann es real, pero es una onda electromagnética de la atmósfera, no un sonido. Que oír un latido de 7,83 Hz haga algo distinto de cualquier otro pulso en theta no se ha demostrado. Exploración personal.",
+    "en": "The Schumann resonance is real, but it is an electromagnetic wave in the atmosphere, not a sound. That hearing a 7.83 Hz beat does anything different from any other theta pulse has not been shown. Personal exploration."
+  },
+  "fuentes": [],
+  "duracion_s": 1200,
+  "semilla": 10,
+  "advertencias": [
+    "no_conducir"
+  ],
+  "capas": [
+    {
+      "tipo": "serie",
+      "base_hz": 7.83,
+      "armonicos": [
+        16,
+        24,
+        32,
+        48
+      ],
+      "nivel_db": -28
+    },
+    {
+      "tipo": "pulso",
+      "forma": "isocronico",
+      "portadora_hz": 125.28,
+      "beat_hz": 7.83,
+      "nivel_db": -32,
+      "desde_s": 10,
+      "transicion_s": 20
+    },
+    {
+      "tipo": "colchon",
+      "modo": "quintas",
+      "raiz_hz": 62.64,
+      "nivel_db": -17,
+      "ciclo_s": 160,
+      "voces": 5,
+      "brillo": 0.3
+    }
+  ]
+}

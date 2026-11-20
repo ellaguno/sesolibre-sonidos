@@ -1,7 +1,7 @@
 // Las recetas del repositorio (../recetas/*.json): el mismo JSON que valida y toca el
 // núcleo. Aquí solo se leen para mostrarlas; al tocar, se manda el JSON tal cual.
 
-export type Sala = 'comprobado' | 'prometedor' | 'exploracion';
+export type Sala = 'comprobado' | 'prometedor' | 'exploracion' | 'propio';
 export type Idioma = 'es' | 'en';
 export interface Texto {
   es: string;
@@ -19,7 +19,10 @@ export interface Receta {
   fuentes: string[];
   duracion_s: number;
   advertencias: string[];
-  capas: { tipo: string; forma?: string }[];
+  capas: Record<string, unknown>[];
+  /** Solo en los diseños propios: lo que eligió el usuario, para poder editarlo. */
+  diseno?: unknown;
+  [otro: string]: unknown;
 }
 
 export interface Entrada {
@@ -33,6 +36,7 @@ const crudos = import.meta.glob('../../../recetas/*.json', { eager: true, query:
   string
 >;
 
+/** Las salas del catálogo. Los diseños propios van aparte, arriba. */
 export const SALAS: Sala[] = ['comprobado', 'prometedor', 'exploracion'];
 
 export const RECETAS: Entrada[] = Object.keys(crudos)

@@ -16,12 +16,14 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import androidx.media3.session.SessionToken
+import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.google.common.util.concurrent.ListenableFuture
+import org.json.JSONObject
 
 /**
  * La cara web del servicio: la app (JS) elige la receta y este plugin se la manda al
@@ -152,6 +154,23 @@ class SonidosPlugin : Plugin() {
     fun volumen(call: PluginCall) {
         val db = call.getFloat("db") ?: return call.reject("faltan los dB")
         mandar(call, Contrato.VOLUMEN, Bundle().apply { putFloat(Contrato.VOLUMEN_DB, db) })
+    }
+
+    /** El espectro de lo que suena: `bandas` valores de 0 a 1. Vacío si no suena nada. */
+    @PluginMethod
+    fun espectro(call: PluginCall) {
+        val n = (call.getInt("bandas") ?: 48).coerceIn(8, 128)
+        val v = FloatArray(n)
+        val arr = JSArray()
+        if (SonidosService.actual?.espectro(v) == true) for (x in v) arr.put(x.toDouble())
+        call.resolve(JSObject().put("bandas", arr))
+    }
+
+    /** `motivo` nulo si el núcleo acepta la receta; si no, por qué no. */
+    @PluginMethod
+    fun validar(call: PluginCall) {
+        val receta = call.getString("receta") ?: return call.reject("falta la receta")
+        call.resolve(JSObject().put("motivo", Nativo.validar(receta) ?: JSONObject.NULL))
     }
 
     @PluginMethod

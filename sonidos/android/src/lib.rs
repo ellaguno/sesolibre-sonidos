@@ -207,6 +207,16 @@ pub extern "system" fn Java_com_sesolibre_sonidos_motor_Nativo_duracion(_env: JN
     sesion(h).map(|s| s.motor.lock().unwrap_or_else(|e| e.into_inner()).duracion_s()).unwrap_or(0.0)
 }
 
+/// Llena `bandas` con el espectro de lo último que sonó (0..1 por banda, graves primero).
+#[no_mangle]
+pub extern "system" fn Java_com_sesolibre_sonidos_motor_Nativo_espectro<'l>(env: JNIEnv<'l>, _c: JClass<'l>, h: jlong, bandas: JFloatArray<'l>) {
+    let Some(s) = sesion(h) else { return };
+    let n = env.get_array_length(&bandas).unwrap_or(0).clamp(0, 256) as usize;
+    let mut v = vec![0.0f32; n];
+    let _ = catch_unwind(AssertUnwindSafe(|| s.motor.lock().unwrap_or_else(|e| e.into_inner()).espectro(&mut v)));
+    let _ = env.set_float_array_region(&bandas, 0, &v);
+}
+
 #[no_mangle]
 pub extern "system" fn Java_com_sesolibre_sonidos_motor_Nativo_liberar(_env: JNIEnv, _c: JClass, h: jlong) {
     if h != 0 {

@@ -5,9 +5,11 @@ mod ambiente;
 mod barrido;
 mod colchon;
 mod instrumento;
+mod naturaleza;
 mod pulso;
 mod respiracion;
 mod ruido;
+mod serie;
 mod tono;
 
 use crate::banco::{self, Banco};
@@ -74,6 +76,8 @@ pub fn construir(gen: &Generador, sr: f32, rng: Rng, duracion_s: f32, banco: &Ba
         Generador::Ambiente { ambiente, paso_bajo_hz } => {
             Box::new(ambiente::Ambiente::nuevo(banco.obtener(banco::ambiente(ambiente)?)?, *paso_bajo_hz, sr))
         }
+        Generador::Serie { base_hz, armonicos } => Box::new(serie::Serie::nueva(*base_hz, armonicos, sr)),
+        Generador::Naturaleza { clase } => naturaleza::nueva(*clase, sr, rng),
         Generador::Barrido { desde_hz, hasta_hz, periodo_s } => {
             Box::new(barrido::Barrido::nuevo(*desde_hz, *hasta_hz, *periodo_s, sr))
         }

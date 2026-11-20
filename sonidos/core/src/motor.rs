@@ -11,6 +11,8 @@ use crate::rng::Rng;
 use crate::{Error, SR};
 
 const BLOQUE: usize = 256;
+/// Muestras que mira el espectrómetro (43 ms: resuelve desde ~47 Hz).
+const VENTANA: usize = 2048;
 /// Lo más que puede durar una sesión, se alargue lo que se alargue.
 const MAXIMO_S: f64 = 12.0 * 3600.0;
 
@@ -37,6 +39,9 @@ pub struct Motor {
     /// Volumen del usuario (≤ 0 dB), p. ej. el modo noche. Se mueve a 12 dB/s.
     volumen_db: f32,
     volumen_objetivo_db: f32,
+    /// Lo último que salió (mono), en anillo, para el espectrómetro.
+    anillo: Vec<f32>,
+    anillo_pos: usize,
 }
 
 impl Motor {
@@ -76,6 +81,8 @@ impl Motor {
             atenuado: false,
             volumen_db: 0.0,
             volumen_objetivo_db: 0.0,
+            anillo: vec![0.0; VENTANA],
+            anillo_pos: 0,
         })
     }
 
@@ -183,8 +190,40 @@ impl Motor {
             let (l, r) = self.master.procesar(t, l, r);
             out[i * 2] = l * usuario;
             out[i * 2 + 1] = r * usuario;
+            self.anillo[self.anillo_pos] = (l + r) * 0.5 * usuario;
+            self.anillo_pos = (self.anillo_pos + 1) % VENTANA;
         }
         self.cuadro += n as u64;
+    }
+
+    /// El espectro de lo último que sonó, en `bandas.len()` bandas logarítmicas de 40 Hz a
+    /// 16 kHz. Cada valor va de 0 (silencio, −100 dBFS) a 1 (−20 dBFS). No lo llama el hilo
+    /// de audio: reserva memoria y hace una FFT.
+    pub fn espectro(&self, bandas: &mut [f32]) {
+        let n = VENTANA;
+        let mut re = vec![0.0f32; n];
+        let mut im = vec![0.0f32; n];
+        for (i, x) in re.iter_mut().enumerate() {
+            let w = 0.5 - 0.5 * (std::f32::consts::TAU * i as f32 / n as f32).cos();
+            *x = self.anillo[(self.anillo_pos + i) % n] * w;
+        }
+        crate::dsp::fft(&mut re, &mut im);
+        let por_bin = self.sr / n as f32;
+        let (lo, hi) = (40.0f32, 16_000.0f32);
+        let total = bandas.len().max(1) as f32;
+        for (b, salida) in bandas.iter_mut().enumerate() {
+            let f0 = lo * (hi / lo).powf(b as f32 / total);
+            let f1 = lo * (hi / lo).powf((b + 1) as f32 / total);
+            let i0 = ((f0 / por_bin) as usize).max(1);
+            let i1 = ((f1 / por_bin).ceil() as usize).clamp(i0 + 1, n / 2);
+            let mut pico = 0.0f32;
+            for i in i0..i1 {
+                pico = pico.max(re[i] * re[i] + im[i] * im[i]);
+            }
+            // Un seno a fondo de escala da n/4 tras la ventana de Hann.
+            let db = lin_a_db(pico.sqrt() / (n as f32 / 4.0));
+            *salida = ((db + 100.0) / 80.0).clamp(0.0, 1.0);
+        }
     }
 
     /// Rinde `segundos` (o la receta completa) a memoria. Para pruebas y para el CLI.

@@ -48,6 +48,12 @@ public final class Prueba {
                 }
                 exigir(estado == 0 && pico > 0.001 && pico <= 0.2001, "  suena bajo techo (pico " + String.format("%.3f", pico) + ")");
 
+                float[] bandas = new float[48];
+                Nativo.espectro(s, bandas);
+                float mayor = 0;
+                for (float b : bandas) mayor = Math.max(mayor, b);
+                exigir(mayor > 0.3f && mayor <= 1f, "  el espectro ve el sonido (máx " + String.format("%.2f", mayor) + ")");
+
                 Nativo.atenuar(s, true);
                 int bloques = 0;
                 while ((Nativo.procesar(s, bloque, CUADROS) & Nativo.EN_SILENCIO) == 0) bloques++;
@@ -57,10 +63,11 @@ public final class Prueba {
                 exigir(callado && bloques < 47, "  pausa en " + bloques + " bloques y calla del todo");
                 Nativo.atenuar(s, false);
 
-                exigir(Nativo.extender(s, 900f) == 900f && Math.round(Nativo.duracion(s)) == 960, "  +15 min alarga la sesión");
+                exigir(Nativo.extender(s, 30f) == 30f && Math.round(Nativo.duracion(s)) == 90, "  alargar 30 s alarga la sesión");
                 Nativo.volumen(s, -8f);
+                Nativo.extender(s, -1f);
                 while ((estado & Nativo.TERMINADO) == 0) estado = Nativo.procesar(s, bloque, CUADROS);
-                exigir(Math.abs(Nativo.segundos(s) - 960) < 0.1, "  termina sola a los 960 s");
+                exigir(Math.abs(Nativo.segundos(s) - 90) < 0.1, "  termina sola a los 90 s");
                 Nativo.liberar(s);
             }
         }

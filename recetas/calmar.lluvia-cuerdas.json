@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "fade_in_s": 8,
+  "fade_out_s": 30,
+  "techo_db": -14,
+  "id": "calmar.lluvia-cuerdas",
+  "sala": "comprobado",
+  "situacion": "calmar",
+  "nombre": {
+    "es": "Lluvia en la ventana",
+    "en": "Rain on the window"
+  },
+  "descripcion": {
+    "es": "Lluvia pareja con gotas cercanas, un viento leve y una sección de cuerdas lejana. Sin pulsos; sirve en altavoz. Media hora.",
+    "en": "Steady rain with close drops, a light wind and a distant string section. No pulses; fine on a speaker. Half an hour."
+  },
+  "ciencia": {
+    "es": "Los sonidos de naturaleza bajan la activación tras un momento de estrés más rápido que el silencio o el ruido urbano (ensayos pequeños, efectos pequeños a medianos). Aquí la lluvia, el viento y los pájaros son sintetizados, no grabados.",
+    "en": "Nature sounds lower arousal after a stressful moment faster than silence or city noise (small trials, small to medium effects). Here rain, wind and birds are synthesized, not recorded."
+  },
+  "fuentes": [],
+  "duracion_s": 1800,
+  "semilla": 11,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 6,
+    "amortiguacion_hz": 2500
+  },
+  "capas": [
+    {
+      "tipo": "naturaleza",
+      "clase": "lluvia",
+      "nivel_db": -18
+    },
+    {
+      "tipo": "naturaleza",
+      "clase": "viento",
+      "nivel_db": -30
+    },
+    {
+      "tipo": "colchon",
+      "modo": "menor",
+      "timbre": "cuerdas",
+      "nivel_db": -20,
+      "ciclo_s": 240,
+      "voces": 5,
+      "reverb": 0.6
+    }
+  ]
+}

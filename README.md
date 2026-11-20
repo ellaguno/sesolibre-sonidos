@@ -32,6 +32,10 @@ en primer plano, con controles en la notificación y la pantalla de bloqueo, tem
 +15 min y modo noche. Compila a APK y pasa lint; el puente JNI pasa `tools/prueba_jni.sh`.
 Falta lo que solo dice un teléfono: una noche entera con la pantalla apagada.
 
+Desde el 20 nov: doce recetas (432 Hz, Schumann, lluvia, bosque), un **diseñador** para
+armar sonidos propios, guardarlos y compartirlos como un código de texto, y un
+**espectrómetro** calculado en Rust.
+
 ## App Android
 
 ```bash
@@ -63,7 +67,8 @@ Una receta es JSON versionado (ver `DISEÑO.md §4`). Capas disponibles: `ruido`
 rosa, marrón, con filtros), `tono`, `pulso` (binaural, isocrónico, AM), `colchon` (acordes
 lentos, afinable; sintético o con cuerdas reales), `instrumento` (arpa, vibráfono, flauta…
 tocando notas sueltas del acorde), `ambiente` (grabaciones de agua en bucle), `respiracion`
-(guía sin voz) y `barrido` (solo Exploración). Cada capa puede enviar a una reverberación. El núcleo **rechaza** recetas con techo alto, tonos fuera de
+(guía sin voz), `serie` (armónicos de una base), `naturaleza` (viento, lluvia y aves
+sintetizados) y `barrido`. Cada capa puede enviar a una reverberación. El núcleo **rechaza** recetas con techo alto, tonos fuera de
 20–16 000 Hz, pulsos sin advertencias o textos con palabras prohibidas.
 
 ## Licencia

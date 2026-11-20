@@ -35,5 +35,7 @@ internal object Nativo {
     @JvmStatic external fun extender(sesion: Long, segundos: Float): Float
     @JvmStatic external fun segundos(sesion: Long): Double
     @JvmStatic external fun duracion(sesion: Long): Double
+    /** Espectro de lo último que sonó: 0..1 por banda, graves primero. */
+    @JvmStatic external fun espectro(sesion: Long, bandas: FloatArray)
     @JvmStatic external fun liberar(sesion: Long)
 }

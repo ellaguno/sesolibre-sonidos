@@ -12,6 +12,7 @@ export default {
         comprobado: 'rgb(var(--comprobado) / <alpha-value>)',
         prometedor: 'rgb(var(--prometedor) / <alpha-value>)',
         exploracion: 'rgb(var(--exploracion) / <alpha-value>)',
+        propio: 'rgb(var(--propio) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Noto Sans', 'sans-serif'],

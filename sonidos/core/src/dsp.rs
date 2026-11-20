@@ -78,6 +78,15 @@ impl Biquad {
         let a0 = 1.0 + alpha;
         Self::norm(alpha, 0.0, -alpha, -2.0 * c, 1.0 - alpha, a0)
     }
+    /// Mueve un paso banda a otra frecuencia sin perder el estado (para filtros que vagan).
+    pub fn reafinar_banda(&mut self, hz: f32, q: f32, sr: f32) {
+        let n = Biquad::paso_banda(hz, q, sr);
+        self.b0 = n.b0;
+        self.b1 = n.b1;
+        self.b2 = n.b2;
+        self.a1 = n.a1;
+        self.a2 = n.a2;
+    }
     fn norm(b0: f32, b1: f32, b2: f32, a1: f32, a2: f32, a0: f32) -> Self {
         Biquad { b0: b0 / a0, b1: b1 / a0, b2: b2 / a0, a1: a1 / a0, a2: a2 / a0, ..Default::default() }
     }
@@ -197,5 +206,47 @@ impl Limitador {
         }
         let g = self.reduccion;
         ((l * g).clamp(-self.techo, self.techo), (r * g).clamp(-self.techo, self.techo))
+    }
+}
+
+/// FFT radix-2 en sitio (longitud potencia de dos). Para el espectrómetro, no para audio.
+pub fn fft(re: &mut [f32], im: &mut [f32]) {
+    let n = re.len();
+    debug_assert!(n.is_power_of_two() && im.len() == n);
+    let mut j = 0;
+    for i in 1..n {
+        let mut bit = n >> 1;
+        while j & bit != 0 {
+            j ^= bit;
+            bit >>= 1;
+        }
+        j |= bit;
+        if i < j {
+            re.swap(i, j);
+            im.swap(i, j);
+        }
+    }
+    let mut largo = 2;
+    while largo <= n {
+        let ang = -2.0 * PI / largo as f32;
+        let (wr, wi) = (ang.cos(), ang.sin());
+        let mut i = 0;
+        while i < n {
+            let (mut cr, mut ci) = (1.0f32, 0.0f32);
+            for k in 0..largo / 2 {
+                let (a, b) = (i + k, i + k + largo / 2);
+                let tr = re[b] * cr - im[b] * ci;
+                let ti = re[b] * ci + im[b] * cr;
+                re[b] = re[a] - tr;
+                im[b] = im[a] - ti;
+                re[a] += tr;
+                im[a] += ti;
+                let ncr = cr * wr - ci * wi;
+                ci = cr * wi + ci * wr;
+                cr = ncr;
+            }
+            i += largo;
+        }
+        largo <<= 1;
     }
 }

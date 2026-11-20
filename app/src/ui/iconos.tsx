@@ -40,7 +40,12 @@ export const Reloj = ({ className }: P) => (
   </svg>
 );
 /** La marca de cada sala: ✔ comprobado · ◐ prometedor · ◌ exploración. */
-export const MarcaSala = ({ sala, className }: P & { sala: 'comprobado' | 'prometedor' | 'exploracion' }) => (
+export const Mas = ({ className }: P) => (
+  <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+    <path d="M12 5v14M5 12h14" {...base} />
+  </svg>
+);
+export const MarcaSala = ({ sala, className }: P & { sala: 'comprobado' | 'prometedor' | 'exploracion' | 'propio' }) => (
   <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
     {sala === 'comprobado' && (
       <>
@@ -52,6 +57,12 @@ export const MarcaSala = ({ sala, className }: P & { sala: 'comprobado' | 'prome
       <>
         <circle cx="12" cy="12" r="9" {...base} />
         <path d="M12 3a9 9 0 000 18z" fill="currentColor" />
+      </>
+    )}
+    {sala === 'propio' && (
+      <>
+        <circle cx="12" cy="12" r="9" {...base} />
+        <path d="M9 15l1-3.5 5-5 2.5 2.5-5 5z" {...base} strokeWidth={1.6} />
       </>
     )}
     {sala === 'exploracion' && <circle cx="12" cy="12" r="9" {...base} strokeDasharray="3.2 3.6" />}

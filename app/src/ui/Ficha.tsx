@@ -13,10 +13,14 @@ interface Props {
   simulado: boolean;
   alCerrar: () => void;
   alTocar: (minutos: number) => void;
+  /** Solo en los diseños propios. */
+  alEditar?: () => void;
+  alCompartir?: () => void;
+  alBorrar?: () => void;
 }
 
 /** La ficha de una receta: qué es, qué dice la ciencia, advertencias, duración y tocar. */
-export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alTocar }: Props) {
+export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alTocar, alEditar, alCompartir, alBorrar }: Props) {
   const r = entrada.receta;
   const s = DE_SALA[r.sala];
   const t = (c: string) => traducir(idioma, c);
@@ -55,11 +59,11 @@ export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alToca
           </button>
         </div>
 
-        <p className="mt-3 leading-relaxed text-texto/90">{r.descripcion[idioma]}</p>
+        {r.descripcion[idioma] && <p className="mt-3 leading-relaxed text-texto/90">{r.descripcion[idioma]}</p>}
 
         <section className={`mt-4 rounded-2xl border p-4 ${s.borde} ${s.fondo}`}>
           <h3 className={`text-sm font-semibold ${s.texto}`}>{t('ciencia')}</h3>
-          <p className="mt-1 text-sm leading-relaxed text-texto/90">{r.ciencia[idioma]}</p>
+          <p className="mt-1 text-sm leading-relaxed text-texto/90">{r.sala === 'propio' ? t('cienciaPropio') : r.ciencia[idioma]}</p>
           {r.fuentes.length > 0 && (
             <p className="mt-2 text-sm text-tenue">
               {t('fuentes')}:{' '}
@@ -110,6 +114,26 @@ export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alToca
           <Tocar className="h-6 w-6" />
           {t('tocar')} · {minutosLegibles(idioma, minutos)}
         </button>
+
+        {(alEditar || alCompartir || alBorrar) && (
+          <div className="mt-3 flex gap-2">
+            {alEditar && (
+              <button type="button" onClick={alEditar} className="min-h-11 flex-1 rounded-full border border-borde text-sm font-medium">
+                {t('editar')}
+              </button>
+            )}
+            {alCompartir && (
+              <button type="button" onClick={alCompartir} className="min-h-11 flex-1 rounded-full border border-borde text-sm font-medium">
+                {t('compartir')}
+              </button>
+            )}
+            {alBorrar && (
+              <button type="button" onClick={alBorrar} className="min-h-11 flex-1 rounded-full border border-red-400/40 text-sm font-medium text-red-200">
+                {t('borrar')}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

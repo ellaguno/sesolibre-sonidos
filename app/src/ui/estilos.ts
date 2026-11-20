@@ -16,6 +16,13 @@ export const DE_SALA: Record<Sala, { texto: string; borde: string; fondo: string
     boton: 'bg-prometedor text-fondo',
     barra: 'bg-prometedor',
   },
+  propio: {
+    texto: 'text-propio',
+    borde: 'border-propio/30',
+    fondo: 'bg-propio/10',
+    boton: 'bg-propio text-fondo',
+    barra: 'bg-propio',
+  },
   exploracion: {
     texto: 'text-exploracion',
     borde: 'border-exploracion/40 border-dashed',

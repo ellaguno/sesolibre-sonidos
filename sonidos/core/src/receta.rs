@@ -19,6 +19,8 @@ pub enum Sala {
     Comprobado,
     Prometedor,
     Exploracion,
+    /// Diseños del usuario (o que le compartieron): nadie los ha evaluado.
+    Propio,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -133,6 +135,14 @@ pub enum ColorRuido {
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
+pub enum ClaseNatural {
+    Viento,
+    Lluvia,
+    Aves,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
 pub enum FormaPulso {
     /// Un tono por oído; la diferencia es el *beat*. Requiere auriculares.
     Binaural,
@@ -222,6 +232,10 @@ pub enum Generador {
         #[serde(default)]
         paso_bajo_hz: Option<f32>,
     },
+    /// Armónicos audibles de una fundamental que puede no oírse (7,83 Hz → 125, 188, 250…).
+    Serie { base_hz: f32, armonicos: Vec<u16> },
+    /// Naturaleza sintetizada: viento, lluvia o pájaros imaginarios.
+    Naturaleza { clase: ClaseNatural },
     /// Solo Exploración: frecuencia que recorre un rango ida y vuelta (cimática).
     Barrido {
         desde_hz: f32,
@@ -398,8 +412,17 @@ impl Receta {
                         }
                     }
                 }
+                Generador::Serie { base_hz, armonicos } => {
+                    if !(1.0..=200.0).contains(base_hz) || armonicos.is_empty() || armonicos.len() > 12 {
+                        return ec("serie: base en [1, 200] Hz y de 1 a 12 armónicos");
+                    }
+                    if armonicos.iter().any(|&n| n == 0 || !(40.0..=4_000.0).contains(&(base_hz * n as f32))) {
+                        return ec("serie: cada armónico debe caer en [40, 4000] Hz (los que se oyen)");
+                    }
+                }
+                Generador::Naturaleza { .. } => {}
                 Generador::Barrido { desde_hz, hasta_hz, periodo_s } => {
-                    if self.sala != Sala::Exploracion {
+                    if self.sala != Sala::Exploracion && self.sala != Sala::Propio {
                         return ec("el barrido solo existe en Exploración");
                     }
                     if !(20.0..=16_000.0).contains(desde_hz) || !(20.0..=16_000.0).contains(hasta_hz) {
@@ -416,6 +439,10 @@ impl Receta {
         }
         if hay_pulso && !self.advertencias.iter().any(|a| a == "no_conducir") {
             return e("una receta con pulsos lleva la advertencia 'no_conducir'".into());
+        }
+        // Los diseños propios son texto privado del usuario: ahí no se vigila el vocabulario.
+        if self.sala == Sala::Propio {
+            return Ok(());
         }
         if let Some(p) = self.palabra_prohibida() {
             return e(format!("usa la palabra prohibida '{}' (DISEÑO.md §8)", p));

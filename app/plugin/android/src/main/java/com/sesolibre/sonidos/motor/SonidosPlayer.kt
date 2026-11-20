@@ -124,6 +124,13 @@ internal class SonidosPlayer(private val context: Context) : SimpleBasePlayer(Lo
         hilo?.volumen(db)
     }
 
+    /** Llena `bandas` con el espectro actual. Devuelve false si no hay nada sonando. */
+    fun espectro(bandas: FloatArray): Boolean {
+        val h = hilo ?: return false
+        if (!quiereSonar || estado != Player.STATE_READY) return false
+        return h.espectro(bandas)
+    }
+
     // ------------------------------------------------------------------ SimpleBasePlayer
 
     override fun getState(): State {
@@ -287,6 +294,10 @@ internal class SonidosPlayer(private val context: Context) : SimpleBasePlayer(Lo
         fun restanteS(): Double = conSesion(0.0) { Nativo.duracion(it) - Nativo.segundos(it) }
         fun extender(s: Float): Float = conSesion(0f) { Nativo.extender(it, s) }
         fun volumen(db: Float) = conSesion(Unit) { Nativo.volumen(it, db) }
+        fun espectro(bandas: FloatArray): Boolean = conSesion(false) {
+            Nativo.espectro(it, bandas)
+            true
+        }
 
         fun pausar(pausa: Boolean) = synchronized(candado) {
             quierePausa = pausa

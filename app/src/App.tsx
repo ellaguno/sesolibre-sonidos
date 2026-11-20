@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { Share } from '@capacitor/share';
+
+import { DISENO_INICIAL, cargarDisenos, codificar, construir, decodificar, entradaDe, guardarDisenos, type Diseno } from './core/diseno';
 import { idiomaInicial, traducir } from './core/i18n';
 import { NOCHE_DB, Sonidos } from './core/motor';
 import { RECETAS, SALAS, deSala, type Entrada, type Idioma } from './core/recetas';
 import { useMotor } from './core/useMotor';
 import { DE_SALA } from './ui/estilos';
+import { Disenador } from './ui/Disenador';
 import { Ficha } from './ui/Ficha';
-import { Luna, MarcaSala } from './ui/iconos';
+import { Luna, MarcaSala, Mas } from './ui/iconos';
 import { Reproductor } from './ui/Reproductor';
 import { Tarjeta } from './ui/Tarjeta';
 
@@ -32,6 +36,51 @@ export default function App() {
   const [abierta, setAbierta] = useState<Entrada | null>(null);
   const { estado, segundos, error, limpiarError } = useMotor();
   const [fallo, setFallo] = useState<string | null>(null);
+  const [disenos, setDisenos] = useState<Entrada[]>(cargarDisenos);
+  /** El diseñador abierto: un diseño nuevo o el id del que se edita. */
+  const [disenando, setDisenando] = useState<{ diseno: Diseno; id?: string } | null>(null);
+  const [nota, setNota] = useState<string | null>(null);
+
+  const ponerDisenos = (lista: Entrada[]) => {
+    setDisenos(lista);
+    guardarDisenos(lista);
+  };
+
+  const guardarDiseno = async (d: Diseno, id?: string) => {
+    const entrada = entradaDe(construir(d, id));
+    const { motivo } = await Sonidos.validar({ receta: entrada.json });
+    if (motivo) return setFallo(motivo);
+    ponerDisenos(id ? disenos.map((e) => (e.receta.id === id ? entrada : e)) : [entrada, ...disenos]);
+    setDisenando(null);
+    setAbierta(entrada);
+  };
+
+  const compartir = async (entrada: Entrada) => {
+    const codigo = codificar(entrada.receta);
+    try {
+      await Share.share({ title: entrada.receta.nombre[idioma], text: codigo });
+    } catch {
+      // Sin hoja de compartir (navegador de escritorio) o cancelado: al portapapeles.
+      try {
+        await navigator.clipboard.writeText(codigo);
+        setNota(traducir(idioma, 'copiado'));
+      } catch {
+        window.prompt(traducir(idioma, 'compartir'), codigo);
+      }
+    }
+  };
+
+  const importar = async () => {
+    const texto = window.prompt(traducir(idioma, 'importarQue'));
+    if (!texto) return;
+    const receta = decodificar(texto);
+    if (!receta) return setFallo(traducir(idioma, 'importarMal'));
+    const entrada = entradaDe(receta);
+    const { motivo } = await Sonidos.validar({ receta: entrada.json });
+    if (motivo) return setFallo(motivo);
+    ponerDisenos([entrada, ...disenos]);
+    setAbierta(entrada);
+  };
   const t = (c: string) => traducir(idioma, c);
 
   useEffect(() => {
@@ -62,7 +111,7 @@ export default function App() {
     [idioma, noche, limpiarError],
   );
 
-  const sonando = estado.activo ? (RECETAS.find((e) => e.receta.id === estado.recetaId) ?? null) : null;
+  const sonando = estado.activo ? ([...disenos, ...RECETAS].find((e) => e.receta.id === estado.recetaId) ?? null) : null;
   const aviso = fallo ?? error;
 
   return (
@@ -103,7 +152,45 @@ export default function App() {
         </p>
       )}
 
+      {nota && (
+        <p role="status" className="mt-4 rounded-xl border border-propio/40 bg-propio/10 p-3 text-sm text-propio" onClick={() => setNota(null)}>
+          {nota}
+        </p>
+      )}
+
       <main>
+        <section className="mt-8">
+          <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-propio">
+            <MarcaSala sala="propio" className="h-5 w-5" />
+            {t('sala.propio')}
+          </h2>
+          <p className="mt-1 text-sm text-tenue">{t('sala.propio.que')}</p>
+          <div className="mt-3 space-y-3">
+            {disenos.map((e) => (
+              <Tarjeta
+                key={e.receta.id}
+                entrada={e}
+                idioma={idioma}
+                sonando={estado.activo && estado.sonando && estado.recetaId === e.receta.id}
+                alAbrir={() => setAbierta(e)}
+              />
+            ))}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setDisenando({ diseno: DISENO_INICIAL })}
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-dashed border-propio/50 font-medium text-propio"
+              >
+                <Mas className="h-5 w-5" />
+                {t('disenar')}
+              </button>
+              <button type="button" onClick={() => void importar()} className="min-h-12 rounded-2xl border border-borde px-5 font-medium text-tenue">
+                {t('importar')}
+              </button>
+            </div>
+          </div>
+        </section>
+
         {SALAS.map((sala) => {
           const recetas = deSala(sala);
           if (recetas.length === 0) return null;
@@ -145,6 +232,32 @@ export default function App() {
           simulado={estado.simulado}
           alCerrar={() => setAbierta(null)}
           alTocar={(m) => tocar(abierta, m)}
+          {...(abierta.receta.sala === 'propio'
+            ? {
+                alCompartir: () => void compartir(abierta),
+                alBorrar: () => {
+                  ponerDisenos(disenos.filter((e) => e.receta.id !== abierta.receta.id));
+                  setAbierta(null);
+                },
+                ...(abierta.receta.diseno
+                  ? {
+                      alEditar: () => {
+                        setDisenando({ diseno: abierta.receta.diseno as Diseno, id: abierta.receta.id });
+                        setAbierta(null);
+                      },
+                    }
+                  : {}),
+              }
+            : {})}
+        />
+      )}
+
+      {disenando && (
+        <Disenador
+          inicial={disenando.diseno}
+          idioma={idioma}
+          alCerrar={() => setDisenando(null)}
+          alGuardar={(d) => void guardarDiseno(d, disenando.id)}
         />
       )}
 

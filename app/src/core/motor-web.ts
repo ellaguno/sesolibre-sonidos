@@ -3,7 +3,7 @@ import { WebPlugin } from '@capacitor/core';
 import { EN_REPOSO, type Estado, type OpcionesTocar, type SonidosPlugin } from './motor';
 
 /** Simulación para el navegador: mismo contrato, reloj real, sin sonido. */
-export class SonidosWeb extends WebPlugin implements Pick<SonidosPlugin, 'tocar' | 'pausar' | 'reanudar' | 'parar' | 'extender' | 'volumen' | 'estado'> {
+export class SonidosWeb extends WebPlugin implements Omit<SonidosPlugin, 'addListener'> {
   private e: Estado = { ...EN_REPOSO, simulado: true };
   private inicio = 0;
   private acumulado = 0;
@@ -69,6 +69,22 @@ export class SonidosWeb extends WebPlugin implements Pick<SonidosPlugin, 'tocar'
   }
 
   async volumen(): Promise<void> {}
+
+  /** Sin sonido no hay espectro. */
+  async espectro(): Promise<{ bandas: number[] }> {
+    return { bandas: [] };
+  }
+
+  /** En el navegador no está el núcleo: solo se comprueba que sea una receta con capas. */
+  async validar(o: { receta: string }): Promise<{ motivo: string | null }> {
+    try {
+      const r = JSON.parse(o.receta) as { version?: number; capas?: unknown[] };
+      if (r.version !== 1 || !Array.isArray(r.capas) || r.capas.length === 0) return { motivo: 'no es una receta de Sonidos' };
+      return { motivo: null };
+    } catch {
+      return { motivo: 'no es una receta de Sonidos' };
+    }
+  }
 
   async estado(): Promise<Estado> {
     return { ...this.e, segundos: this.ahora() };

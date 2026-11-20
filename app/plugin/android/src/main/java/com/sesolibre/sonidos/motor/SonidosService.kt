@@ -34,6 +34,7 @@ class SonidosService : MediaSessionService() {
             DefaultMediaNotificationProvider.Builder(this).build().apply { setSmallIcon(R.drawable.ic_stat_sonidos) }
         )
         player = SonidosPlayer(this)
+        actual = player
         val constructor = MediaSession.Builder(this, player).setCallback(Ordenes())
         packageManager.getLaunchIntentForPackage(packageName)?.let { abrirApp ->
             constructor.setSessionActivity(
@@ -54,12 +55,19 @@ class SonidosService : MediaSessionService() {
     }
 
     override fun onDestroy() {
+        actual = null
         sesion?.run {
             player.release()
             release()
         }
         sesion = null
         super.onDestroy()
+    }
+
+    internal companion object {
+        /** El reproductor vivo, para lo que el plugin lee directo (mismo proceso): el espectro. */
+        @Volatile
+        var actual: SonidosPlayer? = null
     }
 
     private inner class Ordenes : MediaSession.Callback {

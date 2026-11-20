@@ -49,6 +49,10 @@ export interface SonidosPlugin {
   parar(): Promise<void>;
   extender(o: { minutos: number }): Promise<{ minutos: number }>;
   volumen(o: { db: number }): Promise<void>;
+  /** Espectro de lo que suena: valores 0..1, graves primero. Vacío si no suena nada. */
+  espectro(o: { bandas: number }): Promise<{ bandas: number[] }>;
+  /** `motivo` nulo si el núcleo acepta la receta. */
+  validar(o: { receta: string }): Promise<{ motivo: string | null }>;
   estado(): Promise<Estado>;
   addListener(evento: 'estado', oyente: (e: Estado) => void): Promise<PluginListenerHandle>;
   addListener(evento: 'error', oyente: (e: { mensaje: string }) => void): Promise<PluginListenerHandle>;

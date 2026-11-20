@@ -26,6 +26,24 @@ licencias y la idea de un *core* sin interfaz; toma de Mind el stack de interfaz
   un APK de depuración y pasan lint. Lo que solo se puede comprobar en el Pixel: que suene,
   que sobreviva una noche con la pantalla apagada, llamadas, auriculares que se desconectan,
   y cuánta batería gasta.
+- **Añadido el 20 nov 2026, a petición de Eduardo tras probar el APK** (compila y pasa
+  lint; sin probar en teléfono):
+  - Recetas **432 Hz** y **Schumann 7,83 Hz** (solo sus armónicos audibles: la base no se oye).
+  - **Naturaleza sintetizada** (`naturaleza`: viento, lluvia, aves) y recetas *Lluvia en la
+    ventana* y *Claro del bosque*.
+  - **Diseñador**: el usuario elige fondo (mar, olas, burbujas, oleaje, viento, lluvia, aves,
+    ruidos), colchón, instrumento, frecuencia y respiración; el resultado es una receta de la
+    sala nueva `propio`, validada por el núcleo con los mismos límites.
+  - **Guardar y compartir**: los diseños viven en el dispositivo; se comparten como un código
+    de texto (`sonidos1:` + receta en base64url) y lo importado entra siempre como `propio`.
+  - **Espectrómetro**: FFT en el núcleo (`Motor::espectro`) sobre lo que sale por el altavoz;
+    la app lo dibuja solo con la pantalla a la vista.
+  - **Aves reales, pendiente.** Los cantos de Merlin Bird ID son de la Macaulay Library de
+    Cornell: tienen derechos, no son dominio público, y una app no puede leer los datos de
+    otra. Camino limpio: grabaciones CC0 o CC-BY (xeno-canto filtrando licencia, Freesound),
+    registradas en `manifest.toml` y añadidas a `tools/banco.py` como ambientes. Mientras, las
+    aves son sintéticas y la app lo dice.
+  - **Piano, pendiente**: sigue sin haber muestras versionadas.
 - Cambios respecto al plan: el servicio **sí** sostiene un wake lock parcial mientras suena
   (como hace ExoPlayer; se suelta al pausar o terminar); el audio sale por `AudioTrack` desde
   Kotlin en vez de Oboe (la latencia no importa y es menos código nativo); el puente es JNI a

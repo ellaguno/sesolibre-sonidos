@@ -24,7 +24,7 @@ fn motor(r: &Receta, semilla: Option<u64>) -> Motor {
 
 #[test]
 fn hay_recetas_y_todas_validan() {
-    assert!(recetas().len() >= 8);
+    assert!(recetas().len() >= 12);
 }
 
 #[test]
@@ -170,3 +170,31 @@ fn rechaza_promesas_y_descuidos() {
     assert!(r.validar().is_err(), "capa por encima de 0 dB");
 }
 
+
+#[test]
+fn el_espectro_encuentra_el_tono() {
+    // 528 Hz: la banda que lo contiene debe ser la más alta de las 48.
+    let r = recetas().into_iter().find(|r| r.id == "exploracion.solfeggio-528").unwrap();
+    let mut m = motor(&r, None);
+    m.rendir(Some(30.0));
+    let mut bandas = [0.0f32; 48];
+    m.espectro(&mut bandas);
+    let mayor = bandas.iter().enumerate().max_by(|a, b| a.1.total_cmp(b.1)).unwrap().0;
+    let f0 = 40.0 * (16_000.0f32 / 40.0).powf(mayor as f32 / 48.0);
+    eprintln!("bandas: {:?}", bandas.iter().map(|b| (b * 100.0) as i32).collect::<Vec<_>>());
+    // Colchón en 132 Hz y sus quintas, tono en 528: la energía está entre 100 y 700 Hz.
+    assert!((100.0..700.0).contains(&f0), "pico en {f0} Hz");
+    assert!(bandas[mayor] > 0.5, "pico demasiado bajo: {}", bandas[mayor]);
+    assert!(bandas.iter().all(|b| (0.0..=1.0).contains(b)));
+    assert!(bandas[47] < bandas[mayor] - 0.4, "no debería haber energía a 15 kHz");
+}
+
+#[test]
+fn un_diseno_propio_pasa_sin_vigilar_palabras_pero_no_los_limites() {
+    let mut r = recetas().into_iter().find(|r| r.id == "exploracion.solfeggio-528").unwrap();
+    r.sala = sonidos_core::Sala::Propio;
+    r.nombre.es = "Mi sonido que me cura el lunes".into();
+    assert!(r.validar().is_ok());
+    r.techo_db = -3.0;
+    assert!(r.validar().is_err());
+}

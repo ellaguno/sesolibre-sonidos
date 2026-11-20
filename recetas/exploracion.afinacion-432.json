@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "fade_in_s": 8,
+  "fade_out_s": 30,
+  "techo_db": -14,
+  "id": "exploracion.afinacion-432",
+  "sala": "exploracion",
+  "situacion": "exploracion",
+  "nombre": {
+    "es": "432 Hz",
+    "en": "432 Hz"
+  },
+  "descripcion": {
+    "es": "Un tono de 432 Hz con dos parciales suaves sobre un colchón de quintas afinado a su octava grave (108 Hz). Es el La que algunos prefieren al 440 de orquesta y llaman 'afinación natural'.",
+    "en": "A 432 Hz tone with two soft partials over a fifths pad tuned to its low octave (108 Hz). The A some prefer to the orchestral 440 and call 'natural tuning'."
+  },
+  "ciencia": {
+    "es": "Sin evidencia sólida: dos o tres estudios pequeños y de baja calidad vieron diferencias menores en el pulso entre música a 432 y a 440 Hz. Son ocho hercios de diferencia; suena agradable e inofensivo. Exploración personal.",
+    "en": "No solid evidence: two or three small, low-quality studies saw minor heart-rate differences between music at 432 and 440 Hz. It is an eight hertz difference; pleasant and harmless. Personal exploration."
+  },
+  "fuentes": [],
+  "duracion_s": 900,
+  "semilla": 9,
+  "advertencias": [],
+  "capas": [
+    {
+      "tipo": "tono",
+      "hz": 432,
+      "armonicos": 2,
+      "nivel_db": -26
+    },
+    {
+      "tipo": "colchon",
+      "modo": "quintas",
+      "raiz_hz": 108,
+      "nivel_db": -16,
+      "ciclo_s": 120,
+      "voces": 5,
+      "brillo": 0.4
+    }
+  ]
+}
