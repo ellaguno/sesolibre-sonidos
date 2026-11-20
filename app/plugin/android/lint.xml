@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Media3 exige que el MediaSessionService sea exportado (el sistema y los auriculares
+         se conectan a él). Las órdenes propias solo se aceptan de nuestro paquete. -->
+    <issue id="ExportedService" severity="ignore" />
+</lint>

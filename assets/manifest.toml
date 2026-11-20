@@ -53,3 +53,11 @@ author = "KolbyRFX"
 source = "https://freesound.org/s/852478/"
 license = "CC0-1.0"
 modified = "48 kHz estéreo, RMS -24 dB, Ogg Vorbis q5 (hecho en sesolibre-lienzo)"
+
+[[asset]]
+id = "fase1_renders"
+path = "audio/fase1/"
+kind = "render"
+author = "Eduardo Llaguno (generado por sonidos-core con las muestras de arriba)"
+license = "CC-BY-4.0"
+modified = "120 s por receta, 48 kHz, Ogg Vorbis q5"

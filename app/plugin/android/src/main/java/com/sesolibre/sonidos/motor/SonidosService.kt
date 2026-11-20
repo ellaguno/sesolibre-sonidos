@@ -10,6 +10,7 @@ import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -82,16 +83,16 @@ class SonidosService : MediaSessionService() {
             args: Bundle,
         ): ListenableFuture<SessionResult> {
             if (controller.packageName != packageName) {
-                return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_PERMISSION_DENIED))
+                return Futures.immediateFuture(SessionResult(SessionError.ERROR_PERMISSION_DENIED))
             }
             val respuesta = Bundle()
             when (customCommand.customAction) {
                 Contrato.TOCAR -> {
                     val receta = args.getString(Contrato.RECETA)
-                        ?: return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE))
+                        ?: return Futures.immediateFuture(SessionResult(SessionError.ERROR_BAD_VALUE))
                     Nativo.validar(receta)?.let { motivo ->
                         respuesta.putString(Contrato.ERROR, motivo)
-                        return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE, respuesta))
+                        return Futures.immediateFuture(SessionResult(SessionError.ERROR_BAD_VALUE, respuesta))
                     }
                     player.tocar(
                         receta = receta,
@@ -104,7 +105,7 @@ class SonidosService : MediaSessionService() {
                 }
                 Contrato.EXTENDER -> respuesta.putFloat(Contrato.SEGUNDOS, player.extender(args.getFloat(Contrato.SEGUNDOS, 0f)))
                 Contrato.VOLUMEN -> player.volumen(args.getFloat(Contrato.VOLUMEN_DB, 0f))
-                else -> return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_NOT_SUPPORTED))
+                else -> return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
             }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS, respuesta))
         }

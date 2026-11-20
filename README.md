@@ -12,6 +12,9 @@ app, en la sala **Exploración**, con una etiqueta honesta y la única regla de 
 - `assets/audio/fase0/` — 90 segundos de cada receta de la Fase 0, para escuchar.
 - `sonidos/core` — núcleo en Rust puro: receta + semilla → audio. Sin UI, sin plataforma.
 - `sonidos/cli` — `sonidos`: rinde recetas a WAV y las mide.
+- `sonidos/android` — el núcleo detrás de JNI (`libsonidos.so`).
+- `app/` — la app (Capacitor + React) y su plugin de Android.
+- `assets/audio/` — muestras reales (CC0 o equivalentes) y su índice `banco.json`.
 
 Hermano de [sesolibre-lienzo](https://github.com/ellaguno/sesolibre-lienzo) (de donde toma
 la regla "se escucha antes de seguir" y el manifiesto de licencias) y de
@@ -20,10 +23,26 @@ interfaz y la regla "sin promesas médicas").
 
 ## Estado
 
-**Fase 0 — Escuchar: código hecho (19 nov 2026), falta escuchar.** Seis recetas rinden a
-WAV, pasan las pruebas (deterministas, bajo techo, sin NaN, sin sobresaltos, sin palabras
-prohibidas). Siguiente paso: Eduardo las escucha y decide qué cambia antes de la Fase 1
-(servicio Android con pantalla apagada).
+**Fase 0 — Escuchar:** hecha en código; falta el veredicto de oído.
+
+**Fase 1 — Pantalla apagada: construida (20 nov 2026), sin probar en un teléfono.** Ocho
+recetas con muestras reales (cuerdas, arpa, vibráfono, agua) y reverberación. App Android
+(Capacitor + React) con un plugin propio: el núcleo corre dentro de un `MediaSessionService`
+en primer plano, con controles en la notificación y la pantalla de bloqueo, temporizador,
++15 min y modo noche. Compila a APK y pasa lint; el puente JNI pasa `tools/prueba_jni.sh`.
+Falta lo que solo dice un teléfono: una noche entera con la pantalla apagada.
+
+## App Android
+
+```bash
+cd app
+npm install
+npm run dev                      # la interfaz en el navegador (reloj simulado, sin sonido)
+./scripts/android-apk.sh install # núcleo → web → APK de depuración → adb
+```
+
+Requiere JDK 21, Rust, `cargo-ndk` y el SDK de Android con un NDK (`ANDROID_HOME`).
+`app/plugin/` es el plugin Capacitor (`capacitor-sonidos`): Kotlin + `libsonidos.so`.
 
 ## Uso
 
@@ -42,8 +61,9 @@ encontrar bugs, nunca para decidir si algo ayuda: eso se decide escuchando.
 
 Una receta es JSON versionado (ver `DISEÑO.md §4`). Capas disponibles: `ruido` (blanco,
 rosa, marrón, con filtros), `tono`, `pulso` (binaural, isocrónico, AM), `colchon` (acordes
-lentos, afinable), `respiracion` (guía sin voz), `barrido` (solo Exploración) y `ambiente`
-(bucles de campo; Fase 2). El núcleo **rechaza** recetas con techo alto, tonos fuera de
+lentos, afinable; sintético o con cuerdas reales), `instrumento` (arpa, vibráfono, flauta…
+tocando notas sueltas del acorde), `ambiente` (grabaciones de agua en bucle), `respiracion`
+(guía sin voz) y `barrido` (solo Exploración). Cada capa puede enviar a una reverberación. El núcleo **rechaza** recetas con techo alto, tonos fuera de
 20–16 000 Hz, pulsos sin advertencias o textos con palabras prohibidas.
 
 ## Licencia

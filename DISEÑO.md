@@ -17,11 +17,20 @@ licencias y la idea de un *core* sin interfaz; toma de Mind el stack de interfaz
 
 ## Estado
 
-- **Fase 0 — Escuchar:** el núcleo (`sonidos/core`), el CLI (`sonidos/cli`), seis recetas en
-  `recetas/` y 90 s de cada una en `assets/audio/fase0/*.ogg`. Pendiente: que Eduardo las
-  escuche y diga qué cambia (colchón sintético vs. muestras, niveles, carácter). Hasta
-  entonces no se toca la arquitectura.
-- **Fase 1 — Pantalla apagada:** no empezada. Necesita el SDK de Android.
+- **Fase 0 — Escuchar:** hecha en código (19 nov 2026). Falta el veredicto de Eduardo sobre
+  el sonido.
+- **Fase 1 — Pantalla apagada:** construida (20 nov 2026), **sin probar en un teléfono**.
+  El núcleo usa ya las muestras reales de Lienzo (cuerdas, arpa, vibráfono, armónicos, agua)
+  con reverberación; hay ocho recetas; el puente JNI pasa su prueba en la JVM de escritorio;
+  la app (Capacitor + React) y el plugin (`MediaSessionService` + `AudioTrack`) compilan a
+  un APK de depuración y pasan lint. Lo que solo se puede comprobar en el Pixel: que suene,
+  que sobreviva una noche con la pantalla apagada, llamadas, auriculares que se desconectan,
+  y cuánta batería gasta.
+- Cambios respecto al plan: el servicio **sí** sostiene un wake lock parcial mientras suena
+  (como hace ExoPlayer; se suelta al pausar o terminar); el audio sale por `AudioTrack` desde
+  Kotlin en vez de Oboe (la latencia no importa y es menos código nativo); el puente es JNI a
+  mano, no uniffi (se revisa en la Fase 3, cuando haga falta Swift). El piano Salamander no
+  está versionado en Lienzo: se usan arpa y vibráfono; el piano queda pendiente.
 
 ---
 
@@ -213,7 +222,7 @@ permisos `FOREGROUND_SERVICE` y `FOREGROUND_SERVICE_MEDIA_PLAYBACK`, que arranca
 pide *audio focus* (Android 15+ lo niega a quien no sea app visible o servicio en primer
 plano) y escribe el audio con AAudio/Oboe desde el core en Rust. La `MediaSession` da los
 controles de pantalla de bloqueo y de auriculares; la reproducción activa mantiene el
-proceso fuera de Doze sin *wake locks* propios. Para iOS, más adelante: `AVAudioSession`
+proceso fuera de Doze (con un wake lock parcial mientras suena, por robustez). Para iOS, más adelante: `AVAudioSession`
 en categoría `playback` y el *background mode* "audio".
 
 ```
@@ -287,7 +296,7 @@ ninguna app hermana tiene que inventar sonido ni volver a decidir qué es honest
 | Fase | Entregable | Pregunta que responde |
 |---|---|---|
 | **0 · Escuchar** 🔧 *código hecho el 19 nov 2026; falta escuchar* | `sonidos-core` + CLI que rinde 6 recetas a WAV (dormir, concentrar, respirar, meditar, solfeggio 528, viaje). Eduardo las escucha con auriculares y en altavoz. | ¿El sintético suena bien o hacen falta muestras? ¿Los pulsos dentro de música molestan? Si no gusta, se cambia el sonido, no la arquitectura. |
-| **1 · Pantalla apagada** | App Android mínima (tres situaciones) con el servicio `mediaPlayback`, controles de bloqueo, temporizador y techo de volumen. Una noche entera en el Pixel sin cortes ni batería rara. | ¿Sobrevive al Doze, al cambio de auriculares, a una llamada? Es el riesgo técnico número uno y se resuelve antes de hacer el catálogo. |
+| **1 · Pantalla apagada** 🔧 *construida el 20 nov 2026; falta probar en el Pixel* | App Android mínima (tres situaciones) con el servicio `mediaPlayback`, controles de bloqueo, temporizador y techo de volumen. Una noche entera en el Pixel sin cortes ni batería rara. | ¿Sobrevive al Doze, al cambio de auriculares, a una llamada? Es el riesgo técnico número uno y se resuelve antes de hacer el catálogo. |
 | **2 · Catálogo y salas** | Las siete situaciones, etiquetas con fuentes, sala Exploración con presets, ajustes heredados de Mind, es/en. | ¿Se entiende la diferencia entre salas sin leer? ¿Se usa de noche más de una semana? |
 | **3 · Hermanas** | AAR + npm publicados; Somnia embebe `sonar.calma-ronquido` y compara noches; Mind ofrece sonido de fondo; deep links. | ¿Somnia nota algo medible? ¿Mind lo quiere? |
 | **4 · Laboratorio** | Cimática con cámara y barrido; experimento de plantas con protocolo y diario; sesión 40 Hz larga. | ¿Lo fringe se disfruta como exploración honesta? |
