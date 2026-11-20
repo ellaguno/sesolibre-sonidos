@@ -70,9 +70,22 @@ export class SonidosWeb extends WebPlugin implements Omit<SonidosPlugin, 'addLis
 
   async volumen(): Promise<void> {}
 
-  /** Sin sonido no hay espectro. */
-  async espectro(): Promise<{ bandas: number[] }> {
-    return { bandas: [] };
+  /** Sin sonido no hay espectro real: una forma inventada que se mueve, para ver el gráfico. */
+  async espectro(o: { bandas: number }): Promise<{ bandas: number[] }> {
+    if (!this.e.sonando) return { bandas: [] };
+    const t = Date.now() / 1000;
+    const campana = (x: number, centro: number, ancho: number) => Math.exp(-(((x - centro) / ancho) ** 2));
+    return {
+      bandas: Array.from({ length: o.bandas }, (_, i) => {
+        const x = i / o.bandas;
+        const v =
+          0.75 * campana(x, 0.22, 0.09) * (0.8 + 0.2 * Math.sin(t * 0.7)) +
+          0.55 * campana(x, 0.43, 0.05) * (0.6 + 0.4 * Math.sin(t * 1.3 + 1)) +
+          0.3 * campana(x, 0.66, 0.12) * (0.5 + 0.5 * Math.sin(t * 2.1 + 2)) +
+          0.04 * Math.random();
+        return Math.min(1, v);
+      }),
+    };
   }
 
   /** En el navegador no está el núcleo: solo se comprueba que sea una receta con capas. */

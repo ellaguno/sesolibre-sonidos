@@ -16,8 +16,6 @@ interface Props {
   alExtender: () => void;
 }
 
-const COLOR = { comprobado: '#5ed6b0', prometedor: '#f0be64', exploracion: '#b096ff', propio: '#82beff' } as const;
-
 /** La barra de lo que suena: cuánto queda, pausa, +15 min y parar. */
 export function Reproductor({ entrada, estado, segundos, idioma, alPausar, alReanudar, alParar, alExtender }: Props) {
   const r = entrada.receta;
@@ -30,11 +28,13 @@ export function Reproductor({ entrada, estado, segundos, idioma, alPausar, alRea
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-10 border-t border-borde bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-      {!estado.simulado && (
-        <div className={`mx-auto max-w-xl px-4 pt-2 ${s.texto}`}>
-          <Espectro activo={estado.sonando && !estado.cargando} color={COLOR[r.sala]} etiqueta={t('espectro')} />
-        </div>
-      )}
+      <div className="mx-auto max-w-xl px-4 pt-2">
+        <Espectro
+          activo={estado.sonando && !estado.cargando}
+          etiqueta={t('espectro')}
+          textos={{ pico: t('espectroPico'), toca: t('espectroToca'), simulado: estado.simulado ? t('espectroSimulado') : undefined }}
+        />
+      </div>
       <div className="h-1 w-full bg-borde/60" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(avance * 100)}>
         <div className={`h-full ${s.barra}`} style={{ width: `${avance * 100}%` }} />
       </div>
