@@ -1,0 +1,18 @@
+// Firma de release con la upload key de Google Play (Play App Signing re-firma con la
+// clave de la app). La llave nunca se versiona: llega por variables de entorno, en local
+// desde ~/.sesolibre-keys y en CI desde los secrets del repo. Sin ANDROID_KEYSTORE el
+// release sale sin firmar (sirve para validar, Play no lo acepta).
+// scripts/android-apk.sh copia este archivo a android/app/ y lo aplica desde build.gradle.
+
+def almacen = System.getenv('ANDROID_KEYSTORE')
+if (almacen) {
+    android.signingConfigs {
+        subida {
+            storeFile file(almacen)
+            storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+            keyAlias System.getenv('ANDROID_KEY_ALIAS')
+            keyPassword System.getenv('ANDROID_KEY_PASSWORD') ?: System.getenv('ANDROID_KEYSTORE_PASSWORD')
+        }
+    }
+    android.buildTypes.release.signingConfig android.signingConfigs.subida
+}

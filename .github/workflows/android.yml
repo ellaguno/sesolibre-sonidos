@@ -1,0 +1,99 @@
+name: Android (Play)
+
+# AAB de release (R8) firmado con la upload key de SesoLibre (la misma de Games y Mind) y,
+# en cada tag v* o a mano con la casilla, subida a Google Play como BORRADOR en la pista
+# indicada (por defecto "alpha" = prueba cerrada). La versión se envía a revisión desde
+# Play Console. Todo el build lo hace app/scripts/android-apk.sh aab, igual que en local.
+#
+# Secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS,
+#          ANDROID_KEY_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON. Sin la llave el AAB sale sin
+#          firmar; sin la cuenta de servicio no se sube. Ver docs/PUBLICAR.md.
+# Variables opcionales: PLAY_TRACK (alpha), PLAY_RELEASE_STATUS (draft).
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      upload:
+        description: 'Subir a Google Play (borrador)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  aab:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # versionCode = número de commits
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-ndk --locked
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      # Nada se publica si fallan las pruebas del núcleo o de la app.
+      - run: cargo test --release -p sonidos-core
+      - run: npm ci
+        working-directory: app
+      - run: npm test
+        working-directory: app
+
+      - name: Compilar y firmar el AAB
+        working-directory: app
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            printf '%s' "$KS_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+            export ANDROID_KEYSTORE="$RUNNER_TEMP/upload.jks"
+          else
+            echo "::warning::Sin ANDROID_KEYSTORE_BASE64: AAB SIN FIRMAR (Play no lo acepta)."
+          fi
+          ./scripts/android-apk.sh aab
+          rm -f "$RUNNER_TEMP/upload.jks"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sesolibre-sonidos-aab
+          path: |
+            app/sesolibre-sonidos-*.aab
+            app/sesolibre-sonidos-*.mapping.txt
+          if-no-files-found: error
+
+      - name: Subir a Google Play (borrador)
+        if: github.event_name == 'push' || inputs.upload
+        working-directory: app
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PLAY_TRACK: ${{ vars.PLAY_TRACK || 'alpha' }}
+          PLAY_RELEASE_STATUS: ${{ vars.PLAY_RELEASE_STATUS || 'draft' }}
+        run: |
+          if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::warning::Sin PLAY_SERVICE_ACCOUNT_JSON: no se sube (el AAB queda como artefacto)."
+            exit 0
+          fi
+          AAB=$(ls sesolibre-sonidos-*.aab | head -1)
+          node scripts/play.mjs tracks
+          PLAY_RELEASE_NAME="$(basename "$AAB" .aab | sed 's/^sesolibre-sonidos-//')" \
+            node scripts/play.mjs upload "$AAB" "$PLAY_TRACK" "${AAB%.aab}.mapping.txt" ../docs/release-notes.txt

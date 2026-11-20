@@ -9,6 +9,7 @@ app, en la sala **Exploración**, con una etiqueta honesta y la única regla de 
 - [DISEÑO.md](DISEÑO.md) — análisis de la evidencia, experiencia, arquitectura y fases.
 - [docs/INTEGRAR.md](docs/INTEGRAR.md) — cómo usar el núcleo desde Somnia, Mind u otra app.
 - [docs/PALABRAS.md](docs/PALABRAS.md) — lo que la app dice y lo que no dice nunca.
+- [docs/PUBLICAR.md](docs/PUBLICAR.md) — firma, Google Play y App Store.
 - `recetas/` — las recetas (JSON): el contrato entre el núcleo y cualquier interfaz.
 - `assets/audio/fase0/` — 90 segundos de cada receta de la Fase 0, para escuchar.
 - `sonidos/core` — núcleo en Rust puro: receta + semilla → audio. Sin UI, sin plataforma.
@@ -33,7 +34,8 @@ recetas con muestras reales (cuerdas, arpa, vibráfono, agua) y reverberación. 
 (Capacitor + React) con un plugin propio: el núcleo corre dentro de un `MediaSessionService`
 en primer plano, con controles en la notificación y la pantalla de bloqueo, temporizador,
 +15 min y modo noche. Compila a APK y pasa lint; el puente JNI pasa `tools/prueba_jni.sh`.
-Falta lo que solo dice un teléfono: una noche entera con la pantalla apagada.
+Probada el 20 nov en un Pixel 9 Pro (debug y release con R8): suena con la pantalla
+apagada y responde a los controles de la notificación. Falta una noche entera.
 
 Desde el 20 nov: doce recetas (432 Hz, Schumann, lluvia, bosque), un **diseñador** para
 armar sonidos propios, guardarlos y compartirlos como un código de texto, y un
@@ -54,6 +56,7 @@ cd app
 npm install
 npm run dev                      # la app en el navegador, con sonido (núcleo en WebAssembly)
 ./scripts/android-apk.sh install # núcleo → web → APK de depuración → adb
+./scripts/android-apk.sh aab     # AAB de release para Google Play (ver docs/PUBLICAR.md)
 ```
 
 Requiere JDK 21, Rust, `cargo-ndk` y el SDK de Android con un NDK (`ANDROID_HOME`).

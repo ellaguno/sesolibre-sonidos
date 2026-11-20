@@ -16,3 +16,7 @@ app/public/motor/sonidos.wasm
 app/plugin/android/src/main/jniLibs/
 app/plugin/android/build/
 *.tsbuildinfo
+
+# Builds de release para tiendas (firmados: no se versionan)
+app/*.aab
+app/*.mapping.txt
