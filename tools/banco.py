@@ -50,10 +50,23 @@ ambientes = {
     "grillos": "ambience/mole_cricket.ogg",
     "pita": "ambience/pitta.ogg",
     "gaviotas": "ambience/gulls.ogg",
+    "mirlo": "ambience/blackbird.ogg",
+    "verderon": "ambience/greenfinch.ogg",
+    "mosquitero": "ambience/willow_warbler.ogg",
+    "campanero": "ambience/bellbird.ogg",
 }
 # Cantos de animales: no se tocan a otra velocidad (sonarían a otra especie).
-fieles = ["chotacabras", "ranas", "grillos", "pita", "gaviotas"]
+fieles = ["chotacabras", "ranas", "grillos", "pita", "gaviotas", "mirlo", "verderon", "mosquitero", "campanero"]
+
+
+def eventos(carpeta):
+    d = os.path.join(AUDIO, "events", carpeta)
+    return [f"events/{carpeta}/{f}" for f in sorted(os.listdir(d))]
+
+
+golpes = {"gong": eventos("gong"), "platillo": eventos("bowed_cymbal"), "carillon": eventos("windchimes")}
 with open(os.path.join(AUDIO, "banco.json"), "w", encoding="utf-8") as f:
-    json.dump({"version": 1, "instrumentos": instrumentos, "ambientes": ambientes, "ambientes_fieles": fieles}, f, ensure_ascii=False, indent=1)
+    json.dump({"version": 1, "instrumentos": instrumentos, "ambientes": ambientes, "ambientes_fieles": fieles, "eventos": golpes}, f, ensure_ascii=False, indent=1)
     f.write("\n")
+print("eventos:", ", ".join(f"{k} ({len(v)})" for k, v in golpes.items()))
 print("banco.json:", ", ".join(f"{k} ({len(v['notas'])})" for k, v in instrumentos.items()), "|", ", ".join(ambientes))

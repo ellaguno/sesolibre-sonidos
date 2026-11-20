@@ -11,8 +11,8 @@
     "en": "Bells and brass"
   },
   "descripcion": {
-    "es": "Una campana tubular cada tanto, en una sala muy grande, sobre un coro de trombones y cornos que casi no se mueve. Sin pulsos. Veinte minutos.",
-    "en": "A tubular bell every so often, in a very large room, over a choir of trombones and horns that barely moves. No pulses. Twenty minutes."
+    "es": "Una campana tubular cada tanto y un gong muy de vez en cuando, en una sala muy grande, sobre un coro de trombones y cornos que casi no se mueve. Sin pulsos. Veinte minutos.",
+    "en": "A tubular bell every so often and a gong once in a long while, in a very large room, over a choir of trombones and horns that barely moves. No pulses. Twenty minutes."
   },
   "ciencia": {
     "es": "Es música lenta: baja la activación y acompaña la atención sin pedirla (ensayos pequeños, efectos pequeños a medianos). En meditación lo que más pesa es sentarse.",
@@ -58,6 +58,14 @@
       "nivel_db": -26,
       "reverb": 1.0,
       "desde_s": 10
+    },
+    {
+      "tipo": "eventos",
+      "evento": "gong",
+      "cada_s": 150,
+      "nivel_db": -30,
+      "reverb": 0.8,
+      "desde_s": 30
     }
   ]
 }

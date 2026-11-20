@@ -232,6 +232,8 @@ pub enum Generador {
         #[serde(default)]
         paso_bajo_hz: Option<f32>,
     },
+    /// Golpes sueltos y espaciados (gong, platillo frotado, carillón), uno cada `cada_s` de media.
+    Eventos { evento: String, cada_s: f32 },
     /// Armónicos audibles de una fundamental que puede no oírse (7,83 Hz → 125, 188, 250…).
     Serie { base_hz: f32, armonicos: Vec<u16> },
     /// Naturaleza sintetizada: viento, lluvia o pájaros imaginarios.
@@ -421,6 +423,12 @@ impl Receta {
                     }
                 }
                 Generador::Naturaleza { .. } => {}
+                Generador::Eventos { evento, cada_s } => {
+                    crate::banco::evento(evento).map_err(|e| Error::Receta(format!("{} capa {}: {}", self.id, i, e)))?;
+                    if !(15.0..=900.0).contains(cada_s) {
+                        return ec("eventos: uno cada 15 a 900 s");
+                    }
+                }
                 Generador::Barrido { desde_hz, hasta_hz, periodo_s } => {
                     if self.sala != Sala::Exploracion && self.sala != Sala::Propio {
                         return ec("el barrido solo existe en Exploración");

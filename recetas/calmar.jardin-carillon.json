@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "id": "calmar.jardin-carillon",
+  "sala": "comprobado",
+  "situacion": "calmar",
+  "nombre": {
+    "es": "Jardín con carillón",
+    "en": "Garden with wind chimes"
+  },
+  "descripcion": {
+    "es": "Un verderón y un campanero grabados de verdad, viento leve, un carillón que suena cuando quiere, un platillo frotado muy lejos un arpa espaciada y cuerdas al fondo. Sin pulsos. Veinte minutos.",
+    "en": "A really recorded greenfinch and bellbird, light wind, wind chimes sounding when they please, a very distant bowed cymbal a sparse harp and strings behind. No pulses. Twenty minutes."
+  },
+  "ciencia": {
+    "es": "Los sonidos de naturaleza y la música lenta bajan la activación tras un momento de estrés (ensayos pequeños, efectos pequeños a medianos). Cantos de xeno-canto, CC BY 4.0 (ver créditos).",
+    "en": "Nature sounds and slow music lower arousal after a stressful moment (small trials, small to medium effects). Songs from xeno-canto, CC BY 4.0 (see credits)."
+  },
+  "fuentes": [],
+  "duracion_s": 1200,
+  "fade_in_s": 8,
+  "fade_out_s": 40,
+  "semilla": 16,
+  "techo_db": -14,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 5,
+    "amortiguacion_hz": 4500
+  },
+  "capas": [
+    {
+      "tipo": "ambiente",
+      "ambiente": "verderon",
+      "nivel_db": -28
+    },
+    {
+      "tipo": "ambiente",
+      "ambiente": "campanero",
+      "nivel_db": -33,
+      "desde_s": 15
+    },
+    {
+      "tipo": "naturaleza",
+      "clase": "viento",
+      "nivel_db": -24
+    },
+    {
+      "tipo": "eventos",
+      "evento": "carillon",
+      "cada_s": 50,
+      "nivel_db": -31,
+      "reverb": 0.6,
+      "desde_s": 10
+    },
+    {
+      "tipo": "eventos",
+      "evento": "platillo",
+      "cada_s": 110,
+      "nivel_db": -36,
+      "reverb": 1.0,
+      "desde_s": 40
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "arpa",
+      "modo": "re_pentatonico",
+      "ciclo_s": 200,
+      "notas_por_minuto": 4,
+      "octavas": [
+        1,
+        2
+      ],
+      "nivel_db": -25,
+      "reverb": 0.7,
+      "desde_s": 12
+    },
+    {
+      "tipo": "colchon",
+      "modo": "re_pentatonico",
+      "timbre": "cuerdas",
+      "nivel_db": -19,
+      "ciclo_s": 200,
+      "voces": 5,
+      "reverb": 0.5
+    }
+  ]
+}

@@ -24,14 +24,14 @@ fn motor(r: &Receta, semilla: Option<u64>) -> Motor {
 
 #[test]
 fn hay_recetas_y_todas_validan() {
-    assert!(recetas().len() >= 15);
+    assert!(recetas().len() >= 16);
 }
 
 #[test]
 fn las_muestras_del_indice_existen() {
     let audio = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../assets/audio");
     let i = sonidos_core::banco::indice();
-    for a in i.instrumentos.values().flat_map(|d| d.notas.values()).chain(i.ambientes.values()) {
+    for a in i.instrumentos.values().flat_map(|d| d.notas.values()).chain(i.ambientes.values()).chain(i.eventos.values().flatten()) {
         assert!(audio.join(a).is_file(), "falta {a}");
     }
 }

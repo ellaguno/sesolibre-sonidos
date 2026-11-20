@@ -10,7 +10,7 @@ const destino = join(raiz, 'public', 'audio');
 
 rmSync(destino, { recursive: true, force: true });
 mkdirSync(destino, { recursive: true });
-for (const parte of ['instruments', 'ambience', 'banco.json']) {
+for (const parte of ['instruments', 'ambience', 'events', 'banco.json']) {
   if (!existsSync(join(origen, parte))) throw new Error(`falta ${join(origen, parte)}`);
   cpSync(join(origen, parte), join(destino, parte), { recursive: true });
 }

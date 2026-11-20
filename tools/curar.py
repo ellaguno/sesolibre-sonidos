@@ -30,6 +30,16 @@ XENO = {
     "mole_cricket": ("998077", 300, 2, 58),
     "pitta": ("903851", 400, 2, 80),
     "gulls": ("1165177", 300, 1, 39),
+    "blackbird": ("904765", 500, 3, 90),
+    "greenfinch": ("642404", 500, 5, 90),
+    "willow_warbler": ("989893", 600, 1, 47),
+    "bellbird": ("602854", 400, 1, 56),
+}
+# Golpes sueltos del VSCO 256: carpeta → archivos. Pico a -3 dB, enteros.
+EVENTOS = {
+    "gong": ["gong_f", "gong_2_f"],
+    "bowed_cymbal": ["susCymb1_bow_16", "susCymb1_bow_5", "susCymb2_bowed_3", "susCymb2_bowed_5"],
+    "windchimes": ["windchimes_asc1"],
 }
 
 
@@ -72,3 +82,13 @@ for nombre, (xc, paso_alto, desde, dura) in XENO.items():
     filtro = f"{limpio},volume={ganancia:.2f}dB,afade=t=in:d=0.5,areverse,afade=t=in:d=0.5,areverse"
     subprocess.run(["ffmpeg", "-v", "error", "-y", *corte, "-af", filtro, "-ar", "48000", "-ac", "2", "-c:a", "libvorbis", "-q:a", "4", salida], check=True)
     print(f"ambience/{nombre}: XC{xc}, {dura} s, {ganancia:+.1f} dB")
+
+for carpeta, archivos in EVENTOS.items():
+    for i, nombre in enumerate(archivos, 1):
+        f = os.path.join(AUDIO, "raw", "vsco-256", nombre + ".wav")
+        _, pico = medir(["-i", f])
+        salida = os.path.join(AUDIO, "events", carpeta, f"{i}.ogg")
+        os.makedirs(os.path.dirname(salida), exist_ok=True)
+        filtro = f"volume={-3.0 - pico:.2f}dB,areverse,afade=t=in:d=0.3,areverse"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f, "-af", filtro, "-ar", "48000", "-ac", "2", "-c:a", "libvorbis", "-q:a", "5", salida], check=True)
+    print(f"events/{carpeta}: {len(archivos)}")

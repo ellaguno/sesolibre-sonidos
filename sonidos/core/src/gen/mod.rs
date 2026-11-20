@@ -4,6 +4,7 @@
 mod ambiente;
 mod barrido;
 mod colchon;
+mod eventos;
 mod instrumento;
 mod naturaleza;
 mod pulso;
@@ -78,6 +79,13 @@ pub fn construir(gen: &Generador, sr: f32, rng: Rng, duracion_s: f32, banco: &Ba
             Box::new(ambiente::Ambiente::nuevo(banco.obtener(banco::ambiente(ambiente)?)?, *paso_bajo_hz, fiel, sr))
         }
         Generador::Serie { base_hz, armonicos } => Box::new(serie::Serie::nueva(*base_hz, armonicos, sr)),
+        Generador::Eventos { evento, cada_s } => {
+            let mut sonidos = Vec::new();
+            for a in banco::evento(evento)? {
+                sonidos.push(banco.obtener(a)?);
+            }
+            Box::new(eventos::Eventos::nuevos(sonidos, *cada_s, sr, rng))
+        }
         Generador::Naturaleza { clase } => naturaleza::nueva(*clase, sr, rng),
         Generador::Barrido { desde_hz, hasta_hz, periodo_s } => {
             Box::new(barrido::Barrido::nuevo(*desde_hz, *hasta_hz, *periodo_s, sr))

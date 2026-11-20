@@ -3,11 +3,12 @@
 
 import type { Entrada, Receta } from './recetas';
 
-export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'gaviotas', 'viento', 'lluvia', 'selva', 'noche', 'grillos', 'ranas', 'aves', 'rosa', 'marron'] as const;
+export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'gaviotas', 'viento', 'lluvia', 'mirlo', 'verderon', 'mosquitero', 'campanero', 'selva', 'noche', 'grillos', 'ranas', 'aves', 'rosa', 'marron'] as const;
 export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta', 'corno', 'trombones'] as const;
 export const MODOS = ['re_pentatonico', 'menor', 'quintas'] as const;
 export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'fagot', 'corno', 'trompeta', 'campanas', 'armonicos'] as const;
 export const FRECUENCIAS = ['ninguno', 'tono', 'binaural', 'isocronico', 'serie'] as const;
+export const EVENTOS = ['ninguno', 'carillon', 'platillo', 'gong'] as const;
 export const DENSIDADES = { pocas: 3, algunas: 6, muchas: 12 } as const;
 
 export interface Diseno {
@@ -24,6 +25,8 @@ export interface Diseno {
   /** Pulso (binaural, isocrónico) o base de la serie de armónicos, en Hz. */
   beat: number;
   respiracion: boolean;
+  /** Golpes sueltos y espaciados. Falta en los diseños guardados antes de existir. */
+  evento?: (typeof EVENTOS)[number];
   minutos: number;
 }
 
@@ -39,6 +42,7 @@ export const DISENO_INICIAL: Diseno = {
   hz: 200,
   beat: 6,
   respiracion: false,
+  evento: 'ninguno',
   minutos: 30,
 };
 
@@ -60,6 +64,11 @@ function capaDeFondo(f: Diseno['fondos'][number]): Record<string, unknown> {
       return { tipo: 'naturaleza', clase: 'lluvia', nivel_db: -19 };
     case 'aves':
       return { tipo: 'naturaleza', clase: 'aves', nivel_db: -30, reverb: 0.5 };
+    case 'mirlo':
+    case 'verderon':
+    case 'mosquitero':
+    case 'campanero':
+      return { tipo: 'ambiente', ambiente: f, nivel_db: -30 };
     case 'gaviotas':
       return { tipo: 'ambiente', ambiente: 'gaviotas', nivel_db: -34 };
     case 'selva':
@@ -125,6 +134,9 @@ export function construir(d: Diseno, id = `propio.${Date.now().toString(36)}`): 
   } else if (d.frecuencia === 'serie') {
     const base = acotar(d.beat, 1, 200, 7.83);
     capas.push({ tipo: 'serie', base_hz: base, armonicos: armonicosAudibles(base), nivel_db: -28 });
+  }
+  if (d.evento && d.evento !== 'ninguno') {
+    capas.push({ tipo: 'eventos', evento: d.evento, cada_s: d.evento === 'gong' ? 120 : 60, nivel_db: d.evento === 'gong' ? -30 : -27, reverb: 0.8, desde_s: 5 });
   }
   if (d.respiracion) {
     capas.push({ tipo: 'respiracion', inhalar_s: 4, exhalar_s: 6, hz: 196, nivel_db: -17, transicion_s: 2 });

@@ -194,13 +194,36 @@
   "ranas": "ambience/tree_frog.ogg",
   "grillos": "ambience/mole_cricket.ogg",
   "pita": "ambience/pitta.ogg",
-  "gaviotas": "ambience/gulls.ogg"
+  "gaviotas": "ambience/gulls.ogg",
+  "mirlo": "ambience/blackbird.ogg",
+  "verderon": "ambience/greenfinch.ogg",
+  "mosquitero": "ambience/willow_warbler.ogg",
+  "campanero": "ambience/bellbird.ogg"
  },
  "ambientes_fieles": [
   "chotacabras",
   "ranas",
   "grillos",
   "pita",
-  "gaviotas"
- ]
+  "gaviotas",
+  "mirlo",
+  "verderon",
+  "mosquitero",
+  "campanero"
+ ],
+ "eventos": {
+  "gong": [
+   "events/gong/1.ogg",
+   "events/gong/2.ogg"
+  ],
+  "platillo": [
+   "events/bowed_cymbal/1.ogg",
+   "events/bowed_cymbal/2.ogg",
+   "events/bowed_cymbal/3.ogg",
+   "events/bowed_cymbal/4.ogg"
+  ],
+  "carillon": [
+   "events/windchimes/1.ogg"
+  ]
+ }
 }

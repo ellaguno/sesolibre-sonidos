@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { COLCHONES, DENSIDADES, FONDOS, FRECUENCIAS, INSTRUMENTOS, MODOS, type Diseno } from '../core/diseno';
+import { COLCHONES, DENSIDADES, EVENTOS, FONDOS, FRECUENCIAS, INSTRUMENTOS, MODOS, type Diseno } from '../core/diseno';
 import { traducir } from '../core/i18n';
 import type { Idioma } from '../core/recetas';
 import { DE_SALA } from './estilos';
@@ -20,7 +20,7 @@ export function Disenador({ inicial, idioma, alCerrar, alGuardar }: Props) {
   const s = DE_SALA.propio;
   const poner = (cambio: Partial<Diseno>) => setD((v) => ({ ...v, ...cambio }));
   const vacio =
-    d.fondos.length === 0 && d.colchon === 'ninguno' && d.instrumento === 'ninguno' && d.frecuencia === 'ninguno' && !d.respiracion;
+    d.fondos.length === 0 && d.colchon === 'ninguno' && d.instrumento === 'ninguno' && d.frecuencia === 'ninguno' && !d.respiracion && (d.evento ?? 'ninguno') === 'ninguno';
   const conPulso = d.frecuencia === 'binaural' || d.frecuencia === 'isocronico';
 
   const ficha = (activa: boolean) =>
@@ -128,6 +128,7 @@ export function Disenador({ inicial, idioma, alCerrar, alGuardar }: Props) {
         {(conPulso || d.frecuencia === 'serie') && numero('d.beat', d.beat, 0.5, d.frecuencia === 'serie' ? 200 : 45, 0.01, (beat) => poner({ beat }))}
         {d.frecuencia === 'binaural' && <p className="mt-2 text-sm text-prometedor">{t('adv.auriculares')}</p>}
 
+        <Grupo titulo="d.evento" opciones={EVENTOS} valor={d.evento ?? 'ninguno'} alElegir={(evento) => poner({ evento })} />
         <Grupo titulo="d.respiracion" opciones={['no', 'si'] as const} valor={d.respiracion ? 'si' : 'no'} alElegir={(v) => poner({ respiracion: v === 'si' })} />
 
         {vacio && <p className="mt-4 text-sm text-prometedor">{t('d.vacio')}</p>}

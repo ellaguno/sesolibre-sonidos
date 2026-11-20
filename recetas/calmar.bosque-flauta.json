@@ -11,12 +11,12 @@
     "en": "Forest clearing"
   },
   "descripcion": {
-    "es": "Viento entre los árboles, tres pájaros imaginarios que cantan de vez en cuando, cuerdas en Re pentatónico y una flauta que sostiene una nota cada tanto. Veinte minutos.",
-    "en": "Wind through the trees, three imaginary birds singing now and then, strings in D pentatonic and a flute holding a note every so often. Twenty minutes."
+    "es": "Viento entre los árboles, un mirlo y un mosquitero grabados de verdad, cuerdas en Re pentatónico y una flauta que sostiene una nota cada tanto. Veinte minutos.",
+    "en": "Wind through the trees, a really recorded blackbird and willow warbler, strings in D pentatonic and a flute holding a note every so often. Twenty minutes."
   },
   "ciencia": {
-    "es": "Los sonidos de naturaleza bajan la activación tras un momento de estrés más rápido que el silencio o el ruido urbano (ensayos pequeños, efectos pequeños a medianos). Aquí la lluvia, el viento y los pájaros son sintetizados, no grabados.",
-    "en": "Nature sounds lower arousal after a stressful moment faster than silence or city noise (small trials, small to medium effects). Here rain, wind and birds are synthesized, not recorded."
+    "es": "Los sonidos de naturaleza bajan la activación tras un momento de estrés más rápido que el silencio o el ruido urbano (ensayos pequeños, efectos pequeños a medianos). Cantos de xeno-canto, CC BY 4.0 (ver créditos); el viento es sintetizado.",
+    "en": "Nature sounds lower arousal after a stressful moment faster than silence or city noise (small trials, small to medium effects). Songs from xeno-canto, CC BY 4.0 (see credits); the wind is synthesized."
   },
   "fuentes": [],
   "duracion_s": 1200,
@@ -33,11 +33,16 @@
       "nivel_db": -22
     },
     {
-      "tipo": "naturaleza",
-      "clase": "aves",
-      "nivel_db": -30,
-      "reverb": 0.5,
-      "desde_s": 8
+      "tipo": "ambiente",
+      "ambiente": "mirlo",
+      "nivel_db": -32,
+      "desde_s": 6
+    },
+    {
+      "tipo": "ambiente",
+      "ambiente": "mosquitero",
+      "nivel_db": -33,
+      "desde_s": 20
     },
     {
       "tipo": "colchon",

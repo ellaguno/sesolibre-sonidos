@@ -80,6 +80,9 @@ pub struct Indice {
     /// Ambientes que deben sonar a su velocidad real (cantos de animales).
     #[serde(default)]
     pub ambientes_fieles: Vec<String>,
+    /// Golpes sueltos (gong, platillo, carillón): nombre → archivos entre los que se elige.
+    #[serde(default)]
+    pub eventos: BTreeMap<String, Vec<String>>,
 }
 
 pub fn indice() -> &'static Indice {
@@ -103,6 +106,13 @@ pub fn ambiente(nombre: &str) -> Result<&'static str, Error> {
     })
 }
 
+pub fn evento(nombre: &str) -> Result<&'static [String], Error> {
+    indice().eventos.get(nombre).map(Vec::as_slice).ok_or_else(|| {
+        let hay: Vec<&str> = indice().eventos.keys().map(String::as_str).collect();
+        Error::Receta(format!("evento desconocido '{nombre}' (hay: {})", hay.join(", ")))
+    })
+}
+
 /// Los archivos (relativos a `assets/audio/`) que la plataforma debe cargar para esta receta.
 pub fn archivos_necesarios(receta: &Receta) -> Result<Vec<String>, Error> {
     let mut v: Vec<String> = Vec::new();
@@ -110,6 +120,7 @@ pub fn archivos_necesarios(receta: &Receta) -> Result<Vec<String>, Error> {
         match &c.gen {
             Generador::Ambiente { ambiente: a, .. } => v.push(ambiente(a)?.to_string()),
             Generador::Instrumento { instrumento: i, .. } => v.extend(instrumento(i)?.notas.values().cloned()),
+            Generador::Eventos { evento: e, .. } => v.extend(evento(e)?.iter().cloned()),
             Generador::Colchon { timbre: Some(t), .. } => v.extend(instrumento(t)?.notas.values().cloned()),
             _ => {}
         }
