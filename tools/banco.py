@@ -28,6 +28,10 @@ instrumentos = {
     "armonicos": {"sostenido": True, "notas": notas("violin_harm")},
     "flauta": {"sostenido": True, "notas": notas("flute_sus")},
     "corno": {"sostenido": True, "notas": notas("horn_sus")},
+    "trompeta": {"sostenido": True, "notas": notas("trumpet_sus")},
+    "trombones": {"sostenido": True, "notas": notas("trombone_sus")},
+    "fagot": {"sostenido": False, "notas": notas("bassoon")},
+    "campanas": {"sostenido": False, "notas": notas("tubular_bells")},
     "cello": {"sostenido": True, "notas": notas("cello_sus")},
     "viola": {"sostenido": True, "notas": notas("viola_sus")},
     "violin": {"sostenido": True, "notas": notas("violin_sus")},
@@ -41,8 +45,15 @@ ambientes = {
     "hidrofono": "ambience/hydrophone_flow.ogg",
     "burbujas": "ambience/bubble_flow.ogg",
     "olas": "ambience/waves_rocks.ogg",
+    "chotacabras": "ambience/nightjar.ogg",
+    "ranas": "ambience/tree_frog.ogg",
+    "grillos": "ambience/mole_cricket.ogg",
+    "pita": "ambience/pitta.ogg",
+    "gaviotas": "ambience/gulls.ogg",
 }
+# Cantos de animales: no se tocan a otra velocidad (sonarían a otra especie).
+fieles = ["chotacabras", "ranas", "grillos", "pita", "gaviotas"]
 with open(os.path.join(AUDIO, "banco.json"), "w", encoding="utf-8") as f:
-    json.dump({"version": 1, "instrumentos": instrumentos, "ambientes": ambientes}, f, ensure_ascii=False, indent=1)
+    json.dump({"version": 1, "instrumentos": instrumentos, "ambientes": ambientes, "ambientes_fieles": fieles}, f, ensure_ascii=False, indent=1)
     f.write("\n")
 print("banco.json:", ", ".join(f"{k} ({len(v['notas'])})" for k, v in instrumentos.items()), "|", ", ".join(ambientes))

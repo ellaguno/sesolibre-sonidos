@@ -77,6 +77,9 @@ pub struct Indice {
     pub version: u32,
     pub instrumentos: BTreeMap<String, InstrumentoDef>,
     pub ambientes: BTreeMap<String, String>,
+    /// Ambientes que deben sonar a su velocidad real (cantos de animales).
+    #[serde(default)]
+    pub ambientes_fieles: Vec<String>,
 }
 
 pub fn indice() -> &'static Indice {

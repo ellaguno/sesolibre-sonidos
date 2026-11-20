@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "fade_in_s": 10,
+  "techo_db": -14,
+  "fuentes": [
+    "https://www.cochrane.org/CD010459/SLEEP_music-for-insomnia-adults"
+  ],
+  "id": "dormir.noche-de-campo",
+  "sala": "comprobado",
+  "situacion": "dormir",
+  "nombre": {
+    "es": "Noche de campo",
+    "en": "Night in the country"
+  },
+  "descripcion": {
+    "es": "El ronroneo de un chotacabras, un grillo topo y ranitas a lo lejos, grabados de verdad en Francia, sobre una sección de cuerdas muy baja. Sin pulsos; sirve en altavoz. Cuarenta y cinco minutos.",
+    "en": "The churring of a nightjar, a mole cricket and distant tree frogs, really recorded in France, over a very soft string section. No pulses; fine on a speaker. Forty-five minutes."
+  },
+  "ciencia": {
+    "es": "La música lenta probablemente mejora la calidad subjetiva del sueño (Cochrane 2022, certeza moderada). Los sonidos de naturaleza bajan la activación tras el estrés en ensayos pequeños. Grabaciones de xeno-canto, CC BY 4.0 (ver créditos).",
+    "en": "Slow music probably improves subjective sleep quality (Cochrane 2022, moderate certainty). Nature sounds lower arousal after stress in small trials. Recordings from xeno-canto, CC BY 4.0 (see credits)."
+  },
+  "duracion_s": 2700,
+  "fade_out_s": 300,
+  "semilla": 14,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 6,
+    "amortiguacion_hz": 2500
+  },
+  "capas": [
+    {
+      "tipo": "ambiente",
+      "ambiente": "chotacabras",
+      "nivel_db": -27
+    },
+    {
+      "tipo": "ambiente",
+      "ambiente": "grillos",
+      "nivel_db": -33
+    },
+    {
+      "tipo": "ambiente",
+      "ambiente": "ranas",
+      "paso_bajo_hz": 3000,
+      "nivel_db": -35
+    },
+    {
+      "tipo": "colchon",
+      "modo": "menor",
+      "timbre": "cuerdas",
+      "nivel_db": -20,
+      "ciclo_s": 260,
+      "voces": 5,
+      "reverb": 0.6
+    }
+  ]
+}

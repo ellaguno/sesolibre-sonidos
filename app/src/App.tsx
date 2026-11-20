@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Share } from '@capacitor/share';
 
+import { CREDITOS } from './core/creditos';
 import { DISENO_INICIAL, cargarDisenos, codificar, construir, decodificar, entradaDe, guardarDisenos, type Diseno } from './core/diseno';
 import { idiomaInicial, traducir } from './core/i18n';
 import { NOCHE_DB, Sonidos } from './core/motor';
@@ -222,6 +223,19 @@ export default function App() {
         <p>{t('pie')}</p>
         <p>{t('adv.siempre')}</p>
         {sonando && <p>{t('apagada')}</p>}
+        <details className="pt-4 text-left">
+          <summary className="cursor-pointer text-center underline underline-offset-2">{t('creditos')}</summary>
+          <ul className="mt-2 space-y-1 text-xs">
+            {CREDITOS.map((c) => (
+              <li key={c.url}>
+                <a href={c.url} target="_blank" rel="noreferrer" className="underline underline-offset-2">
+                  {c.que}
+                </a>{' '}
+                · {c.quien} · {c.licencia}
+              </li>
+            ))}
+          </ul>
+        </details>
       </footer>
 
       {abierta && (

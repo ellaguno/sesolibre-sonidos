@@ -3,10 +3,10 @@
 
 import type { Entrada, Receta } from './recetas';
 
-export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'viento', 'lluvia', 'aves', 'rosa', 'marron'] as const;
-export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta', 'corno'] as const;
+export const FONDOS = ['mar', 'olas', 'burbujas', 'oleaje', 'gaviotas', 'viento', 'lluvia', 'selva', 'noche', 'grillos', 'ranas', 'aves', 'rosa', 'marron'] as const;
+export const COLCHONES = ['ninguno', 'sintetico', 'cuerdas', 'cello', 'violin', 'flauta', 'corno', 'trombones'] as const;
 export const MODOS = ['re_pentatonico', 'menor', 'quintas'] as const;
-export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'corno', 'armonicos'] as const;
+export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'fagot', 'corno', 'trompeta', 'campanas', 'armonicos'] as const;
 export const FRECUENCIAS = ['ninguno', 'tono', 'binaural', 'isocronico', 'serie'] as const;
 export const DENSIDADES = { pocas: 3, algunas: 6, muchas: 12 } as const;
 
@@ -60,6 +60,16 @@ function capaDeFondo(f: Diseno['fondos'][number]): Record<string, unknown> {
       return { tipo: 'naturaleza', clase: 'lluvia', nivel_db: -19 };
     case 'aves':
       return { tipo: 'naturaleza', clase: 'aves', nivel_db: -30, reverb: 0.5 };
+    case 'gaviotas':
+      return { tipo: 'ambiente', ambiente: 'gaviotas', nivel_db: -34 };
+    case 'selva':
+      return { tipo: 'ambiente', ambiente: 'pita', nivel_db: -30 };
+    case 'noche':
+      return { tipo: 'ambiente', ambiente: 'chotacabras', nivel_db: -30 };
+    case 'grillos':
+      return { tipo: 'ambiente', ambiente: 'grillos', nivel_db: -33 };
+    case 'ranas':
+      return { tipo: 'ambiente', ambiente: 'ranas', nivel_db: -33 };
     case 'rosa':
       return { tipo: 'ruido', color: 'rosa', paso_bajo_hz: 1800, nivel_db: -18 };
     case 'marron':
@@ -91,8 +101,8 @@ export function construir(d: Diseno, id = `propio.${Date.now().toString(36)}`): 
       instrumento: d.instrumento,
       ...armonia,
       notas_por_minuto: DENSIDADES[d.densidad],
-      octavas: d.instrumento === 'corno' ? [0, 1] : d.instrumento === 'flauta' || d.instrumento === 'armonicos' ? [2, 2] : [1, 2],
-      nivel_db: ['flauta', 'armonicos', 'corno'].includes(d.instrumento) ? -29 : -23,
+      octavas: ['corno', 'fagot'].includes(d.instrumento) ? [0, 1] : ['flauta', 'armonicos', 'campanas'].includes(d.instrumento) ? [2, 2] : [1, 2],
+      nivel_db: ['flauta', 'armonicos', 'corno', 'trompeta'].includes(d.instrumento) ? -29 : d.instrumento === 'campanas' ? -27 : -23,
       reverb: 0.7,
       desde_s: 10,
     });

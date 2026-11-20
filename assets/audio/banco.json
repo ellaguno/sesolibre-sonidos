@@ -78,6 +78,52 @@
     "58": "instruments/horn_sus/58.ogg"
    }
   },
+  "trompeta": {
+   "sostenido": true,
+   "notas": {
+    "41": "instruments/trumpet_sus/41.ogg",
+    "48": "instruments/trumpet_sus/48.ogg",
+    "58": "instruments/trumpet_sus/58.ogg",
+    "62": "instruments/trumpet_sus/62.ogg",
+    "65": "instruments/trumpet_sus/65.ogg",
+    "72": "instruments/trumpet_sus/72.ogg"
+   }
+  },
+  "trombones": {
+   "sostenido": true,
+   "notas": {
+    "30": "instruments/trombone_sus/30.ogg",
+    "34": "instruments/trombone_sus/34.ogg",
+    "46": "instruments/trombone_sus/46.ogg",
+    "58": "instruments/trombone_sus/58.ogg"
+   }
+  },
+  "fagot": {
+   "sostenido": false,
+   "notas": {
+    "22": "instruments/bassoon/22.ogg",
+    "26": "instruments/bassoon/26.ogg",
+    "29": "instruments/bassoon/29.ogg",
+    "33": "instruments/bassoon/33.ogg",
+    "36": "instruments/bassoon/36.ogg",
+    "39": "instruments/bassoon/39.ogg",
+    "40": "instruments/bassoon/40.ogg",
+    "45": "instruments/bassoon/45.ogg",
+    "48": "instruments/bassoon/48.ogg",
+    "58": "instruments/bassoon/58.ogg"
+   }
+  },
+  "campanas": {
+   "sostenido": false,
+   "notas": {
+    "60": "instruments/tubular_bells/60.ogg",
+    "64": "instruments/tubular_bells/64.ogg",
+    "67": "instruments/tubular_bells/67.ogg",
+    "69": "instruments/tubular_bells/69.ogg",
+    "72": "instruments/tubular_bells/72.ogg",
+    "76": "instruments/tubular_bells/76.ogg"
+   }
+  },
   "cello": {
    "sostenido": true,
    "notas": {
@@ -143,6 +189,18 @@
  "ambientes": {
   "hidrofono": "ambience/hydrophone_flow.ogg",
   "burbujas": "ambience/bubble_flow.ogg",
-  "olas": "ambience/waves_rocks.ogg"
- }
+  "olas": "ambience/waves_rocks.ogg",
+  "chotacabras": "ambience/nightjar.ogg",
+  "ranas": "ambience/tree_frog.ogg",
+  "grillos": "ambience/mole_cricket.ogg",
+  "pita": "ambience/pitta.ogg",
+  "gaviotas": "ambience/gulls.ogg"
+ },
+ "ambientes_fieles": [
+  "chotacabras",
+  "ranas",
+  "grillos",
+  "pita",
+  "gaviotas"
+ ]
 }

@@ -24,7 +24,7 @@ fn motor(r: &Receta, semilla: Option<u64>) -> Motor {
 
 #[test]
 fn hay_recetas_y_todas_validan() {
-    assert!(recetas().len() >= 12);
+    assert!(recetas().len() >= 15);
 }
 
 #[test]

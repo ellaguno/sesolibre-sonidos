@@ -3,6 +3,8 @@
 !assets/audio/**/*.ogg
 # El material crudo (muestras sin curar) sí se versiona.
 !assets/audio/raw/**
+# …salvo las grabaciones de xeno-canto: pesan decenas de MB y tools/curar.py las vuelve a bajar.
+assets/audio/raw/xeno-canto/
 node_modules/
 dist/
 .DS_Store

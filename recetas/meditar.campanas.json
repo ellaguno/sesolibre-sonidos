@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "fade_in_s": 10,
+  "techo_db": -14,
+  "fuentes": [],
+  "id": "meditar.campanas",
+  "sala": "comprobado",
+  "situacion": "meditar",
+  "nombre": {
+    "es": "Campanas y metales",
+    "en": "Bells and brass"
+  },
+  "descripcion": {
+    "es": "Una campana tubular cada tanto, en una sala muy grande, sobre un coro de trombones y cornos que casi no se mueve. Sin pulsos. Veinte minutos.",
+    "en": "A tubular bell every so often, in a very large room, over a choir of trombones and horns that barely moves. No pulses. Twenty minutes."
+  },
+  "ciencia": {
+    "es": "Es música lenta: baja la activación y acompaña la atención sin pedirla (ensayos pequeños, efectos pequeños a medianos). En meditación lo que más pesa es sentarse.",
+    "en": "It is slow music: it lowers arousal and accompanies attention without demanding it (small trials, small to medium effects). In meditation, sitting down matters most."
+  },
+  "duracion_s": 1200,
+  "fade_out_s": 40,
+  "semilla": 15,
+  "advertencias": [],
+  "espacio": {
+    "rt60_s": 9,
+    "amortiguacion_hz": 3500
+  },
+  "capas": [
+    {
+      "tipo": "colchon",
+      "modo": "quintas",
+      "timbre": "trombones",
+      "nivel_db": -24,
+      "ciclo_s": 300,
+      "voces": 3,
+      "reverb": 0.8
+    },
+    {
+      "tipo": "colchon",
+      "modo": "quintas",
+      "timbre": "corno",
+      "nivel_db": -27,
+      "ciclo_s": 300,
+      "voces": 4,
+      "reverb": 0.8
+    },
+    {
+      "tipo": "instrumento",
+      "instrumento": "campanas",
+      "modo": "quintas",
+      "ciclo_s": 300,
+      "notas_por_minuto": 2.5,
+      "octavas": [
+        2,
+        2
+      ],
+      "nivel_db": -26,
+      "reverb": 1.0,
+      "desde_s": 10
+    }
+  ]
+}

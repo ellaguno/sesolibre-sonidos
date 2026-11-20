@@ -18,13 +18,14 @@ pub struct Ambiente {
 }
 
 impl Ambiente {
-    pub fn nuevo(m: Arc<Muestra>, paso_bajo_hz: Option<f32>, sr: f32) -> Self {
+    /// `fiel`: las dos copias van a velocidad real (un canto no se puede bajar de tono).
+    pub fn nuevo(m: Arc<Muestra>, paso_bajo_hz: Option<f32>, fiel: bool, sr: f32) -> Self {
         let cruce = (2.0 * sr as f64).min(m.cuadros as f64 / 4.0).max(1.0);
         let largo = (m.cuadros as f64 - cruce).max(1.0);
         let ganancia = (0.25 / m.rms.max(1e-4)).min(8.0) * std::f32::consts::FRAC_1_SQRT_2;
         Ambiente {
-            pos: [0.0, largo * 0.37],
-            vel: [1.0, 0.84],
+            pos: [0.0, largo * if fiel { 0.5 } else { 0.37 }],
+            vel: [1.0, if fiel { 1.0 } else { 0.84 }],
             cruce,
             largo,
             ganancia,

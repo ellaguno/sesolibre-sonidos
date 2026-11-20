@@ -74,7 +74,8 @@ pub fn construir(gen: &Generador, sr: f32, rng: Rng, duracion_s: f32, banco: &Ba
             respiracion::Respiracion::nueva(*inhalar_s, *retener_s, *exhalar_s, *pausa_s, *hz, sr, rng),
         ),
         Generador::Ambiente { ambiente, paso_bajo_hz } => {
-            Box::new(ambiente::Ambiente::nuevo(banco.obtener(banco::ambiente(ambiente)?)?, *paso_bajo_hz, sr))
+            let fiel = banco::indice().ambientes_fieles.iter().any(|a| a == ambiente);
+            Box::new(ambiente::Ambiente::nuevo(banco.obtener(banco::ambiente(ambiente)?)?, *paso_bajo_hz, fiel, sr))
         }
         Generador::Serie { base_hz, armonicos } => Box::new(serie::Serie::nueva(*base_hz, armonicos, sr)),
         Generador::Naturaleza { clase } => naturaleza::nueva(*clase, sr, rng),
