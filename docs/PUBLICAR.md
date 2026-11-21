@@ -93,6 +93,13 @@ gh secret set ASC_PRIVATE_KEY -R $R < $A/AuthKey_596256L8PU.p8
 
 En local (macOS): `app/scripts/ios-app.sh` prepara `app/ios/` y `npx cap open ios`.
 
+Ficha del App Store: `python3 app/scripts/asc-ficha.py docs/ficha-appstore.json assets/appstore`
+sube categorías, clasificación por edad, textos (es-MX, en-US), capturas y asigna la última
+compilación procesada. Las capturas (iPhone 6,9" e iPad 13") salen de la web con
+`node tools/capturas-ios.mjs` (con `npx vite preview --port 4173` corriendo en `app/`).
+En la web quedaron hechos a mano: *Privacidad de la app* (no se recopilan datos), precio gratis
+en 175 países y los datos de contacto para la revisión (los de Mind).
+
 ## Ficha
 
 **Descripción corta (≤ 80)**

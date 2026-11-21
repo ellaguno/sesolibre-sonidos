@@ -1,0 +1,52 @@
+{
+  "app": "6837455986",
+  "version": "0.5.0",
+  "copyright": "2026 Eduardo Llaguno",
+  "categorias": { "primaryCategory": "HEALTH_AND_FITNESS", "secondaryCategory": "LIFESTYLE" },
+  "edad": {
+    "booleanos": {
+      "advertising": false, "ageAssurance": false, "gambling": false, "healthOrWellnessTopics": true,
+      "lootBox": false, "messagingAndChat": false, "parentalControls": false, "unrestrictedWebAccess": false,
+      "userGeneratedContent": false, "socialMedia": false, "sharedLocation": false
+    },
+    "ninguno": [
+      "alcoholTobaccoOrDrugUseOrReferences", "contests", "gamblingSimulated", "gunsOrOtherWeapons",
+      "medicalOrTreatmentInformation", "profanityOrCrudeHumor", "sexualContentGraphicAndNudity",
+      "sexualContentOrNudity", "horrorOrFearThemes", "matureOrSuggestiveThemes",
+      "violenceCartoonOrFantasy", "violenceRealisticProlongedGraphicOrSadistic", "violenceRealistic"
+    ]
+  },
+  "idiomas": {
+    "es-MX": {
+      "capturas": "es",
+      "info": {
+        "name": "SesoLibre Sonidos",
+        "subtitle": "Sonido para cada situación",
+        "privacyPolicyUrl": "https://ellaguno.github.io/sesolibre-sonidos/privacidad.html"
+      },
+      "version": {
+        "promotionalText": "Sonidos generados en vivo para dormir, concentrarte o calmarte, con la pantalla bloqueada. Lo comprobado va primero; lo exploratorio, con etiqueta honesta.",
+        "keywords": "dormir,ruido rosa,ruido blanco,relajación,meditar,respirar,concentración,lluvia,naturaleza,calma",
+        "supportUrl": "https://sesolibre.com",
+        "marketingUrl": "https://ellaguno.github.io/sesolibre-sonidos/",
+        "description": "SesoLibre Sonidos genera en vivo el sonido pensado para lo que estás haciendo: dormir, concentrarte, meditar, respirar, calmarte o despertar. Suena con la pantalla bloqueada y se detiene sola cuando termina el temporizador.\n\nLO COMPROBADO, PRIMERO\nCada sonido dice qué dice la ciencia, con fuentes, y lleva una de tres etiquetas: Comprobado, Prometedor o Exploración. Ruido rosa y marrón, agua, cuerdas lentas, respiración guiada a seis por minuto.\n\nEXPLORACIÓN, CON ETIQUETA HONESTA\n432 Hz, solfeggio, resonancia Schumann, cimática: viven aparte, con la única regla de que no hagan daño.\n\n• Se genera en el teléfono: nunca suena igual y no gasta datos.\n• Controles en la pantalla de bloqueo, +15 min y modo noche.\n• Diseñador: arma tus propios sonidos y compártelos como un código de texto.\n• Laboratorio: cimática con la cámara y un experimento de plantas con diario.\n• Sin cuentas, sin anuncios, sin recopilar datos. Español e inglés.\n• Código abierto.\n\nNo sustituye atención médica."
+      }
+    },
+    "en-US": {
+      "capturas": "en",
+      "info": {
+        "name": "SesoLibre Sonidos",
+        "subtitle": "Sound for every situation",
+        "privacyPolicyUrl": "https://ellaguno.github.io/sesolibre-sonidos/privacidad.html"
+      },
+      "version": {
+        "promotionalText": "Sounds generated live to sleep, focus or calm down, with the screen locked. What's proven comes first; exploratory sounds are honestly labeled.",
+        "keywords": "sleep,pink noise,white noise,relax,meditation,breathing,focus,rain,nature,ambient,calm",
+        "supportUrl": "https://sesolibre.com",
+        "marketingUrl": "https://ellaguno.github.io/sesolibre-sonidos/",
+        "description": "SesoLibre Sonidos generates, live, the sound meant for what you are doing: sleeping, focusing, meditating, breathing, calming down or waking up. It plays with the screen locked and stops by itself when the timer ends.\n\nWHAT'S PROVEN COMES FIRST\nEvery sound says what science says, with sources, and carries one of three labels: Proven, Promising or Exploration. Pink and brown noise, water, slow strings, guided breathing at six per minute.\n\nEXPLORATION, HONESTLY LABELED\n432 Hz, solfeggio, Schumann resonance, cymatics: they live apart, with the single rule that they do no harm.\n\n• Generated on your phone: never sounds the same and uses no data.\n• Lock-screen controls, +15 min and night mode.\n• Designer: build your own sounds and share them as a text code.\n• Lab: cymatics with the camera and a plant experiment with a diary.\n• No accounts, no ads, no data collection. Spanish and English.\n• Open source.\n\nNot a substitute for medical care."
+      }
+    }
+  },
+  "capturas": { "APP_IPHONE_67": "iphone-", "APP_IPAD_PRO_3GEN_129": "ipad-" }
+}
