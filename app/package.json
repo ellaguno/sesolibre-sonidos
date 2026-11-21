@@ -1,10 +1,10 @@
 {
   "name": "sesolibre-sonidos",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "description": "Paisajes sonoros con propósito, con la pantalla apagada (web + Android + iOS vía Capacitor)",
+  "description": "Paisajes sonoros con prop\u00f3sito, con la pantalla apagada (web + Android + iOS v\u00eda Capacitor)",
   "scripts": {
     "audio": "node scripts/sync-audio.mjs",
     "dev": "npm run audio && npm run wasm && vite",
@@ -24,6 +24,7 @@
     "@capacitor/filesystem": "^8.1.5",
     "@capacitor/ios": "^8.6.2",
     "@capacitor/share": "^8.0.3",
+    "@fontsource/quicksand": "^5.3.0",
     "capacitor-sonidos": "file:./plugin",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

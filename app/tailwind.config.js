@@ -15,6 +15,8 @@ export default {
         propio: 'rgb(var(--propio) / <alpha-value>)',
       },
       fontFamily: {
+        // La de la marca en la cabecera, pariente de la de Somnia. OFL, empaquetada.
+        marca: ['Quicksand', 'system-ui', 'sans-serif'],
         sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Noto Sans', 'sans-serif'],
       },
     },

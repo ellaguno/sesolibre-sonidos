@@ -180,9 +180,11 @@ export default function App() {
   return (
     <div className={`mx-auto max-w-xl px-4 pt-[max(1.25rem,env(safe-area-inset-top))] ${sonando ? 'pb-32' : 'pb-10'}`}>
       <header className="flex items-center gap-3">
+        <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="h-12 w-12 shrink-0 rounded-[26%] shadow-lg shadow-black/40" />
         <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-semibold tracking-tight">Sonidos</h1>
-          <p className="text-tenue">{t('lema')}</p>
+          <h1 className="font-marca text-[1.75rem] font-medium lowercase leading-none tracking-wide text-[#b7b4ff]" aria-label="SesoLibre Sonidos">
+            sesonidos
+          </h1>
         </div>
         <button
           type="button"
@@ -206,6 +208,7 @@ export default function App() {
           {idioma === 'es' ? 'en' : 'es'}
         </button>
       </header>
+      <p className="mt-2 text-tenue">{t('lema')}</p>
 
       {noche && (
         <p className="mt-3 flex items-start gap-2 rounded-xl border border-borde bg-panel/70 p-3 text-sm text-tenue">

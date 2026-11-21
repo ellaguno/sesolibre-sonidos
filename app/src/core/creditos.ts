@@ -17,4 +17,5 @@ export const CREDITOS: { que: string; quien: string; licencia: string; url: stri
   { que: 'El Abismo y Caribe (obras de SesoLibre Lienzo)', quien: 'Eduardo Llaguno', licencia: 'CC BY 4.0', url: 'https://github.com/ellaguno/sesolibre-lienzo' },
   { que: 'Humpback whales and orcas (en las obras de Lienzo)', quien: 'raiden04, con datos de Rychen et al. 2023, ETH Zürich', licencia: 'CC BY 4.0', url: 'https://freesound.org/s/797762/' },
   { que: 'Ship creaking (en las obras de Lienzo)', quien: 'designerschoice (Nicholas Judy, TDC)', licencia: 'CC BY 4.0', url: 'https://freesound.org/s/818587/' },
+  { que: 'Tipografía Quicksand', quien: 'The Quicksand Project Authors', licencia: 'OFL 1.1', url: 'https://github.com/andrew-paglinawan/QuicksandFamily' },
 ];

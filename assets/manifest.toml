@@ -163,3 +163,12 @@ source = "https://github.com/ellaguno/sesolibre-lienzo (commit 0a39fc3; `lienzo 
 license = "CC-BY-4.0"
 notes = "Incluyen material de terceros que exige crédito: cantos de ballena (raiden04, freesound 797762, CC-BY 4.0, datos de Rychen et al. 2023 © ETH Zürich) y crujidos (designerschoice, freesound 818587, CC-BY 4.0); instrumentos VSCO 256 y ambientes CC0."
 modified = "4 min, fundidos de entrada y salida, 48 kHz estéreo, Ogg Vorbis q4"
+
+[[asset]]
+id = "quicksand"
+path = "(paquete npm @fontsource/quicksand, pesos 500 y 600, subconjunto latino)"
+kind = "font"
+author = "The Quicksand Project Authors"
+source = "https://github.com/andrew-paglinawan/QuicksandFamily"
+license = "OFL-1.1"
+notes = "Letra de la marca en la cabecera, pariente de la de Somnia."
