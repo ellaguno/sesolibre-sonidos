@@ -159,6 +159,16 @@ jobs:
           xcrun altool --upload-app --type ios --file "$IPA" \
             --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
 
+      # Grupo externo con enlace público (entra cualquiera que lo tenga) y revisión beta.
+      - name: TestFlight abierto (grupo con enlace público)
+        if: github.event_name == 'push' || (inputs.upload && !inputs.simulador)
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          GRUPO: ${{ vars.TESTFLIGHT_GRUPO || 'Abierto' }}
+        run: python3 app/scripts/asc-testflight.py "$BUNDLE_ID" "$(git rev-list --count HEAD)" "$GRUPO" docs/release-notes.txt
+
       - name: Limpiar keychain y llave
         if: always()
         run: |
