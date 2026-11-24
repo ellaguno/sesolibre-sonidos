@@ -94,6 +94,27 @@ def main() -> None:
                 'relationships': {'build': {'data': {'type': 'builds', 'id': build}}},
             }})
 
+    # La descripción beta de la app (Apple la exige para testers externos). Sale de
+    # docs/testflight.txt; el correo de comentarios, si se da, de TESTFLIGHT_CORREO.
+    descripciones = Path(__file__).resolve().parents[2] / 'docs/testflight.txt'
+    if descripciones.exists():
+        hechas = {l['attributes']['locale']: l for l in asc.llamar('GET', f'/v1/apps/{app}/betaAppLocalizations?limit=50')['data']}
+        correo = os.environ.get('TESTFLIGHT_CORREO') or None
+        for linea in descripciones.read_text(encoding='utf-8').splitlines():
+            idioma, _, texto = linea.partition(':')
+            locale = {'es': 'es-MX', 'en': 'en-US'}.get(idioma.strip())
+            if not locale or not texto.strip():
+                continue
+            attrs = {'description': texto.strip()[:4000], **({'feedbackEmail': correo} if correo else {})}
+            if locale in hechas:
+                intentar('PATCH', f"/v1/betaAppLocalizations/{hechas[locale]['id']}", {'data': {
+                    'type': 'betaAppLocalizations', 'id': hechas[locale]['id'], 'attributes': attrs}})
+            else:
+                intentar('POST', '/v1/betaAppLocalizations', {'data': {
+                    'type': 'betaAppLocalizations', 'attributes': {'locale': locale, **attrs},
+                    'relationships': {'app': {'data': {'type': 'apps', 'id': app}}}}})
+        print('descripción beta puesta')
+
     # 4. Revisión beta.
     if intentar('POST', '/v1/betaAppReviewSubmissions', {'data': {
         'type': 'betaAppReviewSubmissions',

@@ -94,8 +94,9 @@ gh secret set ASC_PRIVATE_KEY -R $R < $A/AuthKey_596256L8PU.p8
 **TestFlight abierto.** Tras subir, el flujo corre `app/scripts/asc-testflight.py`: espera a que
 Apple procese la compilación, la pone en el grupo externo *Abierto* (variable `TESTFLIGHT_GRUPO`),
 la manda a revisión beta y activa el **enlace público**, que queda en el resumen del run. El
-enlace funciona cuando Apple aprueba esa revisión (suele ser un día). Requisito manual, una
-vez: *TestFlight → Información de la prueba* con descripción, correo y contacto.
+enlace funciona cuando Apple aprueba esa revisión (suele ser un día). La descripción beta sale de `docs/testflight.txt`; el correo de comentarios, de la variable
+`TESTFLIGHT_CORREO` del repo, si existe. El grupo *Abierto* ya está creado:
+<https://testflight.apple.com/join/7yYtQbSH>.
 
 En local (macOS): `app/scripts/ios-app.sh` prepara `app/ios/` y `npx cap open ios`.
 

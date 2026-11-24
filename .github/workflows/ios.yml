@@ -167,6 +167,7 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
           GRUPO: ${{ vars.TESTFLIGHT_GRUPO || 'Abierto' }}
+          TESTFLIGHT_CORREO: ${{ vars.TESTFLIGHT_CORREO }}
         run: python3 app/scripts/asc-testflight.py "$BUNDLE_ID" "$(git rev-list --count HEAD)" "$GRUPO" docs/release-notes.txt
 
       - name: Limpiar keychain y llave
