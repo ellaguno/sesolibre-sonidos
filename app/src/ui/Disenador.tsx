@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { COLCHONES, DENSIDADES, EVENTOS, GRUPOS_DE_FONDO, FRECUENCIAS, INSTRUMENTOS, MODOS, type Diseno } from '../core/diseno';
+import { COLCHONES, DENSIDADES, EVENTOS, GRUPOS_DE_FONDO, NOTAS, VOLUMENES, type Parte, FRECUENCIAS, INSTRUMENTOS, MODOS, type Diseno } from '../core/diseno';
 import { traducir } from '../core/i18n';
 import type { Idioma } from '../core/recetas';
 import { DE_SALA } from './estilos';
@@ -124,6 +124,30 @@ export function Disenador({ inicial, idioma, alCerrar, alGuardar }: Props) {
         {(d.colchon !== 'ninguno' || d.instrumento !== 'ninguno') && (
           <>
             <Grupo titulo="d.modo" opciones={MODOS} valor={d.modo} alElegir={(modo) => poner({ modo })} />
+            <fieldset className="mt-5">
+              <legend className="text-sm font-semibold text-tenue">{t('d.nota')}</legend>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {NOTAS.map((n) => (
+                  <button key={n} type="button" aria-pressed={(d.nota ?? 0) === n} onClick={() => poner({ nota: n })} className={ficha((d.nota ?? 0) === n)}>
+                    {t(`o.nota.${n}`)}
+                  </button>
+                ))}
+              </div>
+              <label className="mt-3 block text-sm text-tenue">
+                {t('d.notaOtra')}
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={40}
+                  max={400}
+                  step={0.01}
+                  value={d.nota || ''}
+                  placeholder="73.4"
+                  onChange={(e) => poner({ nota: Number(e.target.value) || 0 })}
+                  className="mt-1 block min-h-11 w-40 rounded-xl border border-borde bg-fondo px-3 text-base text-texto"
+                />
+              </label>
+            </fieldset>
             <Grupo titulo="d.afinacion" opciones={[440, 432] as const} valor={d.afinacion} alElegir={(afinacion) => poner({ afinacion })} />
           </>
         )}
@@ -135,6 +159,43 @@ export function Disenador({ inicial, idioma, alCerrar, alGuardar }: Props) {
 
         <Grupo titulo="d.evento" opciones={EVENTOS} valor={d.evento ?? 'ninguno'} alElegir={(evento) => poner({ evento })} />
         <Grupo titulo="d.respiracion" opciones={['no', 'si'] as const} valor={d.respiracion ? 'si' : 'no'} alElegir={(v) => poner({ respiracion: v === 'si' })} />
+
+        {!vacio && (
+          <fieldset className="mt-6 rounded-2xl border border-borde p-4">
+            <legend className="px-1 text-sm font-semibold text-tenue">{t('d.volumen')}</legend>
+            {(
+              [
+                ['fondo', d.fondos.length > 0],
+                ['colchon', d.colchon !== 'ninguno'],
+                ['instrumento', d.instrumento !== 'ninguno'],
+                ['frecuencia', d.frecuencia !== 'ninguno'],
+                ['evento', (d.evento ?? 'ninguno') !== 'ninguno'],
+                ['respiracion', d.respiracion],
+              ] as [Parte, boolean][]
+            )
+              .filter(([, hay]) => hay)
+              .map(([parte]) => (
+                <div key={parte} className="mt-2 flex items-center gap-2 first:mt-0">
+                  <span className="w-24 shrink-0 text-sm">{t(`d.parte.${parte}`)}</span>
+                  {(Object.keys(VOLUMENES) as (keyof typeof VOLUMENES)[]).map((v) => {
+                    const activo = (d.volumen?.[parte] ?? 0) === VOLUMENES[v];
+                    return (
+                      <button
+                        key={v}
+                        type="button"
+                        aria-pressed={activo}
+                        aria-label={`${t(`d.parte.${parte}`)}: ${t(`o.${v}`)}`}
+                        onClick={() => poner({ volumen: { ...d.volumen, [parte]: VOLUMENES[v] } })}
+                        className={`min-h-10 flex-1 rounded-full border px-2 text-xs font-medium ${activo ? `${s.boton} border-transparent` : 'border-borde text-texto/90'}`}
+                      >
+                        {t(`o.${v}`)}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+          </fieldset>
+        )}
 
         {vacio && <p className="mt-4 text-sm text-prometedor">{t('d.vacio')}</p>}
         <button

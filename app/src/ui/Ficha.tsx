@@ -17,10 +17,12 @@ interface Props {
   alEditar?: () => void;
   alCompartir?: () => void;
   alBorrar?: () => void;
+  /** Solo en las recetas del catálogo: copiarla a Tus diseños. */
+  alCopiar?: () => void;
 }
 
 /** La ficha de una receta: qué es, qué dice la ciencia, advertencias, duración y tocar. */
-export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alTocar, alEditar, alCompartir, alBorrar }: Props) {
+export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alTocar, alEditar, alCompartir, alBorrar, alCopiar }: Props) {
   const r = entrada.receta;
   const s = DE_SALA[r.sala];
   const t = (c: string) => traducir(idioma, c);
@@ -114,6 +116,12 @@ export function Ficha({ entrada, idioma, auriculares, simulado, alCerrar, alToca
           <Tocar className="h-6 w-6" />
           {t('tocar')} · {minutosLegibles(idioma, minutos)}
         </button>
+
+        {alCopiar && (
+          <button type="button" onClick={alCopiar} className="mt-3 min-h-11 w-full rounded-full border border-borde text-sm font-medium text-tenue">
+            {t('usarBase')}
+          </button>
+        )}
 
         {(alEditar || alCompartir || alBorrar) && (
           <div className="mt-3 flex gap-2">

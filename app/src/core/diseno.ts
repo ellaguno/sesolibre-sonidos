@@ -18,6 +18,13 @@ export const MODOS = ['re_pentatonico', 'menor', 'quintas'] as const;
 export const INSTRUMENTOS = ['ninguno', 'arpa', 'vibrafono', 'marimba', 'flauta', 'fagot', 'corno', 'trompeta', 'campanas', 'armonicos'] as const;
 export const FRECUENCIAS = ['ninguno', 'tono', 'binaural', 'isocronico', 'serie'] as const;
 export const EVENTOS = ['ninguno', 'carillon', 'platillo', 'gong'] as const;
+/** Partes del sonido con volumen propio en el diseñador. */
+export const PARTES = ['fondo', 'colchon', 'instrumento', 'frecuencia', 'evento', 'respiracion'] as const;
+export type Parte = (typeof PARTES)[number];
+/** Tres escalones de volumen por parte: 6 dB abajo, el de fábrica, 6 dB arriba. */
+export const VOLUMENES = { suave: -6, normal: 0, presente: 6 } as const;
+/** Notas de atajo para el colchón (Hz de su nota más grave); 0 = la de siempre (Re). */
+export const NOTAS = [0, 108, 132, 62.64] as const;
 export const DENSIDADES = { pocas: 3, algunas: 6, muchas: 12 } as const;
 
 export interface Diseno {
@@ -37,6 +44,10 @@ export interface Diseno {
   /** Golpes sueltos y espaciados. Falta en los diseños guardados antes de existir. */
   evento?: (typeof EVENTOS)[number];
   minutos: number;
+  /** Nota más grave del colchón y del instrumento, en Hz (40–400). 0 o ausente = Re. */
+  nota?: number;
+  /** Decibelios de más o de menos por parte (−6, 0 o 6). Ausente = 0. */
+  volumen?: Partial<Record<Parte, number>>;
 }
 
 export const DISENO_INICIAL: Diseno = {
@@ -106,7 +117,9 @@ export function armonicosAudibles(base: number): number[] {
 
 export function construir(d: Diseno, id = `propio.${Date.now().toString(36)}`): Receta {
   const capas: Record<string, unknown>[] = d.fondos.slice(0, 3).map(capaDeFondo);
-  const armonia = { modo: d.modo, afinacion_hz: d.afinacion, ciclo_s: 200 };
+  const nFondos = capas.length;
+  const nota = d.nota && d.nota > 0 ? acotar(d.nota, 40, 400, 0) : 0;
+  const armonia = { modo: d.modo, afinacion_hz: d.afinacion, ciclo_s: 200, ...(nota ? { raiz_hz: nota } : {}) };
   if (d.colchon !== 'ninguno') {
     capas.push({
       tipo: 'colchon',
@@ -153,6 +166,14 @@ export function construir(d: Diseno, id = `propio.${Date.now().toString(36)}`): 
   if (d.respiracion) {
     capas.push({ tipo: 'respiracion', inhalar_s: 4, exhalar_s: 6, hz: 196, nivel_db: -17, transicion_s: 2 });
   }
+  // El volumen de cada parte, sobre el nivel de fábrica de su capa. Nunca por encima de 0 dB
+  // (el núcleo lo rechazaría) y siempre bajo el mismo techo que el resto de la app.
+  const parteDe = (capa: Record<string, unknown>, i: number): Parte =>
+    i < nFondos ? 'fondo' : ({ colchon: 'colchon', instrumento: 'instrumento', eventos: 'evento', respiracion: 'respiracion' } as Record<string, Parte>)[capa.tipo as string] ?? 'frecuencia';
+  capas.forEach((capa, i) => {
+    const extra = acotar(d.volumen?.[parteDe(capa, i)] ?? 0, -6, 6, 0);
+    if (extra) capa.nivel_db = Math.min(0, (capa.nivel_db as number) + extra);
+  });
   const nombre = d.nombre.trim() || 'Mi diseño';
   const minutos = acotar(d.minutos, 1, 720, 30);
   return {
@@ -176,6 +197,19 @@ export function construir(d: Diseno, id = `propio.${Date.now().toString(36)}`): 
     espacio: { rt60_s: 6, amortiguacion_hz: 3500 },
     capas,
     diseno: d,
+  };
+}
+
+/** Una receta del catálogo copiada a "Tus diseños": suena igual, y ya es del usuario. */
+export function copiaDe(receta: Receta, sufijo: string): Receta {
+  const nombre = (idioma: 'es' | 'en') => `${receta.nombre[idioma]} ${sufijo}`.slice(0, 60);
+  return {
+    ...receta,
+    id: `propio.${Date.now().toString(36)}`,
+    sala: 'propio',
+    situacion: 'propio',
+    nombre: { es: nombre('es'), en: nombre('en') },
+    diseno: undefined,
   };
 }
 
@@ -222,7 +256,8 @@ const de64 = (b64: string) =>
 
 /** El diseño en una lista corta y posicional. */
 function compacto(d: Diseno): unknown[] {
-  return [d.nombre.trim().slice(0, 60), d.fondos.join('.'), d.colchon, d.modo, d.afinacion, d.instrumento, d.densidad, d.frecuencia, d.hz, d.beat, d.respiracion ? 1 : 0, d.evento ?? 'ninguno', d.minutos];
+  return [d.nombre.trim().slice(0, 60), d.fondos.join('.'), d.colchon, d.modo, d.afinacion, d.instrumento, d.densidad, d.frecuencia, d.hz, d.beat, d.respiracion ? 1 : 0, d.evento ?? 'ninguno', d.minutos,
+    d.nota ?? 0, PARTES.map((p) => d.volumen?.[p] ?? 0).join('.')];
 }
 
 /** Lo contrario, sin fiarse de nada: lo que no reconoce vuelve al valor inicial. */
@@ -245,6 +280,10 @@ function deCompacto(v: unknown): Diseno | null {
     respiracion: v[10] === 1,
     evento: en(EVENTOS, v[11], 'ninguno'),
     minutos: num(v[12], I.minutos),
+    nota: num(v[13], 0),
+    volumen: Object.fromEntries(
+      String(v[14] ?? '').split('.').map((x, i) => [PARTES[i], [-6, 6].includes(Number(x)) ? Number(x) : 0]).filter(([p, x]) => p && x !== 0),
+    ) as Diseno['volumen'],
   };
 }
 

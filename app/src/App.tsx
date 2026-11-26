@@ -5,7 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { Share } from '@capacitor/share';
 
 import { CREDITOS } from './core/creditos';
-import { DISENO_INICIAL, cargarDisenos, codificar, construir, decodificar, entradaDe, guardarDisenos, type Diseno } from './core/diseno';
+import { DISENO_INICIAL, cargarDisenos, codificar, construir, copiaDe, decodificar, entradaDe, guardarDisenos, type Diseno } from './core/diseno';
 import { leerEnlace } from './core/enlace';
 import { idiomaInicial, traducir } from './core/i18n';
 import { NOCHE_DB, Sonidos } from './core/motor';
@@ -355,7 +355,14 @@ export default function App() {
                     }
                   : {}),
               }
-            : {})}
+            : {
+                alCopiar: () => {
+                  const copia = entradaDe(copiaDe(abierta.receta, traducir(idioma, 'copia')));
+                  ponerDisenos([copia, ...disenos]);
+                  setNota(traducir(idioma, 'usarBaseQue'));
+                  setAbierta(copia);
+                },
+              })}
         />
       )}
 
