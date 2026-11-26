@@ -29,14 +29,19 @@ describe('diseños', () => {
   it('compartir e importar devuelve el mismo sonido, siempre como diseño propio', () => {
     const r = construir({ ...DISENO_INICIAL, nombre: 'Mañana de niebla ☁', fondos: ['lluvia', 'aves'] });
     const codigo = codificar(r);
-    expect(codigo.startsWith('sonidos1:')).toBe(true);
+    expect(codigo.startsWith('sonidos2:')).toBe(true);
+    expect(codigo.length).toBeLessThan(260);
     const vuelta = decodificar(`mira esto: ${codigo} ¡pruébalo!`)!;
     expect(vuelta.capas).toEqual(r.capas);
     expect(vuelta.nombre.es).toBe('Mañana de niebla ☁');
     expect(vuelta.sala).toBe('propio');
     expect(vuelta.id).not.toBe('');
+    expect(vuelta.diseno).toBeTruthy(); // se puede seguir editando
     // Un catálogo disfrazado no se cuela como "comprobado".
-    const falso = decodificar(codificar({ ...r, sala: 'comprobado', ciencia: { es: 'cura todo', en: 'x' } }))!;
+    // Una receta que no nació en el diseñador viaja en el formato largo, y entra igual.
+    const larga = codificar({ ...r, diseno: undefined, sala: 'comprobado', ciencia: { es: 'cura todo', en: 'x' } });
+    expect(larga.startsWith('sonidos1:')).toBe(true);
+    const falso = decodificar(larga)!;
     expect(falso.sala).toBe('propio');
     expect(falso.ciencia.es).not.toContain('cura');
   });
@@ -44,5 +49,16 @@ describe('diseños', () => {
   it('rechaza lo que no es un código', () => {
     expect(decodificar('hola')).toBeNull();
     expect(decodificar('sonidos1:AAAA')).toBeNull();
+    expect(decodificar('sonidos2:AAAA')).toBeNull();
+  });
+
+  it('un código corto con valores inventados cae en los valores seguros', () => {
+    const raro = 'sonidos2:' + btoa(JSON.stringify(['x', 'mar.inventado', 'bomba', 'q', 999, 'arpa', 'z', 'binaural', 1e9, -5, 1, 'gong', 30]));
+    const r = decodificar(raro)!;
+    expect(r.sala).toBe('propio');
+    const pulso = r.capas.find((c) => c.tipo === 'pulso')!;
+    expect(pulso.portadora_hz).toBe(1000);
+    expect(pulso.beat_hz).toBe(0.5);
+    expect(r.capas.some((c) => c.ambiente === 'hidrofono')).toBe(true);
   });
 });

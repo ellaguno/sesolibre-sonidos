@@ -206,23 +206,75 @@ export function guardarDisenos(lista: Entrada[]): void {
 
 // ------------------------------------------------------------------ compartir
 
+// Dos formatos. El corto (`sonidos2:`) lleva solo lo que el usuario eligió en el diseñador,
+// unas 150 letras, y la receta se reconstruye al importar. El largo (`sonidos1:`) lleva la
+// receta entera; se sigue leyendo, y se usa para recetas que no nacieron en el diseñador.
 const PREFIJO = 'sonidos1:';
+const PREFIJO_CORTO = 'sonidos2:';
 
-/** Un diseño como texto que cabe en un mensaje: `sonidos1:` + JSON en base64url. */
-export function codificar(receta: Receta): string {
-  const bytes = new TextEncoder().encode(JSON.stringify(receta));
+const a64 = (texto: string) => {
   let bin = '';
-  bytes.forEach((b) => (bin += String.fromCharCode(b)));
-  return PREFIJO + btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  new TextEncoder().encode(texto).forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+};
+const de64 = (b64: string) =>
+  new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)));
+
+/** El diseño en una lista corta y posicional. */
+function compacto(d: Diseno): unknown[] {
+  return [d.nombre.trim().slice(0, 60), d.fondos.join('.'), d.colchon, d.modo, d.afinacion, d.instrumento, d.densidad, d.frecuencia, d.hz, d.beat, d.respiracion ? 1 : 0, d.evento ?? 'ninguno', d.minutos];
+}
+
+/** Lo contrario, sin fiarse de nada: lo que no reconoce vuelve al valor inicial. */
+function deCompacto(v: unknown): Diseno | null {
+  if (!Array.isArray(v) || v.length < 8) return null;
+  const en = <T extends string>(lista: readonly T[], x: unknown, def: T): T => (lista.includes(x as T) ? (x as T) : def);
+  const num = (x: unknown, def: number) => (typeof x === 'number' && Number.isFinite(x) ? x : def);
+  const I = DISENO_INICIAL;
+  return {
+    nombre: String(v[0] ?? '').slice(0, 60),
+    fondos: String(v[1] ?? '').split('.').filter((f): f is Diseno['fondos'][number] => (FONDOS as readonly string[]).includes(f)).slice(0, 3),
+    colchon: en(COLCHONES, v[2], I.colchon),
+    modo: en(MODOS, v[3], I.modo),
+    afinacion: v[4] === 432 ? 432 : 440,
+    instrumento: en(INSTRUMENTOS, v[5], I.instrumento),
+    densidad: en(Object.keys(DENSIDADES) as (keyof typeof DENSIDADES)[], v[6], I.densidad),
+    frecuencia: en(FRECUENCIAS, v[7], I.frecuencia),
+    hz: num(v[8], I.hz),
+    beat: num(v[9], I.beat),
+    respiracion: v[10] === 1,
+    evento: en(EVENTOS, v[11], 'ninguno'),
+    minutos: num(v[12], I.minutos),
+  };
+}
+
+/** Un diseño como texto que cabe en un mensaje. */
+export function codificar(receta: Receta): string {
+  const d = receta.diseno ? deCompacto(compacto(receta.diseno as Diseno)) : null;
+  // Solo va en corto si reconstruirlo da exactamente las mismas capas.
+  if (d && JSON.stringify(construir(d, 'x').capas) === JSON.stringify(receta.capas)) {
+    return PREFIJO_CORTO + a64(JSON.stringify(compacto(d)));
+  }
+  return PREFIJO + a64(JSON.stringify(receta));
 }
 
 /** El diseño que viene en un código (aunque llegue rodeado de texto), o null. */
 export function decodificar(texto: string): Receta | null {
+  const corto = texto.match(/sonidos2:([A-Za-z0-9_-]+)/);
+  if (corto) {
+    try {
+      const d = deCompacto(JSON.parse(de64(corto[1])));
+      if (!d) return null;
+      const receta = construir(d);
+      return receta.capas.length > 0 ? receta : null;
+    } catch {
+      return null;
+    }
+  }
   const m = texto.match(/sonidos1:([A-Za-z0-9_-]+)/);
   if (!m) return null;
   try {
-    const bin = atob(m[1].replace(/-/g, '+').replace(/_/g, '/'));
-    const r = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)))) as Receta;
+    const r = JSON.parse(de64(m[1])) as Receta;
     if (r.version !== 1 || !Array.isArray(r.capas) || r.capas.length === 0) return null;
     const nombre = String(r.nombre?.es ?? 'Diseño').slice(0, 60);
     // Lo que llega de fuera entra siempre como diseño propio, con textos neutros.

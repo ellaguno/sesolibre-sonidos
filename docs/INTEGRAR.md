@@ -56,7 +56,13 @@ En la web, la misma consulta (`?receta=…&min=…`) abre la ficha de la receta.
 
 ## Compartir diseños
 
-Un diseño del usuario es una receta de la sala `propio`. Viaja como texto:
-`sonidos1:` + el JSON en base64url (`app/src/core/diseno.ts`: `codificar`, `decodificar`).
+Un diseño del usuario es una receta de la sala `propio`. Viaja como texto en uno de dos
+formatos (`app/src/core/diseno.ts`: `codificar`, `decodificar`):
+
+- `sonidos2:` + lo que se eligió en el diseñador, en una lista corta (unas 170 letras). La
+  receta se reconstruye al importar y sigue siendo editable.
+- `sonidos1:` + la receta entera en base64url (más de mil letras). Se sigue leyendo, y es el
+  que se usa para recetas que no nacieron en el diseñador.
+
 Lo que se importa entra siempre como `propio`, con textos neutros, y pasa por la validación
 del núcleo: límites de volumen y de frecuencias incluidos.

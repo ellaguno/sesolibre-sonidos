@@ -12,6 +12,7 @@ import { NOCHE_DB, Sonidos } from './core/motor';
 import { RECETAS, SALAS, deSala, type Entrada, type Idioma } from './core/recetas';
 import { useMotor } from './core/useMotor';
 import { DE_SALA } from './ui/estilos';
+import { Codigo } from './ui/Codigo';
 import { Disenador } from './ui/Disenador';
 import { Ficha } from './ui/Ficha';
 import { Laboratorio } from './ui/lab/Laboratorio';
@@ -61,24 +62,21 @@ export default function App() {
     setAbierta(entrada);
   };
 
+  /** La ventana del código: para copiar uno (compartir) o para pegar uno (importar). */
+  const [ventanaCodigo, setVentanaCodigo] = useState<{ codigo?: string } | null>(null);
+
   const compartir = async (entrada: Entrada) => {
     const codigo = codificar(entrada.receta);
     try {
       await Share.share({ title: entrada.receta.nombre[idioma], text: codigo });
     } catch {
-      // Sin hoja de compartir (navegador de escritorio) o cancelado: al portapapeles.
-      try {
-        await navigator.clipboard.writeText(codigo);
-        setNota(traducir(idioma, 'copiado'));
-      } catch {
-        window.prompt(traducir(idioma, 'compartir'), codigo);
-      }
+      // Sin hoja de compartir (navegador de escritorio) o cancelado: se muestra para copiar.
+      setVentanaCodigo({ codigo });
     }
   };
 
-  const importar = async () => {
-    const texto = window.prompt(traducir(idioma, 'importarQue'));
-    if (!texto) return;
+  const importar = async (texto: string) => {
+    setVentanaCodigo(null);
     const receta = decodificar(texto);
     if (!receta) return setFallo(traducir(idioma, 'importarMal'));
     const entrada = entradaDe(receta);
@@ -257,7 +255,7 @@ export default function App() {
                 <Mas className="h-5 w-5" />
                 {t('disenar')}
               </button>
-              <button type="button" onClick={() => void importar()} className="min-h-12 rounded-2xl border border-borde px-5 font-medium text-tenue">
+              <button type="button" onClick={() => setVentanaCodigo({})} className="min-h-12 rounded-2xl border border-borde px-5 font-medium text-tenue">
                 {t('importar')}
               </button>
             </div>
@@ -359,6 +357,10 @@ export default function App() {
               }
             : {})}
         />
+      )}
+
+      {ventanaCodigo && (
+        <Codigo idioma={idioma} codigo={ventanaCodigo.codigo} alCerrar={() => setVentanaCodigo(null)} alImportar={(texto) => void importar(texto)} />
       )}
 
       {disenando && (
