@@ -84,10 +84,19 @@ def main() -> None:
     # 3. La compilación en el grupo, con sus notas.
     if intentar('POST', f'/v1/betaGroups/{gid}/relationships/builds', {'data': [{'type': 'builds', 'id': build}]}) is not None:
         print('compilación añadida al grupo')
+    # Apple crea sola la nota del idioma principal: la que ya existe se actualiza.
+    puestas = {l['attributes']['locale']: l['id']
+               for l in (intentar('GET', f'/v1/builds/{build}/betaBuildLocalizations?limit=50') or {}).get('data', [])}
     for linea in notas.splitlines():
         idioma, _, texto = linea.partition(':')
         locale = {'es': 'es-MX', 'en': 'en-US'}.get(idioma.strip())
-        if locale and texto.strip():
+        if not locale or not texto.strip():
+            continue
+        if locale in puestas:
+            intentar('PATCH', f'/v1/betaBuildLocalizations/{puestas[locale]}', {'data': {
+                'type': 'betaBuildLocalizations', 'id': puestas[locale],
+                'attributes': {'whatsNew': texto.strip()[:4000]}}})
+        else:
             intentar('POST', '/v1/betaBuildLocalizations', {'data': {
                 'type': 'betaBuildLocalizations',
                 'attributes': {'locale': locale, 'whatsNew': texto.strip()[:4000]},
